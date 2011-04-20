@@ -31,10 +31,10 @@ define("TOKEN_URL", "https://api.mashape.com/requestToken");
 
 class TokenUtil {
 
-	public static function requestToken($apiKey) {
-		$parameters = array("apikey"=>$apiKey);
+	public static function requestToken($devKey) {
+		$parameters = array("devkey"=>$devKey);
 		
-		$response = HttpClient::doGet(TOKEN_URL, $parameters);
+		$response = HttpClient::doPost(TOKEN_URL, $parameters);
 		
 		$jsonResponse = json_decode($response);
 		if (empty($jsonResponse->errors)) {

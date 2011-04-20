@@ -26,11 +26,7 @@
 
 require_once(dirname(__FILE__) . "/../init/init.php");
 require_once(dirname(__FILE__) . "/../exceptions/mashapeClientException.php");
-
-define("METHOD", "_method");
-define("TOKEN", "_token");
-define("LANGUAGE", "_language");
-define("VERSION", "_version");
+require_once(dirname(__FILE__) . "/urlUtils.php");
 
 class HttpMethod
 {
@@ -42,7 +38,7 @@ class HttpMethod
 
 class HttpClient {
 
-	public static function call($baseUrl, $httpMethod, $method, $token, $parameters) {
+	public static function call($url, $httpMethod, $token, $parameters) {
 		if (empty($parameters)) {
 			$parameters = array();
 		} else {
@@ -54,29 +50,30 @@ class HttpClient {
 					unset($parameters[$key]);
 				} else {
 					// Convert every value to a string value
-				    $parameters[$key] = (string)$parameters[$key];
+					$parameters[$key] = (string)$parameters[$key];
 				}
 			}
 		}
 
-		$parameters[METHOD] = $method;
 		$parameters[TOKEN] = $token;
 		$parameters[LANGUAGE] = CLIENT_LIBRARY_LANGUAGE;
 		$parameters[VERSION] = CLIENT_LIBRARY_VERSION;
 
+		$url = UrlUtils::addClientParameters($url);
+
 		$response;
 		switch($httpMethod) {
 			case HttpMethod::DELETE:
-				$response = self::doDelete($baseUrl, $parameters);
+				$response = self::doDelete($url, $parameters);
 				break;
 			case HttpMethod::GET:
-				$response = self::doGet($baseUrl, $parameters);
+				$response = self::doGet($url, $parameters);
 				break;
 			case HttpMethod::POST:
-				$response = self::doPost($baseUrl, $parameters);
+				$response = self::doPost($url, $parameters);
 				break;
 			case HttpMethod::PUT:
-				$response = self::doPut($baseUrl, $parameters);
+				$response = self::doPut($url, $parameters);
 				break;
 			default:
 				throw new MashapeClientException(EXCEPTION_NOTSUPPORTED_HTTPMETHOD, EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE);
@@ -86,29 +83,30 @@ class HttpClient {
 		}
 		$responseObject = json_decode($response);
 		if (empty($responseObject)) {
-			throw new MashapeClientException(EXCEPTION_JSONDECODE_REQUEST, EXCEPTION_SYSTEM_ERROR_CODE);
+			throw new MashapeClientException(sprintf(EXCEPTION_JSONDECODE_REQUEST, $response), EXCEPTION_SYSTEM_ERROR_CODE);
 		}
 		return $responseObject;
 	}
 
-	public static function doGet($url, $parameters) {
-		$queryString = "";
+	private static function replaceParameters($url, $parameters) {
+		$finalUrl = UrlUtils::getCleanUrl($url, $parameters);
 		if (!empty($parameters)) {
 			$keys = array_keys($parameters);
 			for ($i = 0;$i<count($keys);$i++) {
 				$key = $keys[$i];
-				if ($i != 0) {
-					$queryString .= "&";
-				}
-				$queryString .= $key . "=" . urlencode($parameters[$key]);
+				$finalUrl = str_replace("{" . $key . "}", urlencode($parameters[$key]), $finalUrl);
 			}
 		}
+		return $finalUrl;
+	}
 
-		$response = self::makeRequest($url . "?" . $queryString, "GET", null);
+	private static function doGet($url, $parameters) {
+		$finalUrl = self::replaceParameters($url, $parameters);
+		$response = self::makeRequest($finalUrl, "GET", null);
 		return $response;
 	}
 
-	private static function doPost($url, $parameters) {
+	public static function doPost($url, $parameters) {
 		$response = self::makeRequest($url, "POST", $parameters);
 		return $response;
 	}
@@ -125,8 +123,12 @@ class HttpClient {
 
 	private static function makeRequest($url, $httpMethod, $parameters) {
 		$data = null;
+		$finalUrl = $url;
 		if (!(empty($parameters))) {
-			$data = http_build_query($parameters);
+			// It's a POST/PUT/DELETE request
+			$data = http_build_query(array_merge($parameters, UrlUtils::getQueryStringParameters($url)));
+			$finalUrl = self::replaceParameters($url, $parameters);
+			$finalUrl = UrlUtils::removeQueryString($finalUrl);
 		}
 
 		$opts = array('http' =>
@@ -138,7 +140,7 @@ class HttpClient {
 		);
 
 		$context  = stream_context_create($opts);
-		$response = @file_get_contents($url, false, $context);
+		$response = @file_get_contents($finalUrl, false, $context);
 		return $response;
 	}
 

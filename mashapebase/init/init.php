@@ -27,5 +27,9 @@
 require_once(dirname(__FILE__) . "/json.php");
 
 define("CLIENT_LIBRARY_LANGUAGE", "PHP");
-define("CLIENT_LIBRARY_VERSION", "V01");
+define("CLIENT_LIBRARY_VERSION", "V02");
+
+define("TOKEN", "_token");
+define("LANGUAGE", "_language");
+define("VERSION", "_version");
 ?>
