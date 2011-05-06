@@ -24,27 +24,10 @@
  *
  */
 
-require_once(dirname(__FILE__) . "/httpClient.php");
-require_once(dirname(__FILE__) . "/../exceptions/mashapeClientException.php");
+define("EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE", 1003);
+define("EXCEPTION_NOTSUPPORTED_HTTPMETHOD", "HTTP method not supported. Only DELETE, GET, POST, PUT are supported");
 
-define("TOKEN_URL", "https://api.mashape.com/requestToken");
-
-class TokenUtil {
-
-	public static function requestToken($devKey) {
-		$parameters = array("devkey"=>$devKey);
-		
-		$response = HttpClient::doPost(TOKEN_URL, $parameters);
-		
-		$jsonResponse = json_decode($response);
-		if (empty($jsonResponse->errors)) {
-			$token = $jsonResponse->token;
-			return $token;
-		} else {
-			throw new MashapeClientException($jsonResponse->errors[0]->message, $jsonResponse->errors[0]->code);
-		}
-	}
-
-}
+define("EXCEPTION_SYSTEM_ERROR_CODE", 2000);
+define("EXCEPTION_JSONDECODE_REQUEST", "Can't deserialize the response JSON from the component. The json_decode function is missing on your server or the method returned an invalid JSON value: %s");
 
 ?>

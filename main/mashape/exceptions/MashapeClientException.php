@@ -24,8 +24,14 @@
  *
  */
 
-require_once(dirname(__FILE__) . "/init/init.php");
-require_once(dirname(__FILE__) . "/http/httpClient.php");
-require_once(dirname(__FILE__) . "/http/tokenUtil.php");
+require_once (dirname(__FILE__) . "/ExceptionConstants.php");
+
+class MashapeClientException extends Exception {
+
+	function __construct($message, $code) {
+		parent::__construct($message, $code);
+	}
+
+}
 
 ?>

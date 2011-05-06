@@ -26,7 +26,7 @@
 
 if (!function_exists('json_decode')) {
 	function json_decode($content, $assoc=false) {
-		require_once(dirname(__FILE__) . "/../json/jsonImpl.php");
+		require_once(dirname(__FILE__) . "/Services_JSON.php");
 		if ($assoc) {
 			$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 		}
