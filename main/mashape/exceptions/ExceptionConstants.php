@@ -28,6 +28,6 @@ define("EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE", 1003);
 define("EXCEPTION_NOTSUPPORTED_HTTPMETHOD", "HTTP method not supported. Only DELETE, GET, POST, PUT are supported");
 
 define("EXCEPTION_SYSTEM_ERROR_CODE", 2000);
-define("EXCEPTION_JSONDECODE_REQUEST", "Can't deserialize the response JSON from the component. The json_decode function is missing on your server or the method returned an invalid JSON value: %s");
+define("EXCEPTION_JSONDECODE_REQUEST", "Can't deserialize the response JSON from the component. The method returned an invalid JSON value: %s");
 
 ?>
