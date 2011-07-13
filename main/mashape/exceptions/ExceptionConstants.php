@@ -29,5 +29,6 @@ define("EXCEPTION_NOTSUPPORTED_HTTPMETHOD", "HTTP method not supported. Only DEL
 
 define("EXCEPTION_SYSTEM_ERROR_CODE", 2000);
 define("EXCEPTION_JSONDECODE_REQUEST", "Can't deserialize the response JSON from the component. The method returned an invalid JSON value: %s");
+define("EXCEPTION_EMPTY_RESPONSE", "Can't deserialize the response JSON from the component. The method returned an empty value.");
 
 ?>

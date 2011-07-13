@@ -17,6 +17,9 @@ class HttpClient {
 		UrlUtils::prepareRequest($url, $parameters, ($httpMethod != HttpMethod::GET) ? true : false);
 		
 		$response = self::execRequest($httpMethod, $url, $parameters);
+		if (empty($response)) {
+		    throw new MashapeClientException(EXCEPTION_EMPTY_RESPONSE, EXCEPTION_SYSTEM_ERROR_CODE);
+		}
 
 		$jsonResponse = json_decode($response);
 		if (empty($jsonResponse)) {
