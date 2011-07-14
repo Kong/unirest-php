@@ -8,13 +8,12 @@ require_once(dirname(__FILE__) . "/UrlUtils.php");
 class HttpClient {
 
 	public static function doRequest($httpMethod, $url, $parameters, $token) {
-		if (!($httpMethod == HttpMethod::DELETE || $httpMethod == HttpMethod::GET ||
-		$httpMethod == HttpMethod::POST || $httpMethod == HttpMethod::PUT)) {
+		if (!in_array($httpMethod, array(HttpMethod::DELETE, HttpMethod::GET, HttpMethod::POST, HttpMethod::PUT))) {
 			throw new MashapeClientException(EXCEPTION_NOTSUPPORTED_HTTPMETHOD, EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE);
 		}
 
 		UrlUtils::addClientParameters($url, $parameters, $token);
-		UrlUtils::prepareRequest($url, $parameters, ($httpMethod != HttpMethod::GET) ? true : false);
+		UrlUtils::prepareRequest($url, $parameters, $httpMethod != HttpMethod::GET);
 		
 		$response = self::execRequest($httpMethod, $url, $parameters);
 		if (empty($response)) {
