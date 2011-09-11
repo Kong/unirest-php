@@ -1,11 +1,31 @@
 <?php
 
-define("CLIENT_LIBRARY_LANGUAGE", "PHP");
-define("CLIENT_LIBRARY_VERSION", "V03");
+/*
+ * Mashape PHP Client library.
+ *
+ * Copyright (C) 2011 Mashape, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * The author of this software is Mashape, Inc.
+ * For any question or feedback please contact us at: support@mashape.com
+ *
+ */
 
-define("TOKEN", "_token");
-define("LANGUAGE", "_language");
-define("VERSION", "_version");
+define("CLIENT_LIBRARY_LANGUAGE", "PHP");
+define("CLIENT_LIBRARY_VERSION", "V04");
 
 define("PLACEHOLDER_REGEX", "/\{([\w\.]+)\}/");
 class UrlUtils {
@@ -73,27 +93,9 @@ class UrlUtils {
 		return preg_match(PLACEHOLDER_REGEX, $value);
 	}
 
-	public static function addClientParameters(&$url, &$parameters, $token) {
-		if ($parameters == null) {
-			$parameters = array();
-		}
-
-		if (strpos($url, "?") === false) {
-			$url .= "?";
-		} else {
-			$url .= "&";
-		}
-
-		$url .= self::addClientParameter(TOKEN);
-		$parameters[TOKEN] = $token;
-		$url .= "&" . self::addClientParameter(LANGUAGE);
-		$parameters[LANGUAGE] = CLIENT_LIBRARY_LANGUAGE;
-		$url .= "&" . self::addClientParameter(VERSION);
-		$parameters[VERSION] = CLIENT_LIBRARY_VERSION;
-	}
-
-	private static function addClientParameter($parameter) {
-		return $parameter . "={" . $parameter . "}";
+	public static function generateClientHeaders() {
+		$headers = "X-Mashape-Language: " . CLIENT_LIBRARY_LANGUAGE . "\r\n" . "X-Mashape-Version: " . CLIENT_LIBRARY_VERSION . "\r\n";
+		return $headers;
 	}
 
 }

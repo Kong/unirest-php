@@ -25,6 +25,5 @@
  */
 
 require_once(dirname(__FILE__) . "/http/HttpClient.php");
-require_once(dirname(__FILE__) . "/http/TokenUtil.php");
 
 ?>
