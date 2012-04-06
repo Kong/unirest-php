@@ -5,11 +5,6 @@ This is the base library for Mashape client libraries.
 
 For questions or feedback visit [mashape.com](http://mashape.com/)
 
-Version
---------------
-
-Version 1.0
-
 Documentation
 -------------------
 
