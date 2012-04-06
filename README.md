@@ -2,6 +2,7 @@ Mashape PHP Client
 ============================================
 
 This is the base library for Mashape client libraries.
+
 For questions or feedback visit [mashape.com](http://mashape.com/)
 
 Version
