@@ -24,9 +24,6 @@
  *
  */
 
-define("CLIENT_LIBRARY_LANGUAGE", "PHP");
-define("CLIENT_LIBRARY_VERSION", "V04");
-
 define("PLACEHOLDER_REGEX", "/\{([\w\.]+)\}/");
 class UrlUtils {
 
@@ -94,7 +91,7 @@ class UrlUtils {
 	}
 
 	public static function generateClientHeaders() {
-		$headers = "X-Mashape-Language: " . CLIENT_LIBRARY_LANGUAGE . "\r\n" . "X-Mashape-Version: " . CLIENT_LIBRARY_VERSION . "\r\n";
+		$headers = "User-Agent: mashape-php/1.0: " . "\r\n";
 		return $headers;
 	}
 
