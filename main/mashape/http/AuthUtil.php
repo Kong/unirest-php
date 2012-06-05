@@ -27,8 +27,12 @@
 class AuthUtil {
 
 	public static function generateAuthenticationHeader($publicKey, $privateKey) {
-		$hash = hash_hmac("sha1", $publicKey, $privateKey);
-		$header = "Proxy-Authorization: " . base64_encode($publicKey . ":" . $hash) . "\r\n";
+		$header = "";
+		if (!($publicKey == null || $privateKey == null)) {
+			$uuid = uniqid();
+			$hash = hash_hmac("sha1", $uuid, $privateKey);
+			$header = "X-Mashape-Authorization: " . base64_encode($publicKey . ":" . $hash . $uuid) . "\r\n";
+		}
 		return $header;
 	}
 
