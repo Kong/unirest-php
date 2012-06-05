@@ -25,6 +25,7 @@
  */
 
 require_once(dirname(__FILE__) . "/../json/Json.php");
+require_once(dirname(__FILE__) . "/Chunked.php");
 require_once(dirname(__FILE__) . "/../exceptions/MashapeClientException.php");
 require_once(dirname(__FILE__) . "/HttpMethod.php");
 require_once(dirname(__FILE__) . "/UrlUtils.php");
@@ -32,7 +33,7 @@ require_once(dirname(__FILE__) . "/AuthUtil.php");
 
 class HttpClient {
 
-	public static function doRequest($httpMethod, $url, $parameters, $mashapeAuthentication, $publicKey, $privateKey) {
+	public static function doRequest($httpMethod, $url, $parameters, $publicKey, $privateKey, $encodeJson = true) {
 		
 		if (!($httpMethod == HttpMethod::DELETE || $httpMethod == HttpMethod::GET ||
 		$httpMethod == HttpMethod::POST || $httpMethod == HttpMethod::PUT)) {
@@ -41,25 +42,32 @@ class HttpClient {
 		
 		UrlUtils::prepareRequest($url, $parameters, ($httpMethod != HttpMethod::GET) ? true : false);
 		
-		$response = self::execRequest($httpMethod, $url, $parameters, $mashapeAuthentication, $publicKey, $privateKey);
+		$response = self::execRequest($httpMethod, $url, $parameters, $publicKey, $privateKey);
 
+		if (!$encodeJson) {
+			return $response;
+		}
+		
 		$jsonResponse = json_decode($response);
 		if (empty($jsonResponse)) {
-			throw new MashapeClientException(sprintf(EXCEPTION_JSONDECODE_REQUEST, $response), EXCEPTION_SYSTEM_ERROR_CODE);
+			// It may be a chunked response
+			$jsonResponse = json_decode(http_chunked_decode($response));
+			if (empty($jsonResponse)) {
+				throw new MashapeClientException(sprintf(EXCEPTION_JSONDECODE_REQUEST, $response), EXCEPTION_SYSTEM_ERROR_CODE);
+			}
 		}
 
 		return $jsonResponse;
-
 	}
 
-	private static function execRequest($httpMethod, $url, $parameters, $mashapeAuthentication, $publicKey, $privateKey) {
+	private static function execRequest($httpMethod, $url, $parameters, $publicKey, $privateKey) {
 		$data = null;
 		if ($httpMethod != HttpMethod::GET) {
 			$url = self::removeQueryString($url);
 			$data = http_build_query($parameters);
 		}
 		
-		$headers = ($mashapeAuthentication) ? AuthUtil::generateAuthenticationHeader($publicKey, $privateKey) : "";
+		$headers = AuthUtil::generateAuthenticationHeader($publicKey, $privateKey);
 		$headers .= UrlUtils::generateClientHeaders();
 		
 		$opts = array('http' =>
