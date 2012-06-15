@@ -8,7 +8,7 @@ For questions or feedback visit [mashape.com](http://mashape.com/)
 Documentation
 -------------------
 
-For the documentation, please visit http://www.mashape.com/guide/consume/php
+For the documentation, please visit http://www.mashape.com/docs/consume/php
 
 Copyright
 ---------------
