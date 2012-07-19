@@ -30,7 +30,7 @@ class AuthUtil {
 		$header = "";
 		if (!($publicKey == null || $privateKey == null)) {
 			$hash = hash_hmac("sha1", $publicKey, $privateKey);
-			$header = "X-Mashape-Authorization: " . base64_encode($publicKey . ":" . $hash) . "\r\n";
+			$header = "X-Mashape-Authorization: " . base64_encode($publicKey . ":" . $hash);
 		}
 		return $header;
 	}
