@@ -42,12 +42,6 @@ class UrlUtils {
 			}
 		}
 
-		if ($addRegularQueryStringParameters) {
-			// Get regular query string parameters
-			self::addRegularQueryStringParameters($url, $parameters);
-		}
-
-
 		$finalUrl = $url;
 		$matches = null;
 		$match = preg_match_all(PLACEHOLDER_REGEX, $url, $matches);
@@ -67,6 +61,17 @@ class UrlUtils {
 
 		$finalUrl = preg_replace("/\?&/", "?", $finalUrl);
 		$finalUrl = preg_replace("/\?$/", "", $finalUrl);
+
+		if ($addRegularQueryStringParameters) {
+			// Get regular query string parameters
+			self::addRegularQueryStringParameters($finalUrl, $parameters);
+		} else {
+			foreach ($parameters as $paramKey => $paramValue) {
+				$delimiter = (strpos($finalUrl, "?") === false) ? "?" : "&";
+				$finalUrl .= $delimiter . $paramKey . "=" . $paramValue;
+			}
+		}
+
 		$url = $finalUrl;
 	}
 

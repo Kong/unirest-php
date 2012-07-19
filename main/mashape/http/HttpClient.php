@@ -30,19 +30,22 @@ require_once(dirname(__FILE__) . "/../exceptions/MashapeClientException.php");
 require_once(dirname(__FILE__) . "/HttpMethod.php");
 require_once(dirname(__FILE__) . "/UrlUtils.php");
 require_once(dirname(__FILE__) . "/AuthUtil.php");
+require_once(dirname(__FILE__) . "/../auth/HeaderAuth.php");
+require_once(dirname(__FILE__) . "/../auth/BasicAuth.php");
+require_once(dirname(__FILE__) . "/../auth/CustomHeaderAuth.php");
+require_once(dirname(__FILE__) . "/../auth/MashapeAuth.php");
+require_once(dirname(__FILE__) . "/../auth/QueryAuth.php");
 
 class HttpClient {
 
-	public static function doRequest($httpMethod, $url, $parameters, $publicKey, $privateKey, $encodeJson = true) {
+	public static function doRequest($httpMethod, $url, $parameters, $authHandlers, $encodeJson = true) {
 		
 		if (!($httpMethod == HttpMethod::DELETE || $httpMethod == HttpMethod::GET ||
 		$httpMethod == HttpMethod::POST || $httpMethod == HttpMethod::PUT)) {
 			throw new MashapeClientException(EXCEPTION_NOTSUPPORTED_HTTPMETHOD, EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE);
 		}
 		
-		UrlUtils::prepareRequest($url, $parameters, ($httpMethod != HttpMethod::GET) ? true : false);
-		
-		$response = self::execRequest($httpMethod, $url, $parameters, $publicKey, $privateKey);
+		$response = self::execRequest($httpMethod, $url, $parameters, $authHandlers);
 
 		if (!$encodeJson) {
 			return $response;
@@ -60,18 +63,26 @@ class HttpClient {
 		return $jsonResponse;
 	}
 
-	private static function execRequest($httpMethod, $url, $parameters, $publicKey, $privateKey) {
+	private static function execRequest($httpMethod, $url, $parameters, $authHandlers) {
 		$data = null;
+		
+		$headers = array();
+        $headers[] = UrlUtils::generateClientHeaders();
+		// Authentication
+		foreach($authHandlers as $handler) {
+			if ($handler instanceof QueryAuth) {
+				$parameters = array_merge($parameters, $handler->handleParams());
+			} else if ($handler instanceof HeaderAuth) {
+				$headers[] = $handler->handleHeader();
+			}
+		}
+		
+		UrlUtils::prepareRequest($url, $parameters, ($httpMethod != HttpMethod::GET) ? true : false);
+
 		if ($httpMethod != HttpMethod::GET) {
             //$url = self::removeQueryString($url);
 			$data = http_build_query($parameters);
 		}
-		
-        //$headers = array();
-        $headers = array(
-        );
-        $headers[] = AuthUtil::generateAuthenticationHeader($publicKey, $privateKey);
-        $headers[] = UrlUtils::generateClientHeaders();
 
         $ch = curl_init ();
 
