@@ -63,24 +63,31 @@ class HttpClient {
 	private static function execRequest($httpMethod, $url, $parameters, $publicKey, $privateKey) {
 		$data = null;
 		if ($httpMethod != HttpMethod::GET) {
-			$url = self::removeQueryString($url);
+            //$url = self::removeQueryString($url);
 			$data = http_build_query($parameters);
 		}
 		
-		$headers = AuthUtil::generateAuthenticationHeader($publicKey, $privateKey);
-		$headers .= UrlUtils::generateClientHeaders();
-		
-		$opts = array('http' =>
-		array(
-				'ignore_errors' => true,
-		        'method'  => $httpMethod,
-		        'content' => $data,
-		        'header' => $headers
-		)
-		);
+        //$headers = array();
+        $headers = array(
+        );
+        $headers[] = AuthUtil::generateAuthenticationHeader($publicKey, $privateKey);
+        $headers[] = UrlUtils::generateClientHeaders();
 
-		$context  = stream_context_create($opts);
-		$response = @file_get_contents($url, false, $context);
+        $ch = curl_init ();
+
+        // prepare the request
+        //curl_setopt($ch, CURLOPT_USERPWD, "username:password"); for basic auth
+        curl_setopt ($ch, CURLOPT_URL , $url); 
+		if ($httpMethod != HttpMethod::GET) {
+			curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
+            //curl_setopt ($ch, CURLOPT_POST, 1);
+            curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
+        }
+		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt ($ch, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($ch);
+        curl_close($ch);
+		
 		return $response;
 	}
 

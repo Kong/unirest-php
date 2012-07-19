@@ -91,7 +91,7 @@ class UrlUtils {
 	}
 
 	public static function generateClientHeaders() {
-		$headers = "User-Agent: mashape-php/1.0: " . "\r\n";
+		$headers = "User-Agent: mashape-php/1.0: ";
 		return $headers;
 	}
 
