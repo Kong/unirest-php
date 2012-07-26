@@ -68,7 +68,9 @@ class UrlUtils {
 		} else {
 			foreach ($parameters as $paramKey => $paramValue) {
 				$delimiter = (strpos($finalUrl, "?") === false) ? "?" : "&";
-				$finalUrl .= $delimiter . $paramKey . "=" . $paramValue;
+                if (strpos($finalUrl, $paramKey."=") === false) {
+                    $finalUrl .= $delimiter . $paramKey . "=" . urlencode($paramValue);
+                }
 			}
 		}
 
