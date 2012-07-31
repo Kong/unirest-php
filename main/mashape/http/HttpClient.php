@@ -65,6 +65,9 @@ class HttpClient {
 
 	private static function execRequest($httpMethod, $url, $parameters, $authHandlers) {
 		$data = null;
+		if ($parameters == null) {
+			$parameters = array();
+		}
 		
 		$headers = array();
         $headers[] = UrlUtils::generateClientHeaders();
