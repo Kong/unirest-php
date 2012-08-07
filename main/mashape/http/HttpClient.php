@@ -86,11 +86,9 @@ class HttpClient {
             //$url = self::removeQueryString($url);
 			$data = http_build_query($parameters);
 		}
-
         $ch = curl_init ();
 
         // prepare the request
-        //curl_setopt($ch, CURLOPT_USERPWD, "username:password"); for basic auth
         curl_setopt ($ch, CURLOPT_URL , $url); 
 		if ($httpMethod != HttpMethod::GET) {
 			curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
