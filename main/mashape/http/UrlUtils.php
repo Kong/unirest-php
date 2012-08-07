@@ -53,6 +53,7 @@ class UrlUtils {
 				if (array_key_exists($key, $parameters)) {
 					$finalUrl = preg_replace("/(\?.+)\{" . $key . "\}/", '${1}' . urlencode($parameters[$key]), $finalUrl);
 					$finalUrl = preg_replace("/\{" . $key . "\}/", rawurlencode($parameters[$key]), $finalUrl);
+					unset($parameters[$key]);
 				} else {
 					$finalUrl = preg_replace("/&?[\w]*=?\{" . $key . "\}/", "", $finalUrl);
 				}
@@ -68,9 +69,7 @@ class UrlUtils {
 		} else {
 			foreach ($parameters as $paramKey => $paramValue) {
 				$delimiter = (strpos($finalUrl, "?") === false) ? "?" : "&";
-                if (strpos($finalUrl, $paramKey."=") === false) {
-                    $finalUrl .= $delimiter . $paramKey . "=" . urlencode($paramValue);
-                }
+				$finalUrl .= $delimiter . $paramKey . "=" . urlencode($paramValue);
 			}
 		}
 
