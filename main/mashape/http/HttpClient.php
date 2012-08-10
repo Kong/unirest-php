@@ -24,12 +24,10 @@
  *
  */
 
-require_once(dirname(__FILE__) . "/../json/Json.php");
-require_once(dirname(__FILE__) . "/Chunked.php");
 require_once(dirname(__FILE__) . "/../exceptions/MashapeClientException.php");
 require_once(dirname(__FILE__) . "/HttpMethod.php");
 require_once(dirname(__FILE__) . "/UrlUtils.php");
-require_once(dirname(__FILE__) . "/AuthUtil.php");
+require_once(dirname(__FILE__) . "/MashapeResponse.php");
 require_once(dirname(__FILE__) . "/../auth/HeaderAuth.php");
 require_once(dirname(__FILE__) . "/../auth/BasicAuth.php");
 require_once(dirname(__FILE__) . "/../auth/CustomHeaderAuth.php");
@@ -47,20 +45,11 @@ class HttpClient {
 		
 		$response = self::execRequest($httpMethod, $url, $parameters, $authHandlers);
 
-		if (!$encodeJson) {
-			return $response;
+		if ($encodeJson) {
+			$response->parseBodyAsJson();
 		}
 		
-		$jsonResponse = json_decode($response);
-		if (empty($jsonResponse)) {
-			// It may be a chunked response
-			$jsonResponse = json_decode(http_chunked_decode($response));
-			if (empty($jsonResponse)) {
-				throw new MashapeClientException(sprintf(EXCEPTION_JSONDECODE_REQUEST, $response), EXCEPTION_SYSTEM_ERROR_CODE);
-			}
-		}
-
-		return $jsonResponse;
+		return $response;
 	}
 
 	private static function execRequest($httpMethod, $url, $parameters, $authHandlers) {
@@ -83,7 +72,6 @@ class HttpClient {
 		UrlUtils::prepareRequest($url, $parameters, ($httpMethod != HttpMethod::GET) ? true : false);
 
 		if ($httpMethod != HttpMethod::GET) {
-            //$url = self::removeQueryString($url);
 			$data = http_build_query($parameters);
 		}
         $ch = curl_init ();
@@ -97,22 +85,14 @@ class HttpClient {
         }
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt ($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt ($ch, CURLINFO_HEADER_OUT, true);
         $response = curl_exec($ch);
+		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$responseHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
         curl_close($ch);
 		
-		return $response;
+		return new MashapeResponse($response, $httpCode, $responseHeaders);
 	}
-
-	private static function removeQueryString($url) {
-		$pos = strpos($url, "?");
-		if ($pos !== false) {
-			return substr($url, 0, $pos);
-		}
-		return $url;
-	}
-
 }
-
-
 
 ?>
