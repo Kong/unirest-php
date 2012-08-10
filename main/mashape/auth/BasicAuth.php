@@ -7,7 +7,7 @@ class BasicAuth extends HeaderAuth {
 
 	function __construct($username, $password) {
 		$headerValue = $username . ":" . $password;
-		$this->header = "Authorization: " . base64_encode($headerValue);
+		$this->header = "Authorization: Basic " . base64_encode($headerValue);
 	}
 
 	public function handleHeader() {
