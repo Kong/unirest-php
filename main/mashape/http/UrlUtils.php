@@ -32,27 +32,18 @@ class UrlUtils {
 			$parameters = array();
 		}
 		// Remove null parameters
-		$keys = array_keys($parameters);
-		for ($i = 0;$i<count($keys);$i++) {
-			$key = $keys[$i];
-			if ($parameters[$key] === null) {
-				unset($parameters[$key]);
-			} else {
-				$parameters[$key] = (string)$parameters[$key];
-			}
-		}
+        $parameters = array_filter($parameters, function($value) { return !is_null($value); });
 
 		$finalUrl = $url;
 		$matches = null;
 		$match = preg_match_all(PLACEHOLDER_REGEX, $url, $matches);
 
 		if (!empty($matches) && count($matches) > 1) {
-			$matches = $matches[1];
-			$count = count($matches);
-			foreach ($matches as $key) {
+            $bracketedMatches = $matches[0];
+			$plainMatches = $matches[1];
+			foreach ($plainMatches as $index => $key) {
 				if (array_key_exists($key, $parameters)) {
-					$finalUrl = preg_replace("/(\?.+)\{" . $key . "\}/", '${1}' . urlencode($parameters[$key]), $finalUrl);
-					$finalUrl = preg_replace("/\{" . $key . "\}/", rawurlencode($parameters[$key]), $finalUrl);
+                    $finalUrl = str_replace($bracketedMatches[$index], rawurlencode($parameters[$key]), $finalUrl);
 					unset($parameters[$key]);
 				} else {
 					$finalUrl = preg_replace("/&?[\w]*=?\{" . $key . "\}/", "", $finalUrl);
@@ -60,7 +51,7 @@ class UrlUtils {
 			}
 		}
 
-		$finalUrl = preg_replace("/\?&/", "?", $finalUrl);
+		$finalUrl = str_replace("?&", "?", $finalUrl);
 		$finalUrl = preg_replace("/\?$/", "", $finalUrl);
 
 		if ($addRegularQueryStringParameters) {
@@ -81,11 +72,13 @@ class UrlUtils {
 		if (count($urlParts) > 1) {
 			$queryString = $urlParts[1];
 			$queryStringParameters = explode("&", $queryString);
+
 			foreach ($queryStringParameters as $queryStringParameter) {
 				$queryStringParameterParts = explode("=", $queryStringParameter);
 				if (count($queryStringParameterParts) > 1) {
-					if (!self::isPlaceHolder($queryStringParameterParts[1])) {
-						$parameters[$queryStringParameterParts[0]] = $queryStringParameterParts[1];
+                    list($paramKey, $paramValue) = $queryStringParameterParts;
+					if (!self::isPlaceHolder($paramValue)) {
+						$parameters[$paramKey] = $paramValue;
 					}
 				}
 			}
