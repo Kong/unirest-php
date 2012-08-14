@@ -32,18 +32,26 @@ class UrlUtils {
 			$parameters = array();
 		}
 		// Remove null parameters
-        $parameters = array_filter($parameters, function($value) { return !is_null($value); });
+		$keys = array_keys($parameters);
+		for ($i = 0;$i<count($keys);$i++) {
+			$key = $keys[$i];
+			if ($parameters[$key] === null) {
+				unset($parameters[$key]);
+			} else {
+				$parameters[$key] = (string)$parameters[$key];
+			}
+		}
 
 		$finalUrl = $url;
 		$matches = null;
 		$match = preg_match_all(PLACEHOLDER_REGEX, $url, $matches);
 
 		if (!empty($matches) && count($matches) > 1) {
-            $bracketedMatches = $matches[0];
+			$bracketedMatches = $matches[0];
 			$plainMatches = $matches[1];
 			foreach ($plainMatches as $index => $key) {
 				if (array_key_exists($key, $parameters)) {
-                    $finalUrl = str_replace($bracketedMatches[$index], rawurlencode($parameters[$key]), $finalUrl);
+					$finalUrl = str_replace($bracketedMatches[$index], rawurlencode($parameters[$key]), $finalUrl);
 					unset($parameters[$key]);
 				} else {
 					$finalUrl = preg_replace("/&?[\w]*=?\{" . $key . "\}/", "", $finalUrl);
@@ -76,7 +84,7 @@ class UrlUtils {
 			foreach ($queryStringParameters as $queryStringParameter) {
 				$queryStringParameterParts = explode("=", $queryStringParameter);
 				if (count($queryStringParameterParts) > 1) {
-                    list($paramKey, $paramValue) = $queryStringParameterParts;
+					list($paramKey, $paramValue) = $queryStringParameterParts;
 					if (!self::isPlaceHolder($paramValue)) {
 						$parameters[$paramKey] = $paramValue;
 					}
