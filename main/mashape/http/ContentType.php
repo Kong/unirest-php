@@ -24,16 +24,11 @@
  *
  */
 
-define("EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE", 1003);
-define("EXCEPTION_NOTSUPPORTED_HTTPMETHOD", "HTTP method not supported. Only DELETE, GET, POST, PUT are supported");
-
-define("EXCEPTION_NOTSUPPORTED_CONTENTTYPE_CODE", 415);
-define("EXCEPTION_NOTSUPPORTED_CONTENTTYPE", "Content Type not supported. Currently only application/x-www-form-urlencoded and multipart/form-data are supported");
-
-define("EXCEPTION_GET_INVALID_CONTENTTYPE_CODE", 415);
-define("EXCEPTION_GET_INVALID_CONTENTTYPE", "A GET request must have a content type of application/x-www-form-urlencoded");
-
-define("EXCEPTION_SYSTEM_ERROR_CODE", 2000);
-define("EXCEPTION_JSONDECODE_REQUEST", "Can't deserialize the response JSON: %s");
+class ContentType
+{
+	const FORM = "FORM";
+	const MULTIPART = "MULTIPART";
+	const JSON = "JSON";
+}
 
 ?>

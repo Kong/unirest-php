@@ -1,7 +1,7 @@
 <?php
-require_once(dirname(__FILE__) . "/HeaderAuth.php");
+require_once(dirname(__FILE__) . "/HeaderAuthentication.php");
 
-class BasicAuth extends HeaderAuth {
+class BasicAuthentication extends HeaderAuthentication {
 
 	private $header;
 

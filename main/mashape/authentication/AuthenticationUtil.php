@@ -24,7 +24,7 @@
  *
  */
 
-class AuthUtil {
+class AuthenticationUtil {
 
 	public static function generateAuthenticationHeader($publicKey, $privateKey) {
 		$header = "";
