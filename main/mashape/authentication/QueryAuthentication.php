@@ -1,7 +1,7 @@
 <?php
-require_once(dirname(__FILE__) . "/Auth.php");
+require_once(dirname(__FILE__) . "/Authentication.php");
 
-class QueryAuth implements Auth {
+class QueryAuthentication implements Authentication {
 
 	private $params;
 

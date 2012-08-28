@@ -44,7 +44,7 @@ class MashapeResponse {
         $this->body = json_decode($this->rawBody);
 		if (empty($this->body) && ($this->statusCode == 200)) {
 			// It may be a chunked response
-			$this->body = json_decode(http_chunked_decode($this->rawBody));
+			//$this->body = json_decode(http_chunked_decode($this->rawBody));
 			if (empty($this->body)) {
                 throw new MashapeClientException(
                     sprintf(EXCEPTION_JSONDECODE_REQUEST, $this->rawBody),

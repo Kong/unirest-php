@@ -1,5 +1,5 @@
 <?php
-interface Auth {
+interface Authentication {
 	public function handleHeader();
 
 	public function handleParams();
