@@ -28,6 +28,7 @@ require_once(dirname(__FILE__) . "/../exceptions/MashapeClientException.php");
 require_once(dirname(__FILE__) . "/HttpMethod.php");
 require_once(dirname(__FILE__) . "/ContentType.php");
 require_once(dirname(__FILE__) . "/UrlUtils.php");
+require_once(dirname(__FILE__) . "/HttpUtils.php");
 require_once(dirname(__FILE__) . "/MashapeResponse.php");
 require_once(dirname(__FILE__) . "/../authentication/HeaderAuthentication.php");
 require_once(dirname(__FILE__) . "/../authentication/BasicAuthentication.php");
@@ -37,13 +38,15 @@ require_once(dirname(__FILE__) . "/../authentication/QueryAuthentication.php");
 
 class HttpClient {
 
-	public static function doRequest($httpMethod, $url, $parameters, $authHandlers, $contentType = ContentType::FORM, $encodeJson = true) {
+	public static function doRequest($httpMethod, $url, $parameters, 
+			$authHandlers, $contentType = ContentType::FORM, $encodeJson = true) {
+		HttpUtils::cleanParameters($parameters);
 
-		if (!($httpMethod == HttpMethod::DELETE || $httpMethod == HttpMethod::GET ||
-		$httpMethod == HttpMethod::POST || $httpMethod == HttpMethod::PUT)) {
-			throw new MashapeClientException(EXCEPTION_NOTSUPPORTED_HTTPMETHOD, EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE);
+		if ($authHandlers == null) {
+			$authHandlers = array();
 		}
 
+		self::validateRequest($httpMethod, $url, $parameters, $authHandlers, $contentType);
 		$response = self::execRequest($httpMethod, $url, $parameters, $authHandlers, $contentType);
 
 		if ($encodeJson) {
@@ -53,66 +56,72 @@ class HttpClient {
 		return $response;
 	}
 
-	private static function execRequest($httpMethod, $url, $parameters, $authHandlers, $contentType) {
-		$data = null;
-		if ($parameters == null) {
-			$parameters = array();
+	private static function validateRequest($httpMethod, $url, $parameters, $authHandlers, $contentType) {
+		if ( !($httpMethod == HttpMethod::DELETE 
+				|| $httpMethod == HttpMethod::GET 
+				|| $httpMethod == HttpMethod::POST 
+				|| $httpMethod == HttpMethod::PUT 
+				|| $httpMethod == HttpMethod::PATCH)) {
+			// we only support these HTTP methods.
+			throw new MashapeClientException(EXCEPTION_NOTSUPPORTED_HTTPMETHOD, 
+				EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE);
 		}
-		if ($authHandlers == null) {
-			$authHandlers = array();
+		if ($contentType == ContentType::JSON && is_array($parameters)) {
+			// Content type JSON does not allow array parameters.
+			throw new MashapeClientException(
+				EXCEPTION_CONTENT_TYPE_JSON_ARRAY, 
+				EXCEPTION_CONTENT_TYPE_JSON_ARRAY_CODE);
 		}
-
-		$headers = array();
-        $headers[] = UrlUtils::generateClientHeaders();
-		// Authentication
-		foreach($authHandlers as $handler) {
-			if ($handler instanceof QueryAuthentication) {
-				$parameters = array_merge($parameters, $handler->handleParams());
-			} else if ($handler instanceof HeaderAuthentication) {
-				$headers[] = $handler->handleHeader();
-			}
+		if (!is_array($parameters) && $contentType != ContentType::JSON) {
+			// Raw parameters are only allows for ContentType::JSON 
+			throw new MashapeClientException(
+				EXCEPTION_CONTENT_TYPE_NON_ARRAY, 
+				EXCEPTION_CONTENT_TYPE_NON_ARRAY_CODE);
 		}
-
-		UrlUtils::prepareRequest($url, $parameters, ($httpMethod != HttpMethod::GET) ? true : false);
-
-		if ($httpMethod != HttpMethod::GET) {
-			switch ($contentType) {
-			case ContentType::FORM:
-				$data = http_build_query($parameters);
-				break;
-			case ContentType::MULTIPART:
-				$data = $parameters;
-				break;
-			case ContentType::JSON:
-				// TODO support json
-			default:
-				throw new MashapeClientException(
-					EXCEPTION_NOTSUPPORTED_CONTENTTYPE, 
-					EXCEPTION_NOTSUPPORTED_CONTENTTYPE_CODE);
-			}
-		} else if ($contentType != ContentType::FORM) {
+		if ($httpMethod == HttpMethod::GET && $contentType != ContentType::FORM) {
 			// if we have a GET request that is anything other than urlencoded 
 			// form data, we shouldn't allow it.
 			throw new MashapeClientException(
 				EXCEPTION_GET_INVALID_CONTENTTYPE, 
 				EXCEPTION_GET_INVALID_CONTENTTYPE_CODE);
 		}
-        $ch = curl_init ();
+		if ($contentType == ContentType::JSON) {
+			foreach ($authHandlers as $handler) {
+				if ($handler instanceof QueryAuthentication) {
+					// bad. No room for query auth parameters if the whole body is json
+					throw new MashapeClientException(
+						EXCEPTION_CONTENT_TYPE_JSON_QUERYAUTH, 
+						EXCEPTION_CONTENT_TYPE_JSON_QUERYAUTH_CODE);
+				}
+			}
+		}
+	}
 
-        // prepare the request
-        curl_setopt ($ch, CURLOPT_URL , $url);
-		if ($httpMethod != HttpMethod::GET) {
+	private static function execRequest($httpMethod, $url, $parameters, $authHandlers, $contentType) {
+		// first, collect the headers and parameters we'll need from the authentication handlers
+		list($headers, $authParameters) = HttpUtils::handleAuthentication($authHandlers);
+		if (is_array($parameters)) {
+			$parameters = array_merge($parameters, $authParameters);
+		}
+
+		// prepare the request
+		$ch = curl_init ();
+		
+		if ($httpMethod == HttpMethod::GET) {
+			$url = UrlUtils::buildUrlWithQueryString($url, $parameters);
+		} else {
+			$data = HttpUtils::buildDataForContentType($contentType, $parameters, $headers);
 			curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
-            //curl_setopt ($ch, CURLOPT_POST, 1);
-            curl_setopt ($ch, CURLOPT_POSTFIELDS, $parameters);
-        }
+			curl_setopt ($ch, CURLOPT_POSTFIELDS, $data);
+		}
+		curl_setopt ($ch, CURLOPT_URL , $url);
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt ($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt ($ch, CURLINFO_HEADER_OUT, true);
-        $response = curl_exec($ch);
+		curl_setopt ($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt ($ch, CURLINFO_HEADER_OUT, true);
+		$response = curl_exec($ch);
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		$responseHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
-        curl_close($ch);
+		curl_close($ch);
 
 		return new MashapeResponse($response, $httpCode, $responseHeaders);
 	}
