@@ -50,6 +50,10 @@ define("EXCEPTION_GET_INVALID_CONTENTTYPE_CODE", 415);
 define("EXCEPTION_GET_INVALID_CONTENTTYPE", "A GET request must have a content"
 	." type of application/x-www-form-urlencoded or application/json");
 
+define("EXCEPTION_CURL_CODE", 520);
+define("EXCEPTION_CURL", 
+	"Encountered an exception making the request");
+
 define("EXCEPTION_SYSTEM_ERROR_CODE", 2000);
 define("EXCEPTION_JSONDECODE_REQUEST", "Can't deserialize the response JSON: %s");
 

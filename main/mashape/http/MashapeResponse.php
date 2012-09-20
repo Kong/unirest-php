@@ -34,22 +34,27 @@ class MashapeResponse {
     public $rawBody;
     public $headers;
 
-    function __construct($response, $statusCode, $headers) {
+    function __construct($response, $statusCode, $headers, $encodeJson = false) {
         $this->rawBody = $response;
         $this->headers = $headers;
         $this->statusCode = $statusCode;
+		$this->_parseBody($encodeJson);
     }
 
-    function parseBodyAsJson() {
-        $this->body = json_decode($this->rawBody);
-		if (empty($this->body) && ($this->statusCode == 200)) {
-			// It may be a chunked response
-			//$this->body = json_decode(http_chunked_decode($this->rawBody));
-			if (empty($this->body)) {
-                throw new MashapeClientException(
-                    sprintf(EXCEPTION_JSONDECODE_REQUEST, $this->rawBody),
-                    EXCEPTION_SYSTEM_ERROR_CODE);
+    function _parseBody($encodeJson) {
+		if ($encodeJson) {
+			$this->body = json_decode($this->rawBody);
+			if (empty($this->body) && ($this->statusCode == 200)) {
+				// It may be a chunked response
+				//$this->body = json_decode(http_chunked_decode($this->rawBody));
+				if (empty($this->body)) {
+					throw new MashapeClientException(
+						sprintf(EXCEPTION_JSONDECODE_REQUEST, $this->rawBody),
+						EXCEPTION_SYSTEM_ERROR_CODE);
+				}
 			}
+		} else {
+			$this->body = $this->rawBody;
 		}
     }
 }
