@@ -47,11 +47,7 @@ class HttpClient {
 		}
 
 		self::validateRequest($httpMethod, $url, $parameters, $authHandlers, $contentType);
-		$response = self::execRequest($httpMethod, $url, $parameters, $authHandlers, $contentType);
-
-		if ($encodeJson) {
-			$response->parseBodyAsJson();
-		}
+		$response = self::execRequest($httpMethod, $url, $parameters, $authHandlers, $contentType, $encodeJson);
 
 		return $response;
 	}
@@ -97,7 +93,7 @@ class HttpClient {
 		}
 	}
 
-	private static function execRequest($httpMethod, $url, $parameters, $authHandlers, $contentType) {
+	private static function execRequest($httpMethod, $url, $parameters, $authHandlers, $contentType, $encodeJson) {
 		// first, collect the headers and parameters we'll need from the authentication handlers
 		list($headers, $authParameters) = HttpUtils::handleAuthentication($authHandlers);
 		if (is_array($parameters)) {
@@ -118,12 +114,18 @@ class HttpClient {
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt ($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt ($ch, CURLINFO_HEADER_OUT, true);
+		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
 		$response = curl_exec($ch);
+		if (curl_error($ch)) {
+			throw new MashapeClientException(
+				EXCEPTION_CURL . ":" . curl_error($ch), 
+				EXCEPTION_CURL_CODE);
+		}
 		$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		$responseHeaders = curl_getinfo($ch, CURLINFO_HEADER_OUT);
 		curl_close($ch);
 
-		return new MashapeResponse($response, $httpCode, $responseHeaders);
+		return new MashapeResponse($response, $httpCode, $responseHeaders, $encodeJson);
 	}
 }
 
