@@ -41,6 +41,16 @@ define("EXCEPTION_CONTENT_TYPE_JSON_QUERYAUTH_CODE", 1006);
 define("EXCEPTION_CONTENT_TYPE_JSON_QUERYAUTH", 
 	"Query Authentication cannot be used in conjunction with content type JSON");
 
+define("EXCEPTION_OAUTH1_AUTHORIZE_CODE", 1007);
+define("EXCEPTION_OAUTH1_AUTHORIZE", 
+	"Before consuming an OAuth endpoint, you must invoke the authorize("
+		."'access_token', 'access_secret') function with non-null values");
+
+define("EXCEPTION_OAUTH2_AUTHORIZE_CODE", 1007);
+define("EXCEPTION_OAUTH2_AUTHORIZE", 
+	"Before consuming an OAuth endpoint, you must invoke the authorize("
+		."'access_token') function with a non-null value");
+
 define("EXCEPTION_NOTSUPPORTED_CONTENTTYPE_CODE", 415);
 define("EXCEPTION_NOTSUPPORTED_CONTENTTYPE", 
 	"Content Type not supported. Currently only application/x-www-form-urlencoded, "

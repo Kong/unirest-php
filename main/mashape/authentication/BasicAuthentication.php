@@ -3,15 +3,15 @@ require_once(dirname(__FILE__) . "/HeaderAuthentication.php");
 
 class BasicAuthentication extends HeaderAuthentication {
 
-	private $header;
+	private $headers;
 
 	function __construct($username, $password) {
 		$headerValue = $username . ":" . $password;
-		$this->header = "Authorization: Basic " . base64_encode($headerValue);
+		$this->headers = array("Authorization: Basic " . base64_encode($headerValue));
 	}
 
-	public function handleHeader() {
-		return $this->header;
+	public function handleHeaders() {
+		return $this->headers;
 	}
 
 	public function handleParams() {
