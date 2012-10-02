@@ -3,14 +3,14 @@ require_once(dirname(__FILE__) . "/HeaderAuthentication.php");
 
 class CustomHeaderAuthentication extends HeaderAuthentication {
 
-	private $header;
+	private $headers;
 
 	function __construct($headerName, $headerValue) {
-		$this->header = $headerName . ": " . $headerValue;
+		$this->headers = array($headerName . ": " . $headerValue);
 	}
 
-	public function handleHeader() {
-		return $this->header;
+	public function handleHeaders() {
+		return $this->headers;
 	}
 
 	public function handleParams() {

@@ -35,6 +35,8 @@ require_once(dirname(__FILE__) . "/../authentication/BasicAuthentication.php");
 require_once(dirname(__FILE__) . "/../authentication/CustomHeaderAuthentication.php");
 require_once(dirname(__FILE__) . "/../authentication/MashapeAuthentication.php");
 require_once(dirname(__FILE__) . "/../authentication/QueryAuthentication.php");
+require_once(dirname(__FILE__) . "/../authentication/Oauth10aAuthentication.php");
+require_once(dirname(__FILE__) . "/../authentication/Oauth2Authentication.php");
 
 class HttpClient {
 

@@ -9,7 +9,7 @@ class QueryAuthentication implements Authentication {
 		$this->params = array($queryKey => $queryValue);
 	}
 
-	public function handleHeader() {
+	public function handleHeaders() {
 		return null;
 	}
 

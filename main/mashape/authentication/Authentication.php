@@ -1,6 +1,6 @@
 <?php
 interface Authentication {
-	public function handleHeader();
+	public function handleHeaders();
 
 	public function handleParams();
 }

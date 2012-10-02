@@ -58,7 +58,7 @@ class HttpUtils {
 			break;
 		default:
 			throw new MashapeClientException(
-				EXCEPTION_NOTSUPPORTED_CONTENTTYPE, 
+				EXCEPTION_NOTSUPPORTED_CONTENTTYPE,
 				EXCEPTION_NOTSUPPORTED_CONTENTTYPE_CODE);
 		}
 		return $data;
@@ -73,7 +73,11 @@ class HttpUtils {
 			if ($handler instanceof QueryAuthentication) {
 				$parameters = array_merge($parameters, $handler->handleParams());
 			} else if ($handler instanceof HeaderAuthentication) {
-				$headers[] = $handler->handleHeader();
+				$headers = array_merge($headers, $handler->handleHeaders());
+			} else if ($handler instanceof Oauth10aAuthentication) {
+				$headers = array_merge($headers, $handler->handleHeaders());
+			} else if ($handler instanceof Oauth2Authentication) {
+				$parameters = array_merge($parameters, $handler->handleParams());
 			}
 		}
 		return array($headers, $parameters);

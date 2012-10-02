@@ -4,14 +4,14 @@ require_once(dirname(__FILE__) . "/HeaderAuthentication.php");
 
 class MashapeAuthentication extends HeaderAuthentication {
 
-	private $header;
+	private $headers;
 
 	function __construct($publicKey, $privateKey) {
-		$this->header = AuthenticationUtil::generateAuthenticationHeader($publicKey, $privateKey);
+		$this->headers = array(AuthenticationUtil::generateAuthenticationHeader($publicKey, $privateKey));
 	}
 
-	public function handleHeader() {
-		return $this->header;
+	public function handleHeaders() {
+		return $this->headers;
 	}
 }
 ?>
