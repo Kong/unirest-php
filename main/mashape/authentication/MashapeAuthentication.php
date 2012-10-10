@@ -15,4 +15,3 @@ class MashapeAuthentication extends HeaderAuthentication {
 	}
 }
 ?>
-

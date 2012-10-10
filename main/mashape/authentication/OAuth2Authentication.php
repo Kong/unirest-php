@@ -18,7 +18,3 @@ class OAuth2Authentication extends OAuthAuthentication {
 	}
 }
 ?>
-
-
-
-
