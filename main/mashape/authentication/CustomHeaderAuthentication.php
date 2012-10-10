@@ -18,5 +18,3 @@ class CustomHeaderAuthentication extends HeaderAuthentication {
 	}
 }
 ?>
-
-

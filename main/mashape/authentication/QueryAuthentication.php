@@ -18,4 +18,3 @@ class QueryAuthentication implements Authentication {
 	}
 }
 ?>
-

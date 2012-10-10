@@ -22,6 +22,3 @@ class OAuth10aAuthentication extends OAuthAuthentication {
 	}
 }
 ?>
-
-
-

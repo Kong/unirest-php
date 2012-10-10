@@ -19,6 +19,3 @@ class BasicAuthentication extends HeaderAuthentication {
 	}
 }
 ?>
-
-
-
