@@ -5,14 +5,14 @@ class OAuthAuthentication implements Authentication {
 
 	protected $consumerKey;
 	protected $consumerSecret;
-	protected $redirectUrl;
+	protected $callbackUrl;
 	protected $accessToken;
 	protected $accessSecret;
 
-	function __construct($consumerKey, $consumerSecret, $redirectUrl) {
+	function __construct($consumerKey, $consumerSecret, $callbackUrl) {
 		$this->consumerKey = $consumerKey;
 		$this->consumerSecret = $consumerSecret;
-		$this->redirectUrl = $redirectUrl;
+		$this->callbackUrl = $callbackUrl;
 	}
 
 	public function addAccessToken($accessToken, $accessSecret = null) {
@@ -24,7 +24,7 @@ class OAuthAuthentication implements Authentication {
 		$params = array(
 			"consumerKey" => $this->consumerKey,
 			"consumerSecret" => $this->consumerSecret,
-			"redirectUrl" => $this->redirectUrl,
+			"callbackUrl" => $this->callbackUrl,
 		);
         return $params;
     }
