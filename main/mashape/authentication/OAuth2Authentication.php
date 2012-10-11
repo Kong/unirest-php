@@ -3,8 +3,8 @@ require_once(dirname(__FILE__) . "/OAuthAuthentication.php");
 
 class OAuth2Authentication extends OAuthAuthentication {
 
-	function __construct($consumerKey, $consumerSecret, $redirectUrl) {
-		parent::__construct($consumerKey, $consumerSecret, $redirectUrl);
+	function __construct($consumerKey, $consumerSecret, $callbackUrl) {
+		parent::__construct($consumerKey, $consumerSecret, $callbackUrl);
 	}
 
 	public function handleParams() {
