@@ -36,5 +36,17 @@ if (!function_exists('json_decode')) {
 		return $json->decode($content);
 	}
 }
+if (!function_exists('json_encode')) {
+	function json_encode($content) {
+		require_once(dirname(__FILE__) . "/Services_JSON.php");
+		if ($assoc) {
+			$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+		}
+		else {
+			$json = new Services_JSON;
+		}
+		return $json->encode($content);
+	}
+}
 
 ?>
