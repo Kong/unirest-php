@@ -39,7 +39,9 @@ class HttpUtils {
                 if ($parameters[$key] === null) {
                     unset($parameters[$key]);
                 } else {
-                    $parameters[$key] = (string)$parameters[$key];
+					if ($key != HttpUtils::JSON_PARAM_BODY) {
+                    	$parameters[$key] = (string)$parameters[$key];
+					}
                 }
             }
         }
@@ -56,7 +58,7 @@ class HttpUtils {
 			break;
 		case ContentType::JSON:
 			$headers[] = "Content-Type: application/json";
-			$data = json_encode($parameters[JSON_PARAM_BODY]);
+			$data = json_encode($parameters[HttpUtils::JSON_PARAM_BODY]);
 			break;
 		default:
 			throw new MashapeClientException(
