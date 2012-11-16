@@ -39,7 +39,7 @@ require_once(dirname(__FILE__) . "/../authentication/OAuth10aAuthentication.php"
 require_once(dirname(__FILE__) . "/../authentication/OAuth2Authentication.php");
 
 class HttpClient {
-
+	
 	public static function doRequest($httpMethod, $url, $parameters, 
 			$authHandlers, $contentType = ContentType::FORM, $encodeJson = true) {
 		HttpUtils::cleanParameters($parameters);

@@ -26,6 +26,8 @@
 
 class HttpUtils {
 
+	const JSON_PARAM_BODY = "88416847677069008618";
+
 	public static function cleanParameters(&$parameters) {
         if ($parameters == null) {
             $parameters = array();
@@ -54,7 +56,7 @@ class HttpUtils {
 			break;
 		case ContentType::JSON:
 			$headers[] = "Content-Type: application/json";
-			$data = $parameters;
+			$data = $parameters[JSON_PARAM_BODY];
 			break;
 		default:
 			throw new MashapeClientException(
