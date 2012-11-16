@@ -56,7 +56,7 @@ class HttpUtils {
 			break;
 		case ContentType::JSON:
 			$headers[] = "Content-Type: application/json";
-			$data = $parameters[JSON_PARAM_BODY];
+			$data = json_encode($parameters[JSON_PARAM_BODY]);
 			break;
 		default:
 			throw new MashapeClientException(
