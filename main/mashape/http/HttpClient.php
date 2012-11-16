@@ -64,12 +64,6 @@ class HttpClient {
 			throw new MashapeClientException(EXCEPTION_NOTSUPPORTED_HTTPMETHOD, 
 				EXCEPTION_NOTSUPPORTED_HTTPMETHOD_CODE);
 		}
-		if ($contentType == ContentType::JSON) {
-			// Content type JSON does not allow array parameters.
-			throw new MashapeClientException(
-				EXCEPTION_CONTENT_TYPE_JSON_ARRAY, 
-				EXCEPTION_CONTENT_TYPE_JSON_ARRAY_CODE);
-		}
 		if (!is_array($parameters) && $contentType != ContentType::JSON) {
 			// Raw parameters are only allows for ContentType::JSON 
 			throw new MashapeClientException(
