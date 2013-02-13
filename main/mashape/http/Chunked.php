@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists('http-chunked-decode')) { 
+if (!function_exists('http_chunked_decode')) {
     /** 
      * dechunk an http 'transfer-encoding: chunked' message 
      * 
