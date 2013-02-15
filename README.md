@@ -13,4 +13,4 @@ For the documentation, please visit http://www.mashape.com/docs/consume/php
 Copyright
 ---------------
 
-Copyright (C) 2012 Mashape, Inc.
+Copyright (C) 2013 Mashape, Inc.
