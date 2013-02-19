@@ -6,8 +6,8 @@ class MashapeAuthentication extends HeaderAuthentication {
 
 	private $headers;
 
-	function __construct($publicKey, $privateKey) {
-		$this->headers = array(AuthenticationUtil::generateAuthenticationHeader($publicKey, $privateKey));
+	function __construct($mashapeKey) {
+		$this->headers = array(AuthenticationUtil::generateAuthenticationHeader($mashapeKey));
 	}
 
 	public function handleHeaders() {
