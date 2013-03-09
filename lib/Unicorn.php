@@ -4,73 +4,55 @@ require_once(dirname(__FILE__) . "/Chunked.php");
 require_once(dirname(__FILE__) . "/HttpResponse.php");
 require_once(dirname(__FILE__) . "/HttpMethod.php");
 
-class HttpClient {
-
-	const USER_AGENT = "mashape-php/3.0";
+class Unicorn {
 
 	public static function get($url, $headers = array()) {
-		return HttpClient::request(HttpMethod::GET, $url, NULL, $headers);
+		return Unicorn::request(HttpMethod::GET, $url, NULL, $headers);
 	}
 	
-	public static function post($url, $body = NULL, $headers = array()) {
-		return HttpClient::request(HttpMethod::POST, $url, $body, $headers);
+	public static function post($url, $headers = array(), $body = NULL) {
+		return Unicorn::request(HttpMethod::POST, $url, $body, $headers);
+	}
+	
+	public static function delete($url, $headers = array(), $body = NULL) {
+		return Unicorn::request(HttpMethod::DELETE, $url, $body, $headers);
+	}
+
+	public static function put($url, $headers = array(), $body = NULL) {
+		return Unicorn::request(HttpMethod::PUT, $url, $body, $headers);
+	}
+	
+	public static function patch($url, $headers = array(), $body = NULL) {
+		return Unicorn::request(HttpMethod::PATCH, $url, $body, $headers);
 	}
 
 	private static function request($httpMethod, $url, $body = NULL, $headers = array()) {
-		
 		$lowercaseHeaders = array();
 		foreach ($headers as $key => $val) {
-			$lowercaseHeaders[strtolower($key)] = $val;
+			$key = trim(strtolower($key));
+			if ($key == "user-agent") continue;
+			$lowercaseHeaders[] = $key . ": " . $val;
 		}
-		
-		$lowercaseHeaders["user-agent"] = USER_AGENT;
+		$lowercaseHeaders[] = "user-agent: unicorn-php/1.0";
 		
 		$ch = curl_init();
 		if ($httpMethod != HttpMethod::GET) {
 			curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
-			//TODO: Remove
-			/*
-			if (is_array($body)) {
-				$parameters = "";
-				foreach($body as $key => $value) {
-					if (is_array($value)) {
-						throw new Exception("Nested arrays are not supported");
-					}
-					
-					$parameters .= $key . "=";
-					if (substr($value, 0, 1) == "@") {
-						// It's a path
-						$parameters .= $value;
-					} else {
-						$parameters .= rawurlencode($value);
-					}
-					
-					$parameters .= "&";
-				}
-				
-				if (strlen($parameters) > 1) {
-					$parameters = substr($parameters, 0, strlen($parameters) - 1);
-				}
-				
-				$body = $parameters;
-				var_dump($body);
-			}
-			*/
 			curl_setopt ($ch, CURLOPT_POSTFIELDS, $body);
 		}
-		
-		curl_setopt ($ch, CURLOPT_URL , HttpClient::encodeUrl($url));
+				
+		curl_setopt ($ch, CURLOPT_URL , Unicorn::encodeUrl($url));
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt ($ch, CURLOPT_MAXREDIRS, 10);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
 		curl_setopt ($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
 		curl_setopt ($ch, CURLOPT_HEADER, true);
 		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
 		$response = curl_exec($ch);
-		if (curl_error($ch)) {
-			throw new Exception(curl_error($ch));
+		$error = curl_error($ch);
+		if ($error) {
+			throw new Exception($error);
 		}
 		
 		// Split the full response in its headers and body
@@ -82,8 +64,6 @@ class HttpClient {
 		
 		return new HttpResponse($httpCode, $body, $header);
 	}
-	
-	
 	
 	private static function encodeUrl($url) {
 		$parsedUrl = parse_url($url);

@@ -1,9 +1,7 @@
-Mashape PHP Client
+Unicorn-PHP
 ============================================
 
-This is the base library for Mashape client libraries.
-
-For questions or feedback visit [mashape.com](http://mashape.com/)
+Unicorn is a set of lightweight HTTP libraries available in PHP, Ruby, Python, Java, Objective-C.
 
 Documentation
 -------------------
