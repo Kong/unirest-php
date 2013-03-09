@@ -47,6 +47,7 @@ class Unicorn {
 		curl_setopt ($ch, CURLOPT_MAXREDIRS, 10);
 		curl_setopt ($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
 		curl_setopt ($ch, CURLOPT_HEADER, true);
+		curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
 		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
 		$response = curl_exec($ch);
