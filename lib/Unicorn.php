@@ -30,10 +30,13 @@ class Unicorn {
 		$lowercaseHeaders = array();
 		foreach ($headers as $key => $val) {
 			$key = trim(strtolower($key));
-			if ($key == "user-agent") continue;
+			if ($key == "user-agent" || key == "expect") continue;
 			$lowercaseHeaders[] = $key . ": " . $val;
 		}
 		$lowercaseHeaders[] = "user-agent: unicorn-php/1.0";
+		$lowercaseHeaders[] = "expect:";
+		
+		var_dump($lowercaseHeaders);
 		
 		$ch = curl_init();
 		if ($httpMethod != HttpMethod::GET) {
@@ -47,7 +50,6 @@ class Unicorn {
 		curl_setopt ($ch, CURLOPT_MAXREDIRS, 10);
 		curl_setopt ($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
 		curl_setopt ($ch, CURLOPT_HEADER, true);
-		curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Expect:"));
 		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
 		
 		$response = curl_exec($ch);
