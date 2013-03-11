@@ -14,8 +14,8 @@ class Unicorn {
 		return Unicorn::request(HttpMethod::POST, $url, $body, $headers);
 	}
 	
-	public static function delete($url, $headers = array(), $body = NULL) {
-		return Unicorn::request(HttpMethod::DELETE, $url, $body, $headers);
+	public static function delete($url, $headers = array()) {
+		return Unicorn::request(HttpMethod::DELETE, $url, NULL, $headers);
 	}
 
 	public static function put($url, $headers = array(), $body = NULL) {
