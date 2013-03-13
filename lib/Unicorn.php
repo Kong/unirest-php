@@ -6,6 +6,28 @@ require_once(dirname(__FILE__) . "/HttpMethod.php");
 
 class Unicorn {
 
+	// Use it like: Unicorn::getCallbackFunction(func_get_args());
+	/*
+	private static function getCallbackFunction($arg_list) {
+		$argCount = count($arg_list);
+		if ($argCount > 1) {
+			$lastArgument = $arg_list[$argCount - 1];
+			if (is_callable($lastArgument)) {
+				return $lastArgument;
+			}
+		}
+		return NULL;
+	}
+	
+	private static function doAsync($operation, $callback) {
+		require_once(dirname(__FILE__) . "/Thread.php");
+		$id = ThreadStore::add(Unicorn::random(), $operation, $callback);
+		$thread = new UnicornThread($id);
+		$thread->start();
+		return $thread;
+	}
+	*/
+	
 	public static function get($url, $headers = array()) {
 		return Unicorn::request(HttpMethod::GET, $url, NULL, $headers);
 	}
@@ -35,9 +57,7 @@ class Unicorn {
 		}
 		$lowercaseHeaders[] = "user-agent: unicorn-php/1.0";
 		$lowercaseHeaders[] = "expect:";
-		
-		var_dump($lowercaseHeaders);
-		
+				
 		$ch = curl_init();
 		if ($httpMethod != HttpMethod::GET) {
 			curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
