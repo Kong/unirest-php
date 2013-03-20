@@ -68,10 +68,10 @@ class Unicorn {
 	
 	private static function encodeUrl($url) {
 		$parsedUrl = parse_url($url);
-		parse_str( $parsedUrl['query'], $query ); // generating an array by reference (yes, kinda weird)
-
-		$result = $parsedUrl["scheme"] . "://" . $parsedUrl["host"] . (($parsedUrl["port"] != NULL ? ":" . $parsedUrl["port"] : "")) . $parsedUrl["path"] . "?";	
-	
+		$port = ( isset($parsedUrl['port']) ? $parsedUrl['port'] : "" );
+		$path = ( isset($parsedUrl['path']) ? $parsedUrl['path'] : "" );
+		$result = $parsedUrl["scheme"] . "://" . $parsedUrl["host"] . $port . $path . "?";	
+		$query = ( isset($parsedUrl['query']) ? parse_str($parsedUrl['query']) : null );
 		if ($query != null) {
 			foreach($query as $key => $val) {
 				$result .= $key . "=" . rawurlencode($val) . "&";
