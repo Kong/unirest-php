@@ -113,17 +113,26 @@ class Unicorn {
 	}
 	
 	private static function encodeUrl($url) {
-		$parsedUrl = parse_url($url);
-		parse_str( $parsedUrl['query'], $query ); // generating an array by reference (yes, kinda weird)
+		// Parse URL into pieces
+		$url_parsed = parse_url($url);
 
-		$result = $parsedUrl["scheme"] . "://" . $parsedUrl["host"] . (($parsedUrl["port"] != NULL ? ":" . $parsedUrl["port"] : "")) . $parsedUrl["path"] . "?";	
-	
+		// Build the basics bypassing notices
+		$scheme = $url_parsed['scheme'] . '://';
+		$host = $url_parsed['host'];
+		$port = ( isset($url_parsed['port']) ? $url_parsed['port'] : null );
+		$path = ( isset($url_parsed['path']) ? $url_parsed['path'] : null );
+		$query = ( isset($url_parsed['query']) ? $url_parsed['query'] : null );
+
+		// Do we need to encode anything?
 		if ($query != null) {
-			foreach($query as $key => $val) {
-				$result .= $key . "=" . rawurlencode($val) . "&";
-			}
-			$result = substr($result, 0, strlen($result) - 1);
+			// Break up the query into an array
+			parse_str($url_parsed['query'], $query_parsed);
+			// Encode and build query based on RFC 1738
+			$query = '?'.http_build_query($query_parsed);
 		}
+
+		// Return the completed URL
+		$result = $scheme . $host . $port . $path . $query;
 		return $result;
 	}
 	
