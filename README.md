@@ -6,7 +6,72 @@ Unicorn is a set of lightweight HTTP libraries available in PHP, Ruby, Python, J
 Documentation
 -------------------
 
-For the documentation, please visit http://www.mashape.com/docs/consume/php
+### Installing
+Download the PHP library from Github, and require in your script like so:
+
+`require_once './lib/Unicorn.php';`
+
+### Creating Request
+So you're probably wondering how using Unicorn makes creating requests in PHP easier, let's look at a working example:
+
+    $response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+      array(
+        "parameter" => 23,
+        "foo" => "bar"
+      )
+    );
+
+### File Uploads
+To upload files in a multipart form representation simply place an @ symbol before the path:
+
+    $response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+	 array(
+	    "file" => "@/tmp/file.txt"
+	  )
+	);
+ 
+### Custom Entity Body
+Sending a custom body such as a JSON Object rather than a string or form style parameters we utilize json_encode for the body:
+
+	$response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+	  json_encode(
+	    array(
+	      "parameter" => "value",
+	      "foo" => "bar"
+	    )
+	  )
+	);
+
+### Request Reference
+    Unicorn::get($url, $headers = array());
+    Unicorn::post($url, $headers = array(), $body = NULL);
+    Unicorn::put($url, $headers = array(), $body = NULL);
+    Unicorn::patch($url, $headers = array(), $body = NULL);
+    Unicorn::delete($url, $headers = array());
+  
+`url`
+Endpoint, address, or uri to be acted upon and requested information from.
+
+`headers`
+Request Headers as associative array or object
+
+`body`
+Request Body associative array or object
+
+### Response Reference
+Upon recieving a response Unicorn returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
+
+`code`
+HTTP Response Status Code (Example `200`)
+
+`headers`
+HTTP Response Headers
+
+`body`
+Parsed response body where applicable, for example JSON responses are parsed to Objects / Associative Arrays.
+
+`raw_body`
+Un-parsed response body
 
 License
 ---------------
