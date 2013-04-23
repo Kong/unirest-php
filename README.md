@@ -1,7 +1,7 @@
-Unicorn-PHP
+Unirest-PHP
 ============================================
 
-Unicorn is a set of lightweight HTTP libraries available in PHP, Ruby, Python, Java, Objective-C.
+Unirest is a set of lightweight HTTP libraries available in PHP, Ruby, Python, Java, Objective-C.
 
 Documentation
 -------------------
@@ -9,13 +9,13 @@ Documentation
 ### Installing
 Download the PHP library from Github, and require in your script like so:
 
-`require_once './lib/Unicorn.php';`
+`require_once './lib/Unirest.php';`
 
 ### Creating Request
-So you're probably wondering how using Unicorn makes creating requests in PHP easier, let's look at a working example:
+So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
 
 ```php
-$response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+$response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
   array(
     "parameter" => 23,
     "foo" => "bar"
@@ -27,7 +27,7 @@ $response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "applica
 To upload files in a multipart form representation simply place an @ symbol before the path:
 
 ```php
-$response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+$response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
   array(
     "file" => "@/tmp/file.txt"
   )
@@ -37,7 +37,7 @@ $response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "applica
 ### Custom Entity Body
 Sending a custom body such as a JSON Object rather than a string or form style parameters we utilize json_encode for the body:
 ```php
-$response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+$response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
   json_encode(
     array(
       "parameter" => "value",
@@ -49,11 +49,11 @@ $response = Unicorn::post("http://httpbin.org/post", array( "Accept" => "applica
 
 ### Request Reference
 ```php
-Unicorn::get($url, $headers = array());
-Unicorn::post($url, $headers = array(), $body = NULL);
-Unicorn::put($url, $headers = array(), $body = NULL);
-Unicorn::patch($url, $headers = array(), $body = NULL);
-Unicorn::delete($url, $headers = array());
+Unirest::get($url, $headers = array());
+Unirest::post($url, $headers = array(), $body = NULL);
+Unirest::put($url, $headers = array(), $body = NULL);
+Unirest::patch($url, $headers = array(), $body = NULL);
+Unirest::delete($url, $headers = array());
 ```
   
 `url`
@@ -66,7 +66,7 @@ Request Headers as associative array or object
 Request Body associative array or object
 
 ### Response Reference
-Upon recieving a response Unicorn returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
+Upon recieving a response Unirest returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
 
 `code`
 HTTP Response Status Code (Example `200`)
