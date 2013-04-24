@@ -75,7 +75,7 @@ class Unirest
 		$lowercaseHeaders = array();
 		foreach ($headers as $key => $val) {
 			$key = trim(strtolower($key));
-			if ($key == "user-agent" || key == "expect") continue;
+			if ($key == "user-agent" || $key == "expect") continue;
 			$lowercaseHeaders[] = $key . ": " . $val;
 		}
 		$lowercaseHeaders[] = "user-agent: unirest-php/1.0";
