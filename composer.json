@@ -3,12 +3,12 @@
     "description" : "Unirest PHP",
     "keywords" : ["rest", "curl"],
     "type" : "library",
-    "homepage" : "http://unireset.io#php",
+    "homepage" : "http://unirest.io#php",
     "license" : "MIT",
     "authors" : [
         {
             "name" : "Mashape",
-            "email" : "hey@mashape.com",
+            "email" : "support@mashape.com",
             "homepage" : "http://mashape.com"
         }
     ],
@@ -23,6 +23,6 @@
         }
     },
     "support" : {
-        "email" : "hey@mashape.com"
+        "email" : "support@mashape.com"
     }
 }
