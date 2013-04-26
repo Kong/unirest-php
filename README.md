@@ -9,7 +9,26 @@ Documentation
 ### Installing
 Download the PHP library from Github, and require in your script like so:
 
-`require_once './lib/Unirest.php';`
+`require_once './lib/Unirest/Unirest.php';`
+
+#### Using Composer
+
+[Composer](http://getcomposer.org/) is a package manager for PHP.
+
+In the composer.json file in your project add:
+
+```javascript
+{
+  "require" : {
+    "mashape/unirest-php" : "dev-master"
+  }
+}
+```
+And then run:
+
+```
+php composer.phar install
+```
 
 ### Creating Request
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
