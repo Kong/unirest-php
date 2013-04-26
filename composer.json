@@ -1,0 +1,28 @@
+{
+    "name" : "mashape/unirest-php",
+    "description" : "Unirest PHP",
+    "keywords" : ["rest", "curl"],
+    "type" : "library",
+    "homepage" : "http://unireset.io#php",
+    "license" : "MIT",
+    "authors" : [
+        {
+            "name" : "Mashape",
+            "email" : "hey@mashape.com",
+            "homepage" : "http://mashape.com"
+        }
+    ],
+    "require" : {
+        "php" : ">=5.3.0",
+        "ext-curl" : "*",
+        "ext-json" : "*"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Unirest" : "lib"
+        }
+    },
+    "support" : {
+        "email" : "hey@mashape.com"
+    }
+}
