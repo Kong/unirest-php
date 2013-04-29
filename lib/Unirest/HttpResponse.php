@@ -1,6 +1,4 @@
 <?php
-namespace Unirest;
-
 class HttpResponse
 {	
 	private $code;
