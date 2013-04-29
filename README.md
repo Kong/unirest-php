@@ -30,6 +30,12 @@ And then run:
 php composer.phar install
 ```
 
+Include the library in your project with:
+
+```php
+require 'vendor/autoload.php';
+````
+
 ### Creating Request
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
 
