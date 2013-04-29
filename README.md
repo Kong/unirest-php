@@ -9,7 +9,9 @@ Documentation
 ### Installing
 Download the PHP library from Github, and require in your script like so:
 
-`require_once './lib/Unirest/Unirest.php';`
+```php
+require_once './lib/Unirest/Unirest.php';
+```
 
 #### Using Composer
 
