@@ -133,6 +133,10 @@ class Unirest
 			// Encode and build query based on RFC 1738
 			$query = '?'.http_build_query($query_parsed);
 		}
+		
+		// Handle port seperator
+		if ($port && $port[0] != ":")
+			$port = ":" . $port;
 
 		// Return the completed URL
 		$result = $scheme . $host . $port . $path . $query;
