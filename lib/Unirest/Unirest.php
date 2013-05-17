@@ -7,9 +7,9 @@ class Unirest
 	 * @param  array  $headers Additional headers to send
 	 * @return string|stdObj   Response string or stdObj if response is json-decodable
 	 */
-	public static function get($url, $headers = array())
+	public static function get($url, $headers = array(), $curlopts = array())
 	{
-		return Unirest::request(HttpMethod::GET, $url, NULL, $headers);
+		return Unirest::request(HttpMethod::GET, $url, NULL, $headers, $curlopts);
 	}
 
 	/**
@@ -19,20 +19,20 @@ class Unirest
 	 * @param  mixed  $body    POST body data
 	 * @return string|stdObj   Response string or stdObj if response is json-decodable
 	 */
-	public static function post($url, $headers = array(), $body = NULL)
+	public static function post($url, $headers = array(), $body = NULL, $curlopts = array())
 	{
-		return Unirest::request(HttpMethod::POST, $url, $body, $headers);
+		return Unirest::request(HttpMethod::POST, $url, $body, $headers, $curlopts);
 	}
-	
+
 	/**
 	 * Send DELETE request to a URL
 	 * @param  string $url     URL to send the DELETE request to
 	 * @param  array  $headers Additional headers to send
 	 * @return string|stdObj   Response string or stdObj if response is json-decodable
 	 */
-	public static function delete($url, $headers = array())
+	public static function delete($url, $headers = array(),$curlopts = array())
 	{
-		return Unirest::request(HttpMethod::DELETE, $url, NULL, $headers);
+		return Unirest::request(HttpMethod::DELETE, $url, NULL, $headers, $curlopts);
 	}
 
 	/**
@@ -42,11 +42,11 @@ class Unirest
 	 * @param  mixed  $body    PUT body data
 	 * @return string|stdObj   Response string or stdObj if response is json-decodable
 	 */
-	public static function put($url, $headers = array(), $body = NULL)
+	public static function put($url, $headers = array(), $body = NULL, $curlopts = array())
 	{
-		return Unirest::request(HttpMethod::PUT, $url, $body, $headers);
+		return Unirest::request(HttpMethod::PUT, $url, $body, $headers, $curlopts);
 	}
-	
+
 	/**
 	 * Send PATCH request to a URL
 	 * @param  string $url     URL to send the PATCH request to
@@ -54,9 +54,9 @@ class Unirest
 	 * @param  mixed $body     PATCH body data
 	 * @return string|stdObj   Response string or stdObj if response is json-decodable
 	 */
-	public static function patch($url, $headers = array(), $body = NULL)
+	public static function patch($url, $headers = array(), $body = NULL, $curlopts = array())
 	{
-		return Unirest::request(HttpMethod::PATCH, $url, $body, $headers);
+		return Unirest::request(HttpMethod::PATCH, $url, $body, $headers, $curlopts);
 	}
 
 	/**
@@ -68,7 +68,7 @@ class Unirest
 	 * @throws Exception 				If a cURL error occurs
 	 * @return \Unireset\HttpResponse 	\Unirest\HttpResponse object
 	 */
-	private static function request($httpMethod, $url, $body = NULL, $headers = array())
+	private static function request($httpMethod, $url, $body = NULL, $headers = array(), $curlopts = array())
 	{
 		$lowercaseHeaders = array();
 		foreach ($headers as $key => $val) {
@@ -78,13 +78,13 @@ class Unirest
 		}
 		$lowercaseHeaders[] = "user-agent: unirest-php/1.0";
 		$lowercaseHeaders[] = "expect:";
-				
+
 		$ch = curl_init();
 		if ($httpMethod != HttpMethod::GET) {
 			curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
 			curl_setopt ($ch, CURLOPT_POSTFIELDS, $body);
 		}
-				
+
 		curl_setopt ($ch, CURLOPT_URL , Unirest::encodeUrl($url));
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -92,23 +92,30 @@ class Unirest
 		curl_setopt ($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
 		curl_setopt ($ch, CURLOPT_HEADER, true);
 		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
-		
+
+		// If we've specified any extra curl options, set them now
+		if (count($curlopts) > 0) {
+			foreach ($curlopts as $curlOpt => $curlVal) {
+				curl_setopt ($ch, $curlOpt, $curlVal);
+			}
+		}
+
 		$response = curl_exec($ch);
 		$error = curl_error($ch);
 		if ($error) {
 			throw new \Exception($error);
 		}
-		
+
 		// Split the full response in its headers and body
 		$curl_info = curl_getinfo($ch);
 		$header_size = $curl_info["header_size"];
 		$header = substr($response, 0, $header_size);
 		$body = substr($response, $header_size);
 		$httpCode = $curl_info["http_code"];
-		
+
 		return new HttpResponse($httpCode, $body, $header);
 	}
-	
+
 	/**
 	 * Ensure that a URL is encoded and safe to use with cURL
 	 * @param  string $url URL to encode
@@ -133,7 +140,7 @@ class Unirest
 			// Encode and build query based on RFC 1738
 			$query = '?'.http_build_query($query_parsed);
 		}
-		
+
 		// Handle port seperator
 		if ($port && $port[0] != ":")
 			$port = ":" . $port;
@@ -142,48 +149,48 @@ class Unirest
 		$result = $scheme . $host . $port . $path . $query;
 		return $result;
 	}
-	
-}	
+
+}
 
 if (!function_exists('http_chunked_decode')) {
-    /** 
-     * dechunk an http 'transfer-encoding: chunked' message 
-     * 
-     * @param string $chunk the encoded message 
-     * @return string the decoded message.  If $chunk wasn't encoded properly it will be returned unmodified. 
-     */ 
+    /**
+     * dechunk an http 'transfer-encoding: chunked' message
+     *
+     * @param string $chunk the encoded message
+     * @return string the decoded message.  If $chunk wasn't encoded properly it will be returned unmodified.
+     */
     function http_chunked_decode($chunk) {
-        $pos = 0; 
-        $len = strlen($chunk); 
-        $dechunk = null; 
+        $pos = 0;
+        $len = strlen($chunk);
+        $dechunk = null;
 
-        while(($pos < $len) 
+        while(($pos < $len)
             && ($chunkLenHex = substr($chunk,$pos, ($newlineAt = strpos($chunk,"\n",$pos+1))-$pos))
         ) {
-            if (!is_hex($chunkLenHex)) { 
-                trigger_error('Value is not properly chunk encoded', E_USER_WARNING); 
-                return $chunk; 
-            } 
+            if (!is_hex($chunkLenHex)) {
+                trigger_error('Value is not properly chunk encoded', E_USER_WARNING);
+                return $chunk;
+            }
 
-            $pos = $newlineAt + 1; 
-            $chunkLen = hexdec(rtrim($chunkLenHex,"\r\n")); 
-            $dechunk .= substr($chunk, $pos, $chunkLen); 
-            $pos = strpos($chunk, "\n", $pos + $chunkLen) + 1; 
-        } 
-        return $dechunk; 
+            $pos = $newlineAt + 1;
+            $chunkLen = hexdec(rtrim($chunkLenHex,"\r\n"));
+            $dechunk .= substr($chunk, $pos, $chunkLen);
+            $pos = strpos($chunk, "\n", $pos + $chunkLen) + 1;
+        }
+        return $dechunk;
     }
 }
 
-/** 
- * determine if a string can represent a number in hexadecimal 
- * 
- * @param string $hex 
- * @return boolean true if the string is a hex, otherwise false 
- */ 
+/**
+ * determine if a string can represent a number in hexadecimal
+ *
+ * @param string $hex
+ * @return boolean true if the string is a hex, otherwise false
+ */
 function is_hex($hex) {
-    // regex is for weenies 
-    $hex = strtolower(trim(ltrim($hex,"0"))); 
-    if (empty($hex)) { $hex = 0; }; 
-    $dec = hexdec($hex); 
-    return ($hex == dechex($dec)); 
+    // regex is for weenies
+    $hex = strtolower(trim(ltrim($hex,"0")));
+    if (empty($hex)) { $hex = 0; };
+    $dec = hexdec($hex);
+    return ($hex == dechex($dec));
 }
