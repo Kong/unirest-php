@@ -62,13 +62,13 @@ class HttpResponse
 	 */
 	private function get_headers_from_curl_response($headers)
 	{
-		foreach (explode("\r\n", $headers) as $i => $line) {
-			if ($i !== 0) {
-				if (!empty($key) && substr($key, 0, 4) != "HTTP") {
-					$result[$key] = $value;
-				} else {
-					list ($key, $value) = explode(': ', $line);
-				}
+		$headers = explode("\r\n", $headers);
+		array_shift($headers);
+
+		foreach ($headers as $line) {
+			if (strstr($line, ': ')) {
+				list ($key, $value) = explode(': ', $line);
+				$result[$key] = $value;
 			}	
 		}
 
