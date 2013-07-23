@@ -1,4 +1,8 @@
 <?php
+
+use Unirest\HttpMethod;
+use Unirest\HttpResponse;
+
 class Unirest
 {
 	/**
