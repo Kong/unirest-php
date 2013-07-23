@@ -1,4 +1,4 @@
-<?php
+<?php namespace Unirest;
 class HttpMethod
 {
 	const DELETE = "DELETE";
