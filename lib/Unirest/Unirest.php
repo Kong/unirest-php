@@ -15,7 +15,7 @@ class Unirest
 	{
 		return Unirest::request(HttpMethod::GET, $url, NULL, $headers);
 	}
-
+	
 	/**
 	 * Send POST request to a URL
 	 * @param  string $url     URL to send the POST request to
@@ -82,7 +82,7 @@ class Unirest
 		}
 		$lowercaseHeaders[] = "user-agent: unirest-php/1.0";
 		$lowercaseHeaders[] = "expect:";
-				
+					
 		$ch = curl_init();
 		if ($httpMethod != HttpMethod::GET) {
 			curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
