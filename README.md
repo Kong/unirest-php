@@ -117,6 +117,7 @@ Request/Response tracing can be enabled:
 define ("UNIREST_TRACE", "unirest_trace.txt");
 ```
 The trace file is created in the directory of the php script that was first invoked by the webserver.
+
 `WARNING` The trace file may be visible or downloadable to web site visitors. Remember to turn off tracing!
 
 License
