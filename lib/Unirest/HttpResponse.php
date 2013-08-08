@@ -5,6 +5,7 @@ class HttpResponse
 	private $raw_body;
 	private $body;
 	private $headers;
+	private $raw_headers;
 
 	/**
 	 * HttpResponse constructor
@@ -16,6 +17,7 @@ class HttpResponse
 	{
 		$this->code = $code;
 		$this->headers = $this->get_headers_from_curl_response($headers);
+		$this->raw_headers = $headers;
 		$this->raw_body = $raw_body;
 		$this->body = $raw_body;
 		$json = json_decode($raw_body);
@@ -31,6 +33,7 @@ class HttpResponse
 	 * - raw_body
 	 * - body (if the response is json-decodable)
 	 * - headers
+	 * - raw_headers
 	 * @param  [type] $property [description]
 	 * @return [type]           [description]
 	 */

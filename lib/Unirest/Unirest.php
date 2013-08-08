@@ -96,8 +96,18 @@ class Unirest
 		curl_setopt ($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
 		curl_setopt ($ch, CURLOPT_HEADER, true);
 		curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, false);
-		
+		$trace = defined("UNIREST_TRACE");
+		if ($trace) {
+			$trace_fh = fopen(UNIREST_TRACE, 'a');
+			curl_setopt_array($ch, array(
+				CURLOPT_VERBOSE => 1,
+				CURLOPT_STDERR  => $trace_fh,
+			));
+		}
 		$response = curl_exec($ch);
+		if ($trace) {
+			fclose($trace_fh);
+		}
 		$error = curl_error($ch);
 		if ($error) {
 			throw new \Exception($error);
