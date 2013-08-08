@@ -93,7 +93,7 @@ Request Headers as associative array or object
 Request Body associative array or object
 
 ### Response Reference
-Upon recieving a response Unirest returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
+Upon receiving a response Unirest returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
 
 `code`
 HTTP Response Status Code (Example `200`)
@@ -106,6 +106,18 @@ Parsed response body where applicable, for example JSON responses are parsed to 
 
 `raw_body`
 Un-parsed response body
+
+`raw_headers`
+All of the response's headers as a single string. The string includes newlines.
+
+### Debug Trace
+Request/Response tracing can be enabled: 
+```php
+// Enable tracing into file unirest_trace.txt
+define ("UNIREST_TRACE", "unirest_trace.txt");
+```
+The trace file is created in the directory of the php script that was first invoked by the webserver.
+`WARNING` The trace file may be visible or downloadable to web site visitors. Remember to turn off tracing!
 
 License
 ---------------
