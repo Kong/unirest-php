@@ -2,17 +2,14 @@
 
 Unirest is a set of lightweight HTTP libraries available in multiple languages.
 
-Documentation
--------------------
-
-### Installing
-Download the PHP library from Github, and require in your script like so:
+## Installing
+Download the `PHP` library from Github, and require in your script like so:
 
 ```php
 require_once './lib/Unirest.php';
 ```
 
-#### Using Composer
+### Using Composer
 
 [Composer](http://getcomposer.org/) is a package manager for PHP.
 
@@ -37,7 +34,7 @@ Include the library in your project with:
 require 'vendor/autoload.php';
 ````
 
-### Creating Request
+## Creating Request
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
 
 ```php
@@ -49,7 +46,7 @@ $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "applica
 );
 ```
 
-### File Uploads
+## File Uploads
 To upload files in a multipart form representation simply place an @ symbol before the path:
 
 ```php
@@ -60,7 +57,7 @@ $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "applica
 );
  ```
  
-### Custom Entity Body
+## Custom Entity Body
 Sending a custom body such as a JSON Object rather than a string or form style parameters we utilize json_encode for the body:
 ```php
 $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
@@ -73,7 +70,7 @@ $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "applica
 );
 ```
 
-### Request Reference
+# Request
 ```php
 Unirest::get($url, $headers = array());
 Unirest::post($url, $headers = array(), $body = NULL);
@@ -86,7 +83,7 @@ Unirest::delete($url, $headers = array());
 - `headers` - Request Headers as associative array or object
 - `body` - Request Body associative array or object
 
-### Response Reference
+# Response
 Upon recieving a response Unirest returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
 
 - `code` - HTTP Response Status Code (Example `200`)
