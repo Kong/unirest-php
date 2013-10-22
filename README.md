@@ -7,7 +7,7 @@ Documentation
 -------------------
 
 ### Installing
-Download the PHP library from Github, and require in your script like so:
+Unirest-PHP required `PHP v5.3+`. Download the PHP library from Github, and require in your script like so:
 
 ```php
 require_once './lib/Unirest.php';
