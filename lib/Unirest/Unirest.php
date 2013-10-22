@@ -180,14 +180,10 @@ if (!function_exists('http_chunked_decode')) {
 
 /** 
  * determine if a string can represent a number in hexadecimal 
- * 
+ * @link http://uk1.php.net/ctype_xdigit
  * @param string $hex 
  * @return boolean true if the string is a hex, otherwise false 
  */ 
 function is_hex($hex) {
-    // regex is for weenies 
-    $hex = strtolower(trim(ltrim($hex,"0"))); 
-    if (empty($hex)) { $hex = 0; }; 
-    $dec = hexdec($hex); 
-    return ($hex == dechex($dec)); 
+    return ctype_xdigit($hex);
 }
