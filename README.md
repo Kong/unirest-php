@@ -2,6 +2,10 @@
 
 Unirest is a set of lightweight HTTP libraries available in multiple languages.
 
+Created with love by http://mashape.com
+
+
+
 ### Installing
 Unirest-PHP requires PHP `v5.3+`. Download the PHP library from Github, and require in your script like so:
 
