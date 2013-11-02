@@ -131,5 +131,5 @@ class UnirestTest extends UnitTestCase
   	$headers = $response->body->headers;
   	$this->assertEqual("Basic dXNlcjpwYXNzd29yZA==", $headers->Authorization);
   }
-  
+
 }

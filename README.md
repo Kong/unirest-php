@@ -1,8 +1,16 @@
-# Unirest for PHP
+# Unirest for PHP [![Build Status](https://api.travis-ci.org/Mashape/unirest-php.png)](https://travis-ci.org/Mashape/unirest-php)
 
-Unirest is a set of lightweight HTTP libraries available in multiple languages.
+Unirest is a set of lightweight HTTP libraries available in multiple languages, ideal for most applications:
 
-Created with love by http://mashape.com
+* Make `GET`, `POST`, `PUT`, `PATCH`, `DELETE` requests
+* It supports form parameters, file uploads and custom body entities
+* Supports gzip
+* Supports Basic Authentication natively
+* Customizable timeout
+* Customizable default headers for every request (DRY)
+* Automatic JSON parsing into a native object for JSON responses
+
+Created with love by [thefosk](https://github.com/thefosk) @ [mashape.com](https://mashape.com)
 
 ### Install with Composer
 If you're using [Composer](https://github.com/composer/composer) to manage
@@ -35,6 +43,7 @@ require_once '/path/to/unirest-php/lib/Unirest.php';
 ```
 
 ## Creating Request
+
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
 
 ```php
@@ -44,10 +53,16 @@ $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "applica
     "foo" => "bar"
   )
 );
+
+$response->code; // HTTP Status code
+$response->headers; // Headers
+$response->body; // Parsed body
+$response->raw_body; // Unparsed body
 ```
 
 ## File Uploads
-To upload files in a multipart form representation simply place an @ symbol before the path:
+
+To upload files in a multipart form representation simply place an `@` symbol before the path:
 
 ```php
 $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
@@ -70,18 +85,28 @@ $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "applica
 );
 ```
 
+### Basic Authentication
+
+Authenticating the request with basic authentication can be done by providing the `username` and `password` arguments:
+
+```php
+$response = Unirest::get("http://httpbin.org/get", null, null, "username", "password");
+```
+
 # Request
 ```php
-Unirest::get($url, $headers = array());
-Unirest::post($url, $headers = array(), $body = NULL);
-Unirest::put($url, $headers = array(), $body = NULL);
-Unirest::patch($url, $headers = array(), $body = NULL);
-Unirest::delete($url, $headers = array());
+Unirest::get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
+Unirest::post($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest::put($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest::patch($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest::delete($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
 ```
   
 - `url` - Endpoint, address, or uri to be acted upon and requested information from.
 - `headers` - Request Headers as associative array or object
-- `body` - Request Body associative array or object
+- `body` - Request Body as associative array or object
+- `username` - Basic Authentication username
+- `password` - Basic Authentication password
 
 # Response
 Upon recieving a response Unirest returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
@@ -90,3 +115,30 @@ Upon recieving a response Unirest returns the result in the form of an Object, t
 - `headers` - HTTP Response Headers
 - `body` - Parsed response body where applicable, for example JSON responses are parsed to Objects / Associative Arrays.
 - `raw_body` - Un-parsed response body
+
+# Advanced Configuration
+
+You can set some advanced configuration to tune Unirest-PHP:
+
+### Timeout
+
+You can set a custom timeout value (in **seconds**):
+
+```php
+Unirest::timeout(5); // 5s timeout
+```
+
+### Default Request Headers
+
+You can set default headers that will be sent on every request:
+
+```php
+Unirest::defaultHeader("Header1", "Value1");
+Unirest::defaultHeader("Header2", "Value2");
+```
+
+You can clear the default headers anytime with:
+
+```php
+Unirest::clearDefaultHeaders();
+```
