@@ -4,39 +4,35 @@ Unirest is a set of lightweight HTTP libraries available in multiple languages.
 
 Created with love by http://mashape.com
 
-
-
-### Installing
-Unirest-PHP requires PHP `v5.3+`. Download the PHP library from Github, and require in your script like so:
-
-```php
-require_once './lib/Unirest.php';
-```
-
-### Using Composer
-
-[Composer](http://getcomposer.org/) is a package manager for PHP.
-
-In the composer.json file in your project add:
+### Install with Composer
+If you're using [Composer](https://github.com/composer/composer) to manage
+dependencies, you can add Unirest with it.
 
 ```javascript
 {
   "require" : {
     "mashape/unirest-php" : "dev-master"
+  },
+  "autoload": {
+    "psr-0": {"Unirest": "lib/"}
   }
 }
 ```
-And then run:
 
+### Install source from GitHub
+Unirest-PHP requires PHP `v5.3+`. Download the PHP library from Github, and require in your script like so:
+
+To install the source code:
+
+```bash
+$ git clone git@github.com:Mashape/unirest-php.git 
 ```
-php composer.phar install
+
+And include it in your scripts:
+
+```bash
+require_once '/path/to/unirest-php/lib/Unirest.php';
 ```
-
-Include the library in your project with:
-
-```php
-require 'vendor/autoload.php';
-````
 
 ## Creating Request
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
