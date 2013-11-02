@@ -60,7 +60,7 @@ $response->body; // Parsed body
 $response->raw_body; // Unparsed body
 ```
 
-## File Uploads
+### File Uploads
 
 To upload files in a multipart form representation simply place an `@` symbol before the path:
 
@@ -72,7 +72,7 @@ $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "applica
 );
  ```
  
-## Custom Entity Body
+### Custom Entity Body
 Sending a custom body such as a JSON Object rather than a string or form style parameters we utilize json_encode for the body:
 ```php
 $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
