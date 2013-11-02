@@ -1,6 +1,6 @@
-<div style="margin: 20px; background-color: #FDFFC9; padding: 20px; border: solid 3px #cccccc">
-At this time Unirest-PHP only support syncronous requests, and I would really love to implement  <b>asynchronous</b> support. If you guys have any feedback or ideas please comment on issue <a href="https://github.com/Mashape/unirest-php/issues/23">#23</a>.
-</div>
+<hr>
+**To the community**: At this time Unirest-PHP only support syncronous requests, and I would really love to implement  asynchronous support. If you guys have any feedback or ideas please comment on issue <a href="https://github.com/Mashape/unirest-php/issues/23">#23</a>.
+<hr>
 
 # Unirest for PHP [![Build Status](https://api.travis-ci.org/Mashape/unirest-php.png)](https://travis-ci.org/Mashape/unirest-php)
 
