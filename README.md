@@ -146,3 +146,13 @@ You can clear the default headers anytime with:
 ```php
 Unirest::clearDefaultHeaders();
 ```
+
+### SSL validation
+
+You can esplicitly enable or disable SSL certificate validation
+
+```php
+Unirest::verifiyPeer(false);
+```
+
+By default is `true`.

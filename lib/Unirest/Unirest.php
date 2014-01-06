@@ -5,14 +5,19 @@
 
     class Unirest
     {
-			 /**
-			  * Verify SSL peer
-			  * @var bool
-			  */
-			public static $verifyPeer = true;
+			 
+				private static $verifyPeer = true;
 
     		private static $socketTimeout = null;
 				private static $defaultHeaders = array();
+
+				/**
+			  * Verify SSL peer
+			  * @param bool $enabled enable SSL verification, by default is true
+			  */
+			  public static function verifyPeer($enabled) {
+						Unirest::$verifyPeer = $enabled;
+				}
 
 				/**
 				 * Set a timeout
