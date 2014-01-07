@@ -88,6 +88,8 @@ class UnirestTest extends UnitTestCase
 
   	$response = Unirest::get("http://httpbin.org/delay/1");
   	$this->assertEqual(200, $response->code);
+
+    Unirest::timeout(null); // Cleaning timeout for the other tests
   }
 
    public function testDefaultHeader()
@@ -100,7 +102,6 @@ class UnirestTest extends UnitTestCase
   	$properties = get_object_vars($headers);
   	$this->assertTrue(array_key_exists("Hello", $properties));
 		$this->assertEqual("custom", $headers->Hello);
-
 		$response = Unirest::get("http://httpbin.org/get");
 
 		$this->assertEqual(200, $response->code);
@@ -108,7 +109,6 @@ class UnirestTest extends UnitTestCase
   	$properties = get_object_vars($headers);
   	$this->assertTrue(array_key_exists("Hello", $properties));
 		$this->assertEqual("custom", $headers->Hello);
-
 		Unirest::clearDefaultHeaders();
 		$response = Unirest::get("http://httpbin.org/get");
 
