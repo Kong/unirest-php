@@ -152,7 +152,7 @@ Unirest::clearDefaultHeaders();
 You can explicitly enable or disable SSL certificate validation when consuming an SSL protected endpoint:
 
 ```php
-Unirest::verifiyPeer(false); // Disables SSL cert validation
+Unirest::verifyPeer(false); // Disables SSL cert validation
 ```
 
 By default is `true`.
