@@ -80,6 +80,8 @@ class UnirestTest extends UnitTestCase
 
   	$this->expectException();
   	$response = Unirest::get("http://httpbin.org/delay/3");
+
+    Unirest::timeout(null); // Cleaning timeout for the other tests
   }
 
   public function testTimeoutSuccess()
