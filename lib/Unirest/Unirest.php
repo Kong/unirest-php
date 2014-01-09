@@ -113,6 +113,25 @@
 						return Unirest::request(HttpMethod::PATCH, $url, $body, $headers, $username, $password);
 				}
 
+				/**
+         * This function is useful for serializing multidimensional arrays, and avoid getting
+         * the "Array to string conversion" notice
+         */
+				private static function http_build_query_for_curl( $arrays, &$new = array(), $prefix = null ) {
+				    if ( is_object( $arrays ) ) {
+				        $arrays = get_object_vars( $arrays );
+				    }
+
+				    foreach ( $arrays AS $key => $value ) {
+				        $k = isset( $prefix ) ? $prefix . '[' . $key . ']' : $key;
+				        if ( is_array( $value ) OR is_object( $value )  ) {
+				            Unirest::http_build_query_for_curl( $value, $new, $k );
+				        } else {
+				            $new[$k] = $value;
+				        }
+				    }
+				}
+
         /**
          * Send a cURL request
          * @param string $httpMethod HTTP method to use (based off \Unirest\HttpMethod constants)
@@ -141,7 +160,8 @@
 						$ch = curl_init();
 						if ($httpMethod != HttpMethod::GET) {
 								curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
-								curl_setopt ($ch, CURLOPT_POSTFIELDS, $body);
+								Unirest::http_build_query_for_curl($body, $postBody);
+								curl_setopt ($ch, CURLOPT_POSTFIELDS, $postBody);
 						} else if (is_array($body)) {
 								if (strpos($url,'?') !== false) {
 									$url .= "&";

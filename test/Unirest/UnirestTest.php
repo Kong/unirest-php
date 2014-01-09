@@ -31,6 +31,30 @@ class UnirestTest extends UnitTestCase
   	$this->assertEqual("thefosk", $form->nick);
   }
 
+  public function testUpload() {
+    $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+      array(
+        "file" => "@" . dirname(__FILE__) . "/test_upload.txt"
+      )
+    );
+    $this->assertEqual(200, $response->code);
+
+    $files = $response->body->files;
+    $this->assertEqual("This is a test", $files->file);
+  }
+
+  public function testPostMultidimensionalArray()
+  {
+    $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+                            array('key'=>'value','items'=>array('item1','item2')));
+
+    $this->assertEqual(200, $response->code);
+
+    $form = $response->body->form;
+    $this->assertEqual("item1", $form->{"items[0]"});
+    $this->assertEqual("item2", $form->{"items[1]"});
+  }
+
   public function testPut()
   {
   	$response = Unirest::put("http://httpbin.org/put", array( "Accept" => "application/json" ),
