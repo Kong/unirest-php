@@ -71,10 +71,12 @@ To upload files in a multipart form representation simply place an `@` symbol be
 ```php
 $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
   array(
-    "file" => "@/tmp/file.txt"
+    "file" => Unirest::file("/tmp/file.txt")
   )
 );
  ```
+
+ Use the value of `Unirest::file($path)` to assign a file to a parameter.
  
 ### Custom Entity Body
 Sending a custom body such as a JSON Object rather than a string or form style parameters we utilize json_encode for the body:

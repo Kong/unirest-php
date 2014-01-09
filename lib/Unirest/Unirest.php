@@ -114,6 +114,18 @@
 				}
 
 				/**
+				 * Prepares a file for upload. To be used inside the parameters declaration for a request.
+				 * @param string $path The file path
+				 */
+				public static function file($path) {
+						if (function_exists("curl_file_create")) {
+								return curl_file_create($path);
+						} else {
+								return "@" . $path;
+						}
+				}
+
+				/**
          * This function is useful for serializing multidimensional arrays, and avoid getting
          * the "Array to string conversion" notice
          */
