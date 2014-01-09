@@ -94,7 +94,7 @@ class UnirestTest extends UnitTestCase
     $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
       array(
  "name" => "Mark",
-        "file" => "@" . dirname(__FILE__) . "/test_upload.txt"
+        "file" => Unirest::file(dirname(__FILE__) . "/test_upload.txt")
       )
     );
     $this->assertEqual(200, $response->code);
