@@ -71,7 +71,7 @@ To upload files in a multipart form representation use the return value of `Unir
 ```php
 $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
   array(
-    "file" => Unirest::file("/tmp/file.txt")
+    "file" => Unirest::file("/tmp/file.txt") // Tells Unirest where the file is located
   )
 );
  ```
