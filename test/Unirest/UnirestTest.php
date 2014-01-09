@@ -16,6 +16,20 @@ class UnirestTest extends UnitTestCase
   	$this->assertEqual("thefosk", $args->nick);
   }
 
+  public function testGetMultidimensionalArray()
+  {
+    $response = Unirest::get("http://httpbin.org/get", array( "Accept" => "application/json" ),
+                            array('key'=>'value','items'=>array('item1','item2')));
+
+    $this->assertEqual(200, $response->code);
+
+    $args = $response->body->args;
+    print_r($args);
+
+    $this->assertEqual("Mark", $args->{"user.name"});
+    $this->assertEqual("thefosk", $args->nick);
+  }
+
   public function testGetWithDots()
   {
     $response = Unirest::get("http://httpbin.org/get", array( "Accept" => "application/json" ),
