@@ -168,11 +168,13 @@
 								} else {
 									$url .= "?";
 								}
+								Unirest::http_build_query_for_curl($body, $postBody);
+								$url .= http_build_query($postBody);
 							
-								foreach ($body as $parameter => $val) {
-									$url .= $parameter . "=" . $val . "&";
-								}
-								$url = substr($url, 0, strlen($url) - 1);
+								//foreach ($body as $parameter => $val) {
+								//	$url .= $parameter . "=" . $val . "&";
+								//}
+								//$url = substr($url, 0, strlen($url) - 1);
 						}
 					
 						curl_setopt ($ch, CURLOPT_URL, Unirest::encodeUrl($url));
@@ -206,6 +208,18 @@
 						return new HttpResponse($httpCode, $body, $header);
         }
 
+        private static function getArrayFromQuerystring($querystring) {
+        		$pairs = explode("&", $querystring);
+        		$vars = array();
+    				foreach ($pairs as $pair) {
+    						$nv = explode("=", $pair);
+    						$name = $nv[0];
+        				$value = $nv[1];
+        				$vars[$name] = $value;
+    				}
+    				return $vars;
+        }
+
         /**
          * Ensure that a URL is encoded and safe to use with cURL
          * @param  string $url URL to encode
@@ -222,8 +236,7 @@
             $query = (isset($url_parsed['query']) ? $url_parsed['query'] : null);
 
             if ($query != null) {
-                parse_str($url_parsed['query'], $query_parsed);
-                $query = '?' . http_build_query($query_parsed);
+                $query = '?' . http_build_query(Unirest::getArrayFromQuerystring($url_parsed['query']));
             }
             
             if ($port && $port[0] != ":")

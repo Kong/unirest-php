@@ -16,6 +16,36 @@ class UnirestTest extends UnitTestCase
   	$this->assertEqual("thefosk", $args->nick);
   }
 
+  public function testGetWithDots()
+  {
+    $response = Unirest::get("http://httpbin.org/get", array( "Accept" => "application/json" ),
+                            array(
+                              "user.name" => "Mark",
+                              "nick" => "thefosk"
+                            ));
+
+    $this->assertEqual(200, $response->code);
+
+    $args = $response->body->args;
+    $this->assertEqual("Mark", $args->{"user.name"});
+    $this->assertEqual("thefosk", $args->nick);
+  }
+
+  public function testGetWithDots2()
+  {
+    $response = Unirest::get("http://httpbin.org/get", array( "Accept" => "application/json" ),
+                            array(
+                              "user.name" => "Mark Bond",
+                              "nick" => "thefosk"
+                            ));
+
+    $this->assertEqual(200, $response->code);
+    
+    $args = $response->body->args;
+    $this->assertEqual("Mark+Bond", $args->{"user.name"});
+    $this->assertEqual("thefosk", $args->nick);
+  }
+
   public function testPost()
   {
   	$response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
@@ -29,6 +59,21 @@ class UnirestTest extends UnitTestCase
   	$form = $response->body->form;
   	$this->assertEqual("Mark", $form->name);
   	$this->assertEqual("thefosk", $form->nick);
+  }
+
+  public function testPostWithDots()
+  {
+    $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+                            array(
+                              "user.name" => "Mark",
+                              "nick" => "thefosk"
+                            ));
+
+    $this->assertEqual(200, $response->code);
+
+    $form = $response->body->form;
+    $this->assertEqual("Mark", $form->{"user.name"});
+    $this->assertEqual("thefosk", $form->nick);
   }
 
   public function testUpload() {
