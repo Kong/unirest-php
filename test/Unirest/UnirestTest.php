@@ -24,10 +24,10 @@ class UnirestTest extends UnitTestCase
     $this->assertEqual(200, $response->code);
 
     $args = $response->body->args;
-    print_r($args);
 
-    $this->assertEqual("Mark", $args->{"user.name"});
-    $this->assertEqual("thefosk", $args->nick);
+    $this->assertEqual("value", $args->key);
+    $this->assertEqual("item1", $args->{"items%5B0%5D"});
+    $this->assertEqual("item2", $args->{"items%5B1%5D"});
   }
 
   public function testGetWithDots()
@@ -93,6 +93,7 @@ class UnirestTest extends UnitTestCase
   public function testUpload() {
     $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
       array(
+ "name" => "Mark",
         "file" => "@" . dirname(__FILE__) . "/test_upload.txt"
       )
     );
@@ -100,6 +101,9 @@ class UnirestTest extends UnitTestCase
 
     $files = $response->body->files;
     $this->assertEqual("This is a test", $files->file);
+
+    $form = $response->body->form;
+    $this->assertEqual("Mark", $form->name);
   }
 
   public function testPostMultidimensionalArray()
@@ -110,6 +114,7 @@ class UnirestTest extends UnitTestCase
     $this->assertEqual(200, $response->code);
 
     $form = $response->body->form;
+    $this->assertEqual("value", $form->key);
     $this->assertEqual("item1", $form->{"items[0]"});
     $this->assertEqual("item2", $form->{"items[1]"});
   }
