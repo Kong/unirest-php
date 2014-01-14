@@ -182,11 +182,6 @@
 								}
 								Unirest::http_build_query_for_curl($body, $postBody);
 								$url .= http_build_query($postBody);
-							
-								//foreach ($body as $parameter => $val) {
-								//	$url .= $parameter . "=" . $val . "&";
-								//}
-								//$url = substr($url, 0, strlen($url) - 1);
 						}
 					
 						curl_setopt ($ch, CURLOPT_URL, Unirest::encodeUrl($url));
