@@ -90,6 +90,19 @@ class UnirestTest extends UnitTestCase
     $this->assertEqual("thefosk", $form->nick);
   }
 
+    public function testRawPost()
+    {
+        $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
+            json_encode(array(
+                "author" => "Sam Sullivan"
+            )));
+
+        $this->assertEqual(200, $response->code);
+
+        $json = $response->body->json;
+        $this->assertEqual("Sam Sullivan", $json->author);
+    }
+
   public function testUpload() {
     $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
       array(
