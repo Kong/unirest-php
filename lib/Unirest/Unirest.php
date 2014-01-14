@@ -171,13 +171,13 @@
 
 						$ch = curl_init();
 						if ($httpMethod != HttpMethod::GET) {
-                                curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
-                                if( is_array($body) || $body instanceof Traversable ) {
-                                    Unirest::http_build_query_for_curl($body, $postBody);
-                                    curl_setopt ($ch, CURLOPT_POSTFIELDS, $postBody);
-                                } else {
-                                    curl_setopt ($ch, CURLOPT_POSTFIELDS, $body);
-                                }
+              curl_setopt ($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
+              if( is_array($body) || $body instanceof Traversable ) {
+                  Unirest::http_build_query_for_curl($body, $postBody);
+                  curl_setopt ($ch, CURLOPT_POSTFIELDS, $postBody);
+              } else {
+                  curl_setopt ($ch, CURLOPT_POSTFIELDS, $body);
+              }
 						} else if (is_array($body)) {
 								if (strpos($url,'?') !== false) {
 									$url .= "&";
