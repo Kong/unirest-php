@@ -104,6 +104,9 @@ class UnirestTest extends UnitTestCase
     }
 
   public function testUpload() {
+
+    var_dump(file_get_contents(dirname(__FILE__) . "/test_upload.txt"));
+
     $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
       array(
  "name" => "Mark",
