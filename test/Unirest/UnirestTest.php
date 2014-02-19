@@ -116,6 +116,8 @@ class UnirestTest extends UnitTestCase
     $this->assertEqual(200, $response->code);
 
     $files = $response->body->files;
+    var_dump($response->body);
+    var_dump($files);
     $this->assertEqual("This is a test", $files->file);
 
     $form = $response->body->form;
