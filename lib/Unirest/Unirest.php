@@ -185,7 +185,7 @@
 									$url .= "?";
 								}
 								Unirest::http_build_query_for_curl($body, $postBody);
-								$url .= http_build_query($postBody);
+								$url .= urldecode(http_build_query($postBody));
 						}
 					
 						curl_setopt ($ch, CURLOPT_URL, Unirest::encodeUrl($url));
