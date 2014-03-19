@@ -164,16 +164,20 @@ class Unirest
     {
         if ($headers == NULL)
             $headers = array();
+
         $lowercaseHeaders = array();
-        foreach ($headers as $key => $val) {
-            $lowercaseHeaders[] = Unirest::getHeader($key, $val);
-        }
-        foreach (Unirest::$defaultHeaders as $key => $val) {
+        $finalHeaders = array_merge($headers, Unirest::$defaultHeaders);
+        foreach ($finalHeaders as $key => $val) {
             $lowercaseHeaders[] = Unirest::getHeader($key, $val);
         }
         
-        $lowercaseHeaders[] = "user-agent: unirest-php/1.1";
-        $lowercaseHeaders[] = "expect:";
+        $lowerCaseFinalHeaders = array_change_key_case($finalHeaders);
+        if (!array_key_exists("user-agent", $lowerCaseFinalHeaders)) {
+            $lowercaseHeaders[] = "user-agent: unirest-php/1.1";
+        }
+        if (!array_key_exists("expect", $lowerCaseFinalHeaders)) {
+            $lowercaseHeaders[] = "expect:";
+        }
         
         $ch = curl_init();
         if ($httpMethod != HttpMethod::GET) {
@@ -191,7 +195,7 @@ class Unirest
                 $url .= "?";
             }
             Unirest::http_build_query_for_curl($body, $postBody);
-            $url .= http_build_query($postBody);
+            $url .= urldecode(http_build_query($postBody));
         }
         
         curl_setopt($ch, CURLOPT_URL, Unirest::encodeUrl($url));
@@ -267,8 +271,6 @@ class Unirest
     private static function getHeader($key, $val)
     {
         $key = trim(strtolower($key));
-        if ($key == "user-agent" || $key == "expect")
-            continue;
         return $key . ": " . $val;
     }
     

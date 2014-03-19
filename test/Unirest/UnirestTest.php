@@ -2,6 +2,7 @@
 
 class UnirestTest extends UnitTestCase
 {
+
     public function testGet()
     {
         $response = Unirest::get("http://httpbin.org/get?name=Mark", array(
@@ -34,8 +35,8 @@ class UnirestTest extends UnitTestCase
         $args = $response->body->args;
         
         $this->assertEqual("value", $args->key);
-        $this->assertEqual("item1", $args->{"items%5B0%5D"});
-        $this->assertEqual("item2", $args->{"items%5B1%5D"});
+        $this->assertEqual("item1", $args->{"items[0]"});
+        $this->assertEqual("item2", $args->{"items[1]"});
     }
     
     public function testGetWithDots()
@@ -66,7 +67,7 @@ class UnirestTest extends UnitTestCase
         $this->assertEqual(200, $response->code);
         
         $args = $response->body->args;
-        $this->assertEqual("Mark+Bond", $args->{"user.name"});
+        $this->assertEqual("Mark Bond", $args->{"user.name"});
         $this->assertEqual("thefosk", $args->nick);
     }
     
@@ -101,6 +102,20 @@ class UnirestTest extends UnitTestCase
 
         $this->assertEqual("Mark", $form->{"name[0]"});
         $this->assertEqual("John", $form->{"name[1]"});
+    }
+
+    public function testGetArray()
+    {
+        $response = Unirest::get("http://httpbin.org/get", array(), array(
+            "name[0]" => "Mark",
+            "name[1]" => "John"
+        ));
+        
+        $this->assertEqual(200, $response->code);
+        
+        $args = $response->body->args;
+        $this->assertEqual("Mark", $args->{"name[0]"});
+        $this->assertEqual("John", $args->{"name[1]"});
     }
     
     public function testPostWithDots()
@@ -275,6 +290,18 @@ class UnirestTest extends UnitTestCase
         $response = Unirest::get("http://httpbin.org/get", null, null, "user", "password");
         $headers  = $response->body->headers;
         $this->assertEqual("Basic dXNlcjpwYXNzd29yZA==", $headers->Authorization);
+    }
+
+    public function testCustomHeaders() 
+    {
+        $response = Unirest::get('http://httpbin.org/get', array(
+            'user-agent' => 'ciao',
+        ));
+
+        $this->assertEqual(200, $response->code);
+
+        $headers    = $response->body->headers;
+        $this->assertEqual("ciao", $headers->{'User-Agent'});
     }
     
 }
