@@ -87,6 +87,34 @@ class UnirestTest extends UnitTestCase
         $this->assertEqual("thefosk", $form->nick);
     }
 
+    public function testPostWithEqualSign()
+    {
+        $response = Unirest::post("http://httpbin.org/post", array(
+            "Accept" => "application/json"
+        ), array(
+            "name" => "Mark=Hello"
+        ));
+        
+        $this->assertEqual(200, $response->code);
+        
+        $form = $response->body->form;
+        $this->assertEqual("Mark=Hello", $form->name);
+    }
+
+    public function testGetWithEqualSign()
+    {
+        $response = Unirest::get("http://httpbin.org/get", array(
+            "Accept" => "application/json"
+        ), array(
+            "name" => "Mark=Hello"
+        ));
+        
+        $this->assertEqual(200, $response->code);
+        
+        $args = $response->body->args;
+        $this->assertEqual("Mark=Hello", $args->name);
+    }
+
     public function testPostArray()
     {
         $response = Unirest::post("http://httpbin.org/post", array(
