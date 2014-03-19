@@ -113,6 +113,17 @@ class UnirestTest extends UnitTestCase
         
         $args = $response->body->args;
         $this->assertEqual("Mark=Hello", $args->name);
+
+        $response = Unirest::get("http://httpbin.org/get", array(
+            "Accept" => "application/json"
+        ), array(
+            "name" => "Mark=Hello=John"
+        ));
+        
+        $this->assertEqual(200, $response->code);
+        
+        $args = $response->body->args;
+        $this->assertEqual("Mark=Hello=John", $args->name);
     }
 
     public function testPostArray()
