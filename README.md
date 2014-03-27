@@ -66,12 +66,12 @@ $response->raw_body; // Unparsed body
 
 ### File Uploads
 
-To upload files in a multipart form representation simply place an `@` symbol before the path:
+To upload files in a multipart form representation use the return value of `Unirest::file($path)` as the value of a parameter:
 
 ```php
 $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
   array(
-    "file" => "@/tmp/file.txt"
+    "file" => Unirest::file("/tmp/file.txt") // Tells Unirest where the file is located
   )
 );
  ```
