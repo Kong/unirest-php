@@ -133,7 +133,7 @@ class Unirest
      * This function is useful for serializing multidimensional arrays, and avoid getting
      * the "Array to string conversion" notice
      */
-    private static function http_build_query_for_curl($arrays, &$new = array(), $prefix = null)
+    public static function http_build_query_for_curl($arrays, &$new = array(), $prefix = null)
     {
         if (is_object($arrays)) {
             $arrays = get_object_vars($arrays);
@@ -141,7 +141,7 @@ class Unirest
         
         foreach ($arrays AS $key => $value) {
             $k = isset($prefix) ? $prefix . '[' . $key . ']' : $key;
-            if (is_array($value) OR is_object($value)) {
+            if (!$value instanceof CURLFile AND (is_array($value) OR is_object($value))) {
                 Unirest::http_build_query_for_curl($value, $new, $k);
             } else {
                 $new[$k] = $value;
