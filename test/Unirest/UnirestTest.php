@@ -203,7 +203,24 @@ class UnirestTest extends UnitTestCase
         $form = $response->body->form;
         $this->assertEqual("Mark", $form->name);
     }
-    
+
+    public function testUploadIfFilePartOfData()
+    {  
+        $response = Unirest::post("http://httpbin.org/post", array(
+            "Accept" => "application/json"
+        ), array(
+            "name" => "Mark",
+            "files[owl.gif]" => Unirest::file(dirname(__FILE__) . "/test_upload.txt")
+        ));
+        $this->assertEqual(200, $response->code);
+        
+        //$files = $response->body->files;
+        //$this->assertEqual("This is a test", $files->file);
+        
+        $form = $response->body->form;
+        $this->assertEqual("Mark", $form->name);
+    }
+   
     public function testPostMultidimensionalArray()
     {
         $response = Unirest::post("http://httpbin.org/post", array(
@@ -342,5 +359,16 @@ class UnirestTest extends UnitTestCase
         $headers    = $response->body->headers;
         $this->assertEqual("ciao", $headers->{'User-Agent'});
     }
-    
+
+    public function testHttpBuildQueryWhenCurlFile()
+    {
+      $file = Unirest::file(dirname(__FILE__) . "/test_upload.txt");
+      $body = array(
+        "to" => "mail@mailinator.com",
+        "from" => "mail@mailinator.com",
+        "file" => $file 
+      );
+      Unirest::http_build_query_for_curl($body, $postBody);
+      $this->assertEqual($postBody['file'], $file);
+    }
 }
