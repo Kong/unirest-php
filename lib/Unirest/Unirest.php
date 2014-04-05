@@ -141,7 +141,7 @@ class Unirest
         
         foreach ($arrays AS $key => $value) {
             $k = isset($prefix) ? $prefix . '[' . $key . ']' : $key;
-            if (!$value instanceof CURLFile AND (is_array($value) OR is_object($value))) {
+            if (!$value instanceof \CURLFile AND (is_array($value) OR is_object($value))) {
                 Unirest::http_build_query_for_curl($value, $new, $k);
             } else {
                 $new[$k] = $value;
