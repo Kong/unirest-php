@@ -1,7 +1,3 @@
-<hr>
-**To the community**: At this time Unirest-PHP only support syncronous requests, and I would really love to implement  asynchronous support. If you guys have any feedback or ideas please comment on issue <a href="https://github.com/Mashape/unirest-php/issues/23">#23</a>.
-<hr>
-
 # Unirest for PHP [![Build Status](https://api.travis-ci.org/Mashape/unirest-php.png)](https://travis-ci.org/Mashape/unirest-php)
 
 Unirest is a set of lightweight HTTP libraries available in multiple languages, ideal for most applications:
@@ -15,6 +11,12 @@ Unirest is a set of lightweight HTTP libraries available in multiple languages, 
 * Automatic JSON parsing into a native object for JSON responses
 
 Created with love by [thefosk](https://github.com/thefosk) @ [mashape.com](https://mashape.com)
+
+---
+
+**To the community**: At this time Unirest-PHP only support syncronous requests, and I would really love to implement  asynchronous support. If you guys have any feedback or ideas please comment on issue <a href="https://github.com/Mashape/unirest-php/issues/23">#23</a>.
+
+---
 
 ### Install with Composer
 If you're using [Composer](https://github.com/composer/composer) to manage
