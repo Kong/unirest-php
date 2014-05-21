@@ -235,8 +235,8 @@ class Unirest
         $vars  = array();
         foreach ($pairs as $pair) {
             $nv          = explode("=", $pair, 2);
-            $name        = $nv[0];
-            $value       = $nv[1];
+            $name        = urldecode($nv[0]);
+            $value       = urldecode($nv[1]);
             $vars[$name] = $value;
         }
         return $vars;
