@@ -9,6 +9,26 @@ class Unirest
     private static $verifyPeer = true;
     private static $socketTimeout = null;
     private static $defaultHeaders = array();
+    private static $proxy = null;
+    private static $cookieFile = null;
+    
+    /**
+     * Set proxy
+     * @param string $proxy in format IP:port
+     */
+    public static function proxy($proxy)
+    {
+        Unirest::$proxy = $proxy;
+    }
+    
+    /**
+     * Set cookie file for enable cookie handling
+     * @param string $cookieFile - correct path to file with permission to write to them
+     */
+    public static function cookieFile($cookieFile)
+    {
+        Unirest::$cookieFile = $cookieFile;
+    }
     
     /**
      * Verify SSL peer
@@ -211,6 +231,13 @@ class Unirest
         }
         if (!empty($username)) {
             curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . ((empty($password)) ? "" : $password));
+        }
+        if (Unirest::$proxy) {
+            curl_setopt($ch, CURLOPT_PROXY, Unirest::$proxy);
+        }
+        if (Unirest::$cookieFile) {
+            curl_setopt($ch, CURLOPT_COOKIEFILE, Unirest::$cookieFile);
+            curl_setopt($ch, CURLOPT_COOKIEJAR, Unirest::$cookieFile);
         }
         
         $response = curl_exec($ch);
