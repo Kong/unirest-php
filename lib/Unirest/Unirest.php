@@ -315,5 +315,3 @@ function is_hex($hex)
 {
     return ctype_xdigit($hex);
 }
-
-?>
