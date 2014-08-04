@@ -6,6 +6,7 @@ use Unirest\HttpRequest;
 class Unirest
 {
     
+    
     /**
      * Send a GET request to a URL
      * @param string $url URL to send the GET request to
@@ -92,7 +93,8 @@ class Unirest
         if ($headers == NULL)
             $headers = array();
 
-        return new HttpRequest($httpMethod, $url, $body, $lowercaseHeaders, $username, $password);
+        return new HttpRequest($httpMethod, $url, $body, $headers, $username, $password);
     }
 }
+
 ?>

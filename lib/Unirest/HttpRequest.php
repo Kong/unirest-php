@@ -81,7 +81,7 @@ class HttpRequest
         $lowercaseHeaders = array();            
         $finalHeaders = array_merge($headers, HttpRequest::$defaultHeaders);        
         foreach ($finalHeaders as $key => $val) {
-            $lowercaseHeaders[] = getHeader($key, $val);
+            $lowercaseHeaders[] = $this->getHeader($key, $val);
         }
 
         $lowerCaseFinalHeaders = array_change_key_case($finalHeaders);
@@ -92,6 +92,21 @@ class HttpRequest
             $lowercaseHeaders[] = "expect:";
         }
         $this->headers = $lowercaseHeaders;
+    }
+    
+    /**
+     * 
+     * @param type $newHeaders are the new headers that need to be appended
+     * @return \Unirest\HttpRequest 
+     */
+    public function headers($newHeaders)
+    {
+        $flattennedHeaders = array();
+        foreach ($newHeaders as $key => $val) {
+            $flattennedHeaders[] = $this->getHeader($key, $val);
+        }        
+        $this->headers = array_merge($this->headers, $flattennedHeaders);
+        return $this;
     }
 	
     /**
@@ -263,7 +278,7 @@ class HttpRequest
     
     private static function getHeader($key, $val)
     {
-        $key = trim(strtolower($key));
+        $key = trim($key);
         return $key . ": " . $val;
     }    
 }
