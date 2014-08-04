@@ -39,7 +39,7 @@ Unirest-PHP requires PHP `v5.3+`. Download the PHP library from Github, and requ
 To install the source code:
 
 ```bash
-$ git clone git@github.com:Mashape/unirest-php.git 
+$ git clone git@github.com:zeeshanejaz/unirest-php.git 
 ```
 
 And include it in your scripts:
