@@ -12,6 +12,7 @@ Unirest is a set of lightweight HTTP libraries available in multiple languages, 
 
 Created with love by [thefosk](https://github.com/thefosk) @ [mashape.com](https://mashape.com)
 Modifed for APIMATIC by [Zeeshan](https://github.com/zeeshanejaz) @ [apimatic.io](https://apimatic.io)
+
 ---
 
 **To the community**: At this time Unirest-PHP only support syncronous requests, and I would really love to implement  asynchronous support. If you guys have any feedback or ideas please comment on issue <a href="https://github.com/Mashape/unirest-php/issues/23">#23</a>.
@@ -24,12 +25,18 @@ dependencies, you can add Unirest with it.
 
 ```javascript
 {
-  "require" : {
-    "zeeshanejaz/unirest-php" : "dev-master"
-  },
-  "autoload": {
-    "psr-0": {"Unirest": "lib/"}
-  }
+   "config": {
+      "vendor-dir": "packages/"
+    },
+   "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/zeeshanejaz/unirest-php"
+        }
+    ],
+    "require": {
+        "zeeshanejaz/unirest-php" : "dev-master"
+    }
 }
 ```
 
