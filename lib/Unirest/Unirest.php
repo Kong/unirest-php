@@ -263,7 +263,7 @@ class Unirest
         } else {
             $scheme = (!empty($_SERVER['HTTPS'])) ? 'https://'  : 'http://';
             $host   = $_SERVER['SERVER_NAME'];
-            $path   = $backTrace[0]['file'];
+            $path   = dirname($backTrace[0]['file']) . '/' . $url;
         }
         
         $port   = (isset($url_parsed['port']) ? $url_parsed['port'] : null);
