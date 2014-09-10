@@ -57,7 +57,8 @@ class Unirest
      */
     public static function get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::GET, $url, $parameters, $headers, $username, $password);
+        $backTrace = debug_backtrace();
+        return Unirest::request(HttpMethod::GET, $url, $backTrace, $parameters, $headers, $username, $password);
     }
     
     /**
@@ -71,7 +72,8 @@ class Unirest
      */
     public static function post($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::POST, $url, $body, $headers, $username, $password);
+        $backTrace = debug_backtrace();
+        return Unirest::request(HttpMethod::POST, $url, $backTrace, $body, $headers, $username, $password);
     }
     
     /**
@@ -85,7 +87,8 @@ class Unirest
      */
     public static function delete($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::DELETE, $url, $body, $headers, $username, $password);
+        $backTrace = debug_backtrace();
+        return Unirest::request(HttpMethod::DELETE, $url, $backTrace, $body, $headers, $username, $password);
     }
     
     /**
@@ -99,7 +102,8 @@ class Unirest
      */
     public static function put($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::PUT, $url, $body, $headers, $username, $password);
+        $backTrace = debug_backtrace();
+        return Unirest::request(HttpMethod::PUT, $url, $backTrace, $body, $headers, $username, $password);
     }
     
     /**
@@ -113,7 +117,8 @@ class Unirest
      */
     public static function patch($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::PATCH, $url, $body, $headers, $username, $password);
+        $backTrace = debug_backtrace();
+        return Unirest::request(HttpMethod::PATCH, $url, $backTrace, $body, $headers, $username, $password);
     }
     
     /**
@@ -160,7 +165,7 @@ class Unirest
      * @throws Exception if a cURL error occurs
      * @return HttpResponse
      */
-    private static function request($httpMethod, $url, $body = NULL, $headers = array(), $username = NULL, $password = NULL)
+    private static function request($httpMethod, $url, $backTrace, $body = NULL, $headers = array(), $username = NULL, $password = NULL)
     {
         if ($headers == NULL)
             $headers = array();
@@ -198,7 +203,7 @@ class Unirest
             $url .= urldecode(http_build_query($postBody));
         }
         
-        curl_setopt($ch, CURLOPT_URL, Unirest::encodeUrl($url));
+        curl_setopt($ch, CURLOPT_URL, Unirest::encodeUrl($url, $backTrace));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
@@ -251,10 +256,17 @@ class Unirest
     {
         $url_parsed = parse_url($url);
         
-        $scheme = $url_parsed['scheme'] . '://';
-        $host   = $url_parsed['host'];
+        if (isset($url_parsed['scheme'])) {
+            $scheme = $url_parsed['scheme'] . '://';
+            $host   = $url_parsed['host'];
+            $path   = (isset($url_parsed['path']) ? $url_parsed['path'] : null);
+        } else {
+            $scheme = (!empty($_SERVER['HTTPS'])) ? 'https://'  : 'http://';
+            $host   = $_SERVER['SERVER_NAME'];
+            $path   = dirname($backTrace[0]['file']) . '/' . $url;
+        }
+        
         $port   = (isset($url_parsed['port']) ? $url_parsed['port'] : null);
-        $path   = (isset($url_parsed['path']) ? $url_parsed['path'] : null);
         $query  = (isset($url_parsed['query']) ? $url_parsed['query'] : null);
         
         if ($query != null) {
