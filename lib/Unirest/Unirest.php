@@ -251,8 +251,14 @@ class Unirest
     {
         $url_parsed = parse_url($url);
         
-        $scheme = $url_parsed['scheme'] . '://';
-        $host   = $url_parsed['host'];
+        if (isset($url_parsed['scheme'])) {
+            $scheme = $url_parsed['scheme'] . '://';
+            $host   = $url_parsed['host'];
+        } else {
+            $scheme = (!empty($_SERVER['HTTPS'])) ? 'https://'  : 'http://';
+            $host   = $_SERVER['SERVER_NAME'];
+        }
+        
         $port   = (isset($url_parsed['port']) ? $url_parsed['port'] : null);
         $path   = (isset($url_parsed['path']) ? $url_parsed['path'] : null);
         $query  = (isset($url_parsed['query']) ? $url_parsed['query'] : null);
