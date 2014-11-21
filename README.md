@@ -25,10 +25,7 @@ dependencies, you can add Unirest with it.
 ```javascript
 {
   "require" : {
-    "mashape/unirest-php" : "dev-master"
-  },
-  "autoload": {
-    "psr-0": {"Unirest": "lib/"}
+    "mashape/unirest-php" : "~1.0"
   }
 }
 ```

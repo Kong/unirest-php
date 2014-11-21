@@ -27,5 +27,10 @@
     },
     "support" : {
         "email" : "support@mashape.com"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2.x-dev"
+        }
     }
 }
