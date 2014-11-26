@@ -236,7 +236,7 @@ class Unirest
         foreach ($pairs as $pair) {
             $nv          = explode("=", $pair, 2);
             $name        = $nv[0];
-            $value       = $nv[1];
+            $value       = isset($nv[1]) ? $nv[1] : '';
             $vars[$name] = $value;
         }
         return $vars;
