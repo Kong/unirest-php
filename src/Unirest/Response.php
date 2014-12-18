@@ -29,6 +29,12 @@ class Response
     }
 }
 
+/**
+ * if PECL_HTTP is not available use a fall back function
+ *
+ * thanks to ricardovermeltfoort@gmail.com
+ * http://php.net/manual/en/function.http-parse-headers.php#112986
+ */
 if (!function_exists('http_parse_headers')) {
     function http_parse_headers($raw_headers) {
         $headers = array();
