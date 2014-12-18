@@ -2,7 +2,7 @@
 <phpunit colors="true">
     <testsuites>
         <testsuite name="Unirest Test Suite">
-            <directory>./test</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 
