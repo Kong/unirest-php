@@ -5,10 +5,10 @@ namespace Unirest;
 class Response
 {
 
-    private $code;
-    private $raw_body;
-    private $body;
-    private $headers;
+    public $code;
+    public $raw_body;
+    public $body;
+    public $headers;
 
     /**
      * @param int $code response code of the cURL request
@@ -18,7 +18,7 @@ class Response
     public function __construct($code, $raw_body, $headers)
     {
         $this->code     = $code;
-        $this->headers  = $this->getHeadersFromCurlResponse($headers);
+        $this->headers  = http_parse_headers($headers);
         $this->raw_body = $raw_body;
         $this->body     = $raw_body;
         $json           = json_decode($raw_body);
@@ -27,52 +27,35 @@ class Response
             $this->body = $json;
         }
     }
+}
 
-    /**
-     * Return a property of the response if it exists.
-     * Possibilities include: code, raw_body, headers, body (if the response is json-decodable)
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
-    }
+if (!function_exists('http_parse_headers')) {
+    function http_parse_headers($raw_headers) {
+        $headers = array();
+        $key = '';
 
-    /**
-     * Set the properties of this object
-     * @param string $property the property name
-     * @param mixed $value the property value
-     */
-    public function __set($property, $value)
-    {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
+        foreach(explode("\n", $raw_headers) as $i => $h) {
+            $h = explode(':', $h, 2);
 
-        return $this;
-    }
+            if (isset($h[1])) {
+                if (!isset($headers[$h[0]])) {
+                    $headers[$h[0]] = trim($h[1]);
+                } elseif (is_array($headers[$h[0]])) {
+                    $headers[$h[0]] = array_merge($headers[$h[0]], array(trim($h[1])));
+                } else {
+                    $headers[$h[0]] = array_merge(array($headers[$h[0]]), array(trim($h[1])));
+                }
 
-    /**
-     * Retrieve the cURL response headers from the
-     * header string and convert it into an array
-     * @param  string $headers header string from cURL response
-     * @return array
-     */
-    private function getHeadersFromCurlResponse($headers)
-    {
-        $result = array();
-        $headers = explode("\r\n", $headers);
-        array_shift($headers);
-
-        foreach ($headers as $line) {
-            if (strstr($line, ': ')) {
-                list($key, $value) = explode(': ', $line);
-                $result[$key] = $value;
+                $key = $h[0];
+            } else {
+                if (substr($h[0], 0, 1) == "\t") {
+                    $headers[$key] .= "\r\n\t".trim($h[0]);
+                } elseif (!$key){
+                    $headers[0] = trim($h[0]);
+                }
             }
         }
 
-        return $result;
+        return $headers;
     }
 }
