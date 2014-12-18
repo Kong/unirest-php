@@ -195,6 +195,19 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Sam Sullivan', $json->author);
     }
 
+    public function testHttpBuildQueryWhenCurlFile()
+    {
+        $file = Request::file(UPLOAD_FIXTURE);
+        $body = array(
+            'to' => 'mail@mailinator.com',
+            'from' => 'mail@mailinator.com',
+            'file' => $file
+        );
+
+        $result = Request::buildHTTPCurlQuery($body);
+        $this->assertEquals($result['file'], $file);
+    }
+
     public function testUpload()
     {
         $response = Request::post('http://httpbin.org/post', array(
@@ -368,18 +381,5 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
         $headers    = $response->body->headers;
         $this->assertEquals('ciao', $headers->{'User-Agent'});
-    }
-
-    public function testHttpBuildQueryWhenCurlFile()
-    {
-        $file = Request::file(UPLOAD_FIXTURE);
-        $body = array(
-            'to' => 'mail@mailinator.com',
-            'from' => 'mail@mailinator.com',
-            'file' => $file
-        );
-
-        Request::buildHTTPCurlQuery($body, $postBody);
-        $this->assertEquals($postBody['file'], $file);
     }
 }

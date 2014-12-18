@@ -121,12 +121,12 @@ class Request
      * Prepares a file for upload. To be used inside the parameters declaration for a request.
      * @param string $path The file path
      */
-    public static function file($path)
+    public static function file($filename, $mimetype = '', $postname = '')
     {
         if (function_exists('curl_file_create')) {
-            return curl_file_create($path);
+            return curl_file_create($filename, $mimetype = '', $postname = '');
         } else {
-            return '@' . $path;
+            return sprintf('@%s;filename=%s;type=%s', $filename, $postname ?: basename($filename), $mimetype);
         }
     }
 
@@ -134,20 +134,29 @@ class Request
      * This function is useful for serializing multidimensional arrays, and avoid getting
      * the 'Array to string conversion' notice
      */
-    public static function buildHTTPCurlQuery($arrays, &$new = array(), $prefix = null)
+    public static function buildHTTPCurlQuery($data, $parent = false)
     {
-        if (is_object($arrays)) {
-            $arrays = get_object_vars($arrays);
+        $result = array();
+
+        if (is_object($data)) {
+            $data = get_object_vars($data);
         }
 
-        foreach ($arrays as $key => $value) {
-            $k = isset($prefix) ? $prefix . '[' . $key . ']' : $key;
-            if (!$value instanceof \CURLFile and (is_array($value) or is_object($value))) {
-                self::buildHTTPCurlQuery($value, $new, $k);
+        foreach ($data as $key => $value) {
+            if ($parent) {
+                $new_key = sprintf('%s[%s]', $parent, $key);
             } else {
-                $new[$k] = $value;
+                $new_key = $key;
+            }
+
+            if (!$value instanceof \CURLFile and (is_array($value) or is_object($value))) {
+                $result = array_merge($result, self::buildHTTPCurlQuery($value, $new_key));
+            } else {
+                $result[$new_key] = $value;
             }
         }
+
+        return $result;
     }
 
     /**
@@ -189,8 +198,7 @@ class Request
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
             if (is_array($body) || $body instanceof \Traversable) {
-                self::buildHTTPCurlQuery($body, $postBody);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, self::buildHTTPCurlQuery($body));
             } else {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
             }
@@ -201,8 +209,7 @@ class Request
                 $url .= '?';
             }
 
-            self::buildHTTPCurlQuery($body, $postBody);
-            $url .= urldecode(http_build_query($postBody));
+            $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
         }
 
         curl_setopt($ch, CURLOPT_URL, self::encodeUrl($url));
