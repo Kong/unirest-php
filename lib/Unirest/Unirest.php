@@ -54,7 +54,7 @@ class Unirest
      * @param string $password Basic Authentication password
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
-    public static function get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
+    public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
         return self::request(HttpMethod::GET, $url, $parameters, $headers, $username, $password);
     }
@@ -68,7 +68,7 @@ class Unirest
      * @param string $password Basic Authentication password
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
-    public static function post($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+    public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
     {
         return self::request(HttpMethod::POST, $url, $body, $headers, $username, $password);
     }
@@ -82,7 +82,7 @@ class Unirest
      * @param string $password Basic Authentication password
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
-    public static function delete($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+    public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
     {
         return self::request(HttpMethod::DELETE, $url, $body, $headers, $username, $password);
     }
@@ -96,7 +96,7 @@ class Unirest
      * @param string $password Basic Authentication password
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
-    public static function put($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+    public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
     {
         return self::request(HttpMethod::PUT, $url, $body, $headers, $username, $password);
     }
@@ -110,7 +110,7 @@ class Unirest
      * @param string $password Basic Authentication password
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
-    public static function patch($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+    public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
     {
         return self::request(HttpMethod::PATCH, $url, $body, $headers, $username, $password);
     }
@@ -132,16 +132,16 @@ class Unirest
      * This function is useful for serializing multidimensional arrays, and avoid getting
      * the "Array to string conversion" notice
      */
-    public static function http_build_query_for_curl($arrays, &$new = array(), $prefix = null)
+    public static function buildHTTPCurlQuery($arrays, &$new = array(), $prefix = null)
     {
         if (is_object($arrays)) {
             $arrays = get_object_vars($arrays);
         }
 
-        foreach ($arrays AS $key => $value) {
+        foreach ($arrays as $key => $value) {
             $k = isset($prefix) ? $prefix . '[' . $key . ']' : $key;
-            if (!$value instanceof \CURLFile AND (is_array($value) OR is_object($value))) {
-                self::http_build_query_for_curl($value, $new, $k);
+            if (!$value instanceof \CURLFile and (is_array($value) or is_object($value))) {
+                self::buildHTTPCurlQuery($value, $new, $k);
             } else {
                 $new[$k] = $value;
             }
@@ -159,10 +159,11 @@ class Unirest
      * @throws Exception if a cURL error occurs
      * @return HttpResponse
      */
-    private static function request($httpMethod, $url, $body = NULL, $headers = array(), $username = NULL, $password = NULL, $json_decode_assoc = false)
+    private static function request($httpMethod, $url, $body = null, $headers = array(), $username = null, $password = null, $json_decode_assoc = false)
     {
-        if ($headers == NULL)
+        if ($headers == null) {
             $headers = array();
+        }
 
         $lowercaseHeaders = array();
         $finalHeaders = array_merge($headers, Unirest::$defaultHeaders);
@@ -186,19 +187,19 @@ class Unirest
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
 
             if (is_array($body) || $body instanceof Traversable) {
-                self::http_build_query_for_curl($body, $postBody);
+                self::buildHTTPCurlQuery($body, $postBody);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
             } else {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
             }
-        } else if (is_array($body)) {
+        } elseif (is_array($body)) {
             if (strpos($url, '?') !== false) {
                 $url .= "&";
             } else {
                 $url .= "?";
             }
 
-            self::http_build_query_for_curl($body, $postBody);
+            self::buildHTTPCurlQuery($body, $postBody);
             $url .= urldecode(http_build_query($postBody));
         }
 
@@ -221,6 +222,7 @@ class Unirest
 
         $response = curl_exec($ch);
         $error    = curl_error($ch);
+
         if ($error) {
             throw new Exception($error);
         }
@@ -267,8 +269,9 @@ class Unirest
             $query = '?' . http_build_query(self::getArrayFromQuerystring($url_parsed['query']));
         }
 
-        if ($port && $port[0] != ":")
+        if ($port && $port[0] != ":") {
             $port = ":" . $port;
+        }
 
         $result = $scheme . $host . $port . $path . $query;
         return $result;
@@ -279,7 +282,6 @@ class Unirest
         $key = trim(strtolower($key));
         return $key . ": " . $val;
     }
-
 }
 
 if (!function_exists('http_chunked_decode')) {
