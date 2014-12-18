@@ -1,8 +1,8 @@
 <?php
 
-use Unirest\Request as Request;
-
 namespace Unirest;
+
+use Unirest\Request as Request;
 
 define('UPLOAD_FIXTURE', dirname(dirname(__FILE__)) . '/fixtures/upload.txt');
 
@@ -372,13 +372,14 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testHttpBuildQueryWhenCurlFile()
     {
-      $file = Request::file(UPLOAD_FIXTURE);
-      $body = array(
-        'to' => 'mail@mailinator.com',
-        'from' => 'mail@mailinator.com',
-        'file' => $file
-      );
-      Request::buildHTTPCurlQuery($body, $postBody);
-      $this->assertEquals($postBody['file'], $file);
+        $file = Request::file(UPLOAD_FIXTURE);
+        $body = array(
+            'to' => 'mail@mailinator.com',
+            'from' => 'mail@mailinator.com',
+            'file' => $file
+        );
+
+        Request::buildHTTPCurlQuery($body, $postBody);
+        $this->assertEquals($postBody['file'], $file);
     }
 }
