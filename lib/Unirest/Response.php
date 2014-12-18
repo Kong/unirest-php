@@ -2,7 +2,7 @@
 
 namespace Unirest;
 
-class HttpResponse
+class Response
 {
 
     private $code;
@@ -15,13 +15,13 @@ class HttpResponse
      * @param string $raw_body the raw body of the cURL response
      * @param string $headers raw header string from cURL response
      */
-    public function __construct($code, $raw_body, $headers, $json_decode_assoc = false)
+    public function __construct($code, $raw_body, $headers)
     {
         $this->code     = $code;
         $this->headers  = $this->getHeadersFromCurlResponse($headers);
         $this->raw_body = $raw_body;
         $this->body     = $raw_body;
-        $json           = json_decode($raw_body, $json_decode_assoc);
+        $json           = json_decode($raw_body);
 
         if (json_last_error() === JSON_ERROR_NONE) {
             $this->body = $json;
