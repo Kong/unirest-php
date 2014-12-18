@@ -34,7 +34,8 @@ class Response
      * thanks to ricardovermeltfoort@gmail.com
      * http://php.net/manual/en/function.http-parse-headers.php#112986
      */
-    private function parseHeaders($raw_headers) {
+    private function parseHeaders($raw_headers)
+    {
         if (function_exists('http_parse_headers')) {
             return http_parse_headers($raw_headers);
         } else {

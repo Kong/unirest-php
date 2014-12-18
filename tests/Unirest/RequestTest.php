@@ -353,7 +353,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testBasicAuthentication()
     {
-        $response = Request::get('http://httpbin.org/get', null, array(), 'user', 'password');
+        $response = Request::get('http://httpbin.org/get', array(), array(), 'user', 'password');
         $headers  = $response->body->headers;
         $this->assertEquals('Basic dXNlcjpwYXNzd29yZA==', $headers->Authorization);
     }
