@@ -1,10 +1,10 @@
 <?php
 
-namespace Unirest;
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+define('UPLOAD_FIXTURE', dirname(__DIR__) . '/fixtures/upload.txt');
 
 use Unirest\Request as Request;
-
-define('UPLOAD_FIXTURE', dirname(dirname(__FILE__)) . '/fixtures/upload.txt');
 
 class UnirestTest extends \PHPUnit_Framework_TestCase
 {
