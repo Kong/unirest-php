@@ -18,7 +18,7 @@ class HttpResponse
     public function __construct($code, $raw_body, $headers, $json_decode_assoc = false)
     {
         $this->code     = $code;
-        $this->headers  = $this->GetHeadersFromCurlResponse($headers);
+        $this->headers  = $this->getHeadersFromCurlResponse($headers);
         $this->raw_body = $raw_body;
         $this->body     = $raw_body;
         $json           = json_decode($raw_body, $json_decode_assoc);
@@ -60,7 +60,7 @@ class HttpResponse
      * @param  string $headers header string from cURL response
      * @return array
      */
-    private function GetHeadersFromCurlResponse($headers)
+    private function getHeadersFromCurlResponse($headers)
     {
         $result = array();
         $headers = explode("\r\n", $headers);
