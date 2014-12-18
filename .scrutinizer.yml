@@ -4,9 +4,15 @@ tools:
     php_analyzer: true
     php_mess_detector: true
     php_changetracking: true
-    php_code_sniffer: true
-    php_cs_fixer: true
     sensiolabs_security_checker: true
+
+    php_code_sniffer:
+        config:
+            standard: 'PSR2'
+
+    php_cs_fixer:
+        config: 
+            level: 'psr2'
 
 filter:
     excluded_paths:
