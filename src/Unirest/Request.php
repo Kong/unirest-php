@@ -188,7 +188,7 @@ class Request
         if ($method != Method::GET) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
-            if (is_array($body) || $body instanceof Traversable) {
+            if (is_array($body) || $body instanceof \Traversable) {
                 self::buildHTTPCurlQuery($body, $postBody);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
             } else {
@@ -239,17 +239,15 @@ class Request
         return new Response($httpCode, $body, $header);
     }
 
-    private static function getArrayFromQuerystring($querystring)
+    private static function getArrayFromQuerystring($query)
     {
-        $pairs = explode('&', $querystring);
-        $vars  = array();
-        foreach ($pairs as $pair) {
-            $nv          = explode('=', $pair, 2);
-            $name        = $nv[0];
-            $value       = $nv[1];
-            $vars[$name] = $value;
-        }
-        return $vars;
+        $query = preg_replace_callback('/(?:^|(?<=&))[^=[]+/', function($match) {
+            return bin2hex(urldecode($match[0]));
+        }, $query);
+
+        parse_str($query, $values);
+
+        return array_combine(array_map('hex2bin', array_keys($values)), $values);
     }
 
     /**
@@ -268,7 +266,7 @@ class Request
         $query  = (isset($url_parsed['query']) ? $url_parsed['query'] : null);
 
         if ($query != null) {
-            $query = '?' . http_build_query(self::getArrayFromQuerystring($url_parsed['query']));
+            $query = '?' . http_build_query(self::getArrayFromQuerystring($query));
         }
 
         if ($port && $port[0] != ':') {
