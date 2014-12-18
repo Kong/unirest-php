@@ -5,7 +5,6 @@ use Unirest\HttpResponse;
 
 class Unirest
 {
-
     private static $verifyPeer = true;
     private static $socketTimeout = null;
     private static $defaultHeaders = array();
@@ -16,7 +15,7 @@ class Unirest
      */
     public static function verifyPeer($enabled)
     {
-        Unirest::$verifyPeer = $enabled;
+        self::$verifyPeer = $enabled;
     }
 
     /**
@@ -25,7 +24,7 @@ class Unirest
      */
     public static function timeout($seconds)
     {
-        Unirest::$socketTimeout = $seconds;
+        self::$socketTimeout = $seconds;
     }
 
     /**
@@ -35,7 +34,7 @@ class Unirest
      */
     public static function defaultHeader($name, $value)
     {
-        Unirest::$defaultHeaders[$name] = $value;
+        self::$defaultHeaders[$name] = $value;
     }
 
     /**
@@ -43,7 +42,7 @@ class Unirest
      */
     public static function clearDefaultHeaders()
     {
-        Unirest::$defaultHeaders = array();
+        self::$defaultHeaders = array();
     }
 
     /**
@@ -57,7 +56,7 @@ class Unirest
      */
     public static function get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::GET, $url, $parameters, $headers, $username, $password);
+        return self::request(HttpMethod::GET, $url, $parameters, $headers, $username, $password);
     }
 
     /**
@@ -71,7 +70,7 @@ class Unirest
      */
     public static function post($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::POST, $url, $body, $headers, $username, $password);
+        return self::request(HttpMethod::POST, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -85,7 +84,7 @@ class Unirest
      */
     public static function delete($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::DELETE, $url, $body, $headers, $username, $password);
+        return self::request(HttpMethod::DELETE, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -99,7 +98,7 @@ class Unirest
      */
     public static function put($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::PUT, $url, $body, $headers, $username, $password);
+        return self::request(HttpMethod::PUT, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -113,7 +112,7 @@ class Unirest
      */
     public static function patch($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
     {
-        return Unirest::request(HttpMethod::PATCH, $url, $body, $headers, $username, $password);
+        return self::request(HttpMethod::PATCH, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -142,7 +141,7 @@ class Unirest
         foreach ($arrays AS $key => $value) {
             $k = isset($prefix) ? $prefix . '[' . $key . ']' : $key;
             if (!$value instanceof \CURLFile AND (is_array($value) OR is_object($value))) {
-                Unirest::http_build_query_for_curl($value, $new, $k);
+                self::http_build_query_for_curl($value, $new, $k);
             } else {
                 $new[$k] = $value;
             }
@@ -168,22 +167,26 @@ class Unirest
         $lowercaseHeaders = array();
         $finalHeaders = array_merge($headers, Unirest::$defaultHeaders);
         foreach ($finalHeaders as $key => $val) {
-            $lowercaseHeaders[] = Unirest::getHeader($key, $val);
+            $lowercaseHeaders[] = self::getHeader($key, $val);
         }
 
         $lowerCaseFinalHeaders = array_change_key_case($finalHeaders);
+
         if (!array_key_exists("user-agent", $lowerCaseFinalHeaders)) {
             $lowercaseHeaders[] = "user-agent: unirest-php/1.1";
         }
+
         if (!array_key_exists("expect", $lowerCaseFinalHeaders)) {
             $lowercaseHeaders[] = "expect:";
         }
 
         $ch = curl_init();
+
         if ($httpMethod != HttpMethod::GET) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
+
             if (is_array($body) || $body instanceof Traversable) {
-                Unirest::http_build_query_for_curl($body, $postBody);
+                self::http_build_query_for_curl($body, $postBody);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postBody);
             } else {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
@@ -194,21 +197,24 @@ class Unirest
             } else {
                 $url .= "?";
             }
-            Unirest::http_build_query_for_curl($body, $postBody);
+
+            self::http_build_query_for_curl($body, $postBody);
             $url .= urldecode(http_build_query($postBody));
         }
 
-        curl_setopt($ch, CURLOPT_URL, Unirest::encodeUrl($url));
+        curl_setopt($ch, CURLOPT_URL, self::encodeUrl($url));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
         curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, Unirest::$verifyPeer);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, self::$verifyPeer);
         curl_setopt($ch, CURLOPT_ENCODING, ""); // If an empty string, "", is set, a header containing all supported encoding types is sent.
-        if (Unirest::$socketTimeout != null) {
-            curl_setopt($ch, CURLOPT_TIMEOUT, Unirest::$socketTimeout);
+
+        if (self::$socketTimeout != null) {
+            curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
         }
+
         if (!empty($username)) {
             curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . ((empty($password)) ? "" : $password));
         }
@@ -258,7 +264,7 @@ class Unirest
         $query  = (isset($url_parsed['query']) ? $url_parsed['query'] : null);
 
         if ($query != null) {
-            $query = '?' . http_build_query(Unirest::getArrayFromQuerystring($url_parsed['query']));
+            $query = '?' . http_build_query(self::getArrayFromQuerystring($url_parsed['query']));
         }
 
         if ($port && $port[0] != ":")
@@ -290,7 +296,7 @@ if (!function_exists('http_chunked_decode')) {
 
         while (($pos < $len) && ($chunkLenHex = substr($chunk, $pos, ($newlineAt = strpos($chunk, "\n", $pos + 1)) - $pos))) {
 
-            if (!is_hex($chunkLenHex)) {
+            if (!ctype_xdigit($chunkLenHex)) {
                 trigger_error('Value is not properly chunk encoded', E_USER_WARNING);
                 return $chunk;
             }
@@ -304,16 +310,3 @@ if (!function_exists('http_chunked_decode')) {
         return $dechunk;
     }
 }
-
-/**
- * determine if a string can represent a number in hexadecimal
- * @link http://uk1.php.net/ctype_xdigit
- * @param string $hex
- * @return boolean true if the string is a hex, otherwise false
- */
-function is_hex($hex)
-{
-    return ctype_xdigit($hex);
-}
-
-?>

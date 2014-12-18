@@ -23,7 +23,7 @@ class HttpResponse
         $this->body     = $raw_body;
         $json           = json_decode($raw_body, $json_decode_assoc);
 
-        if (json_last_error() == JSON_ERROR_NONE) {
+        if (json_last_error() === JSON_ERROR_NONE) {
             $this->body = $json;
         }
     }
@@ -50,6 +50,7 @@ class HttpResponse
         if (property_exists($this, $property)) {
             $this->$property = $value;
         }
+
         return $this;
     }
 
@@ -61,6 +62,7 @@ class HttpResponse
      */
     private function get_headers_from_curl_response($headers)
     {
+        $result = array();
         $headers = explode("\r\n", $headers);
         array_shift($headers);
 
@@ -73,5 +75,4 @@ class HttpResponse
 
         return $result;
     }
-
 }
