@@ -241,7 +241,7 @@ class Request
 
     private static function getArrayFromQuerystring($query)
     {
-        $query = preg_replace_callback('/(?:^|(?<=&))[^=[]+/', function($match) {
+        $query = preg_replace_callback('/(?:^|(?<=&))[^=[]+/', function ($match) {
             return bin2hex(urldecode($match[0]));
         }, $query);
 

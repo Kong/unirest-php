@@ -303,7 +303,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
     {
         Request::timeout(1);
 
-        $response = Request::get('http://httpbin.org/delay/3');
+        Request::get('http://httpbin.org/delay/3');
 
         Request::timeout(null); // Cleaning timeout for the other tests
     }
@@ -353,7 +353,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testBasicAuthentication()
     {
-        $response = Request::get('http://httpbin.org/get', null, null, 'user', 'password');
+        $response = Request::get('http://httpbin.org/get', null, array(), 'user', 'password');
         $headers  = $response->body->headers;
         $this->assertEquals('Basic dXNlcjpwYXNzd29yZA==', $headers->Authorization);
     }
