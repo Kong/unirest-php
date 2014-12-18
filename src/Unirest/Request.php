@@ -1,9 +1,9 @@
 <?php
 
-use Unirest\method;
-use Unirest\Response;
-
 namespace Unirest;
+
+use Unirest\Method;
+use Unirest\Response;
 
 class Request
 {
@@ -58,7 +58,7 @@ class Request
      */
     public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
-        return self::request(Method::GET, $url, $parameters, $headers, $username, $password);
+        return self::send(Method::GET, $url, $parameters, $headers, $username, $password);
     }
 
     /**
@@ -72,7 +72,7 @@ class Request
      */
     public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(Method::POST, $url, $body, $headers, $username, $password);
+        return self::send(Method::POST, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -86,7 +86,7 @@ class Request
      */
     public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(Method::DELETE, $url, $body, $headers, $username, $password);
+        return self::send(Method::DELETE, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -100,7 +100,7 @@ class Request
      */
     public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(Method::PUT, $url, $body, $headers, $username, $password);
+        return self::send(Method::PUT, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -114,7 +114,7 @@ class Request
      */
     public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(Method::PATCH, $url, $body, $headers, $username, $password);
+        return self::send(Method::PATCH, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -161,7 +161,7 @@ class Request
      * @throws Exception if a cURL error occurs
      * @return Unirest\Response
      */
-    private static function request($method, $url, $body = null, $headers = array(), $username = null, $password = null)
+    private static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
     {
         if ($headers == null) {
             $headers = array();
