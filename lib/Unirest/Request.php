@@ -1,9 +1,11 @@
 <?php
 
-use Unirest\HttpMethod;
-use Unirest\HttpResponse;
+use Unirest\method;
+use Unirest\Response;
 
-class Unirest
+namespace Unirest;
+
+class Request
 {
     private static $verifyPeer = true;
     private static $socketTimeout = null;
@@ -56,7 +58,7 @@ class Unirest
      */
     public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
-        return self::request(HttpMethod::GET, $url, $parameters, $headers, $username, $password);
+        return self::request(Method::GET, $url, $parameters, $headers, $username, $password);
     }
 
     /**
@@ -70,7 +72,7 @@ class Unirest
      */
     public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(HttpMethod::POST, $url, $body, $headers, $username, $password);
+        return self::request(Method::POST, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -84,7 +86,7 @@ class Unirest
      */
     public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(HttpMethod::DELETE, $url, $body, $headers, $username, $password);
+        return self::request(Method::DELETE, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -98,7 +100,7 @@ class Unirest
      */
     public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(HttpMethod::PUT, $url, $body, $headers, $username, $password);
+        return self::request(Method::PUT, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -112,7 +114,7 @@ class Unirest
      */
     public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
     {
-        return self::request(HttpMethod::PATCH, $url, $body, $headers, $username, $password);
+        return self::request(Method::PATCH, $url, $body, $headers, $username, $password);
     }
 
     /**
@@ -121,16 +123,16 @@ class Unirest
      */
     public static function file($path)
     {
-        if (function_exists("curl_file_create")) {
+        if (function_exists('curl_file_create')) {
             return curl_file_create($path);
         } else {
-            return "@" . $path;
+            return '@' . $path;
         }
     }
 
     /**
      * This function is useful for serializing multidimensional arrays, and avoid getting
-     * the "Array to string conversion" notice
+     * the 'Array to string conversion' notice
      */
     public static function buildHTTPCurlQuery($arrays, &$new = array(), $prefix = null)
     {
@@ -150,41 +152,41 @@ class Unirest
 
     /**
      * Send a cURL request
-     * @param string $httpMethod HTTP method to use (based off \Unirest\HttpMethod constants)
+     * @param Unirest\Method $method HTTP method to use
      * @param string $url URL to send the request to
      * @param mixed $body request body
      * @param array $headers additional headers to send
      * @param string $username  Basic Authentication username
      * @param string $password  Basic Authentication password
      * @throws Exception if a cURL error occurs
-     * @return HttpResponse
+     * @return Unirest\Response
      */
-    private static function request($httpMethod, $url, $body = null, $headers = array(), $username = null, $password = null, $json_decode_assoc = false)
+    private static function request($method, $url, $body = null, $headers = array(), $username = null, $password = null)
     {
         if ($headers == null) {
             $headers = array();
         }
 
         $lowercaseHeaders = array();
-        $finalHeaders = array_merge($headers, Unirest::$defaultHeaders);
+        $finalHeaders = array_merge($headers, self::$defaultHeaders);
         foreach ($finalHeaders as $key => $val) {
             $lowercaseHeaders[] = self::getHeader($key, $val);
         }
 
         $lowerCaseFinalHeaders = array_change_key_case($finalHeaders);
 
-        if (!array_key_exists("user-agent", $lowerCaseFinalHeaders)) {
-            $lowercaseHeaders[] = "user-agent: unirest-php/1.1";
+        if (!array_key_exists('user-agent', $lowerCaseFinalHeaders)) {
+            $lowercaseHeaders[] = 'user-agent: unirest-php/2.0';
         }
 
-        if (!array_key_exists("expect", $lowerCaseFinalHeaders)) {
-            $lowercaseHeaders[] = "expect:";
+        if (!array_key_exists('expect', $lowerCaseFinalHeaders)) {
+            $lowercaseHeaders[] = 'expect:';
         }
 
         $ch = curl_init();
 
-        if ($httpMethod != HttpMethod::GET) {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $httpMethod);
+        if ($method != Method::GET) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
             if (is_array($body) || $body instanceof Traversable) {
                 self::buildHTTPCurlQuery($body, $postBody);
@@ -194,9 +196,9 @@ class Unirest
             }
         } elseif (is_array($body)) {
             if (strpos($url, '?') !== false) {
-                $url .= "&";
+                $url .= '&';
             } else {
-                $url .= "?";
+                $url .= '?';
             }
 
             self::buildHTTPCurlQuery($body, $postBody);
@@ -210,39 +212,39 @@ class Unirest
         curl_setopt($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, self::$verifyPeer);
-        curl_setopt($ch, CURLOPT_ENCODING, ""); // If an empty string, "", is set, a header containing all supported encoding types is sent.
+        curl_setopt($ch, CURLOPT_ENCODING, ''); // If an empty string, '', is set, a header containing all supported encoding types is sent.
 
         if (self::$socketTimeout != null) {
             curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
         }
 
         if (!empty($username)) {
-            curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . ((empty($password)) ? "" : $password));
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . ((empty($password)) ? '' : $password));
         }
 
         $response = curl_exec($ch);
         $error    = curl_error($ch);
 
         if ($error) {
-            throw new Exception($error);
+            throw new \Exception($error);
         }
 
         // Split the full response in its headers and body
         $curl_info   = curl_getinfo($ch);
-        $header_size = $curl_info["header_size"];
+        $header_size = $curl_info['header_size'];
         $header      = substr($response, 0, $header_size);
         $body        = substr($response, $header_size);
-        $httpCode    = $curl_info["http_code"];
+        $httpCode    = $curl_info['http_code'];
 
-        return new HttpResponse($httpCode, $body, $header, $json_decode_assoc);
+        return new Response($httpCode, $body, $header);
     }
 
     private static function getArrayFromQuerystring($querystring)
     {
-        $pairs = explode("&", $querystring);
+        $pairs = explode('&', $querystring);
         $vars  = array();
         foreach ($pairs as $pair) {
-            $nv          = explode("=", $pair, 2);
+            $nv          = explode('=', $pair, 2);
             $name        = $nv[0];
             $value       = $nv[1];
             $vars[$name] = $value;
@@ -269,8 +271,8 @@ class Unirest
             $query = '?' . http_build_query(self::getArrayFromQuerystring($url_parsed['query']));
         }
 
-        if ($port && $port[0] != ":") {
-            $port = ":" . $port;
+        if ($port && $port[0] != ':') {
+            $port = ':' . $port;
         }
 
         $result = $scheme . $host . $port . $path . $query;
@@ -280,35 +282,6 @@ class Unirest
     private static function getHeader($key, $val)
     {
         $key = trim(strtolower($key));
-        return $key . ": " . $val;
-    }
-}
-
-if (!function_exists('http_chunked_decode')) {
-    /**
-     * Dechunk an http 'transfer-encoding: chunked' message
-     * @param string $chunk the encoded message
-     * @return string the decoded message
-     */
-    function http_chunked_decode($chunk)
-    {
-        $pos     = 0;
-        $len     = strlen($chunk);
-        $dechunk = null;
-
-        while (($pos < $len) && ($chunkLenHex = substr($chunk, $pos, ($newlineAt = strpos($chunk, "\n", $pos + 1)) - $pos))) {
-
-            if (!ctype_xdigit($chunkLenHex)) {
-                trigger_error('Value is not properly chunk encoded', E_USER_WARNING);
-                return $chunk;
-            }
-
-            $pos      = $newlineAt + 1;
-            $chunkLen = hexdec(rtrim($chunkLenHex, "\r\n"));
-            $dechunk .= substr($chunk, $pos, $chunkLen);
-            $pos = strpos($chunk, "\n", $pos + $chunkLen) + 1;
-        }
-
-        return $dechunk;
+        return $key . ': ' . $val;
     }
 }

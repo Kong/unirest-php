@@ -2,7 +2,7 @@
 
 namespace Unirest;
 
-interface HttpMethod
+interface Method
 {
     const DELETE = 'DELETE';
     const GET = 'GET';

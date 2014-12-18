@@ -13,7 +13,3 @@ tools:
     php_cs_fixer:
         config: 
             level: 'psr2'
-
-filter:
-    excluded_paths:
-        - 'test/*'
