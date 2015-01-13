@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit colors="true">
-    <testsuites>
-        <testsuite name="Unirest Test Suite">
-            <directory>./tests</directory>
-        </testsuite>
-    </testsuites>
+  <testsuites>
+    <testsuite name="Unirest Test Suite">
+      <directory>./tests</directory>
+    </testsuite>
+  </testsuites>
 
-    <php>
-        <ini name="date.timezone" value="UTC"/>
-    </php>
+  <php>
+    <ini name="date.timezone" value="UTC"/>
+  </php>
 </phpunit>
