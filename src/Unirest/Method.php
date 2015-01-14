@@ -20,9 +20,6 @@ interface Method
     const OPTIONS = 'OPTIONS';
     const TRACE = 'TRACE';
 
-    // RFC3744
-    const ACL = 'ACL';
-
     // RFC3253
     const BASELINE = 'BASELINE';
 

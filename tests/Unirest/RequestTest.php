@@ -4,11 +4,11 @@ require_once __DIR__ . '/../../src/Unirest.php';
 
 define('UPLOAD_FIXTURE', dirname(__DIR__) . '/fixtures/upload.txt');
 
+use Unirest\File as File;
 use Unirest\Request as Request;
 
 class UnirestTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testGet()
     {
         $response = Request::get('http://httpbin.org/get?name=Mark', array(
@@ -197,7 +197,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testHttpBuildQueryWhenCurlFile()
     {
-        $file = Request::file(UPLOAD_FIXTURE);
+        $file = File::add(UPLOAD_FIXTURE);
         $body = array(
             'to' => 'mail@mailinator.com',
             'from' => 'mail@mailinator.com',
@@ -214,7 +214,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark',
-            'file' => Request::file(UPLOAD_FIXTURE)
+            'file' => File::add(UPLOAD_FIXTURE)
         ));
         $this->assertEquals(200, $response->code);
 
@@ -231,7 +231,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark',
-            'files[owl.gif]' => Request::file(UPLOAD_FIXTURE)
+            'files[owl.gif]' => File::add(UPLOAD_FIXTURE)
         ));
         $this->assertEquals(200, $response->code);
 
