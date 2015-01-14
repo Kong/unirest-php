@@ -62,6 +62,48 @@ class Request
     }
 
     /**
+     * Send a HEAD request to a URL
+     * @param string $url URL to send the HEAD request to
+     * @param array $headers additional headers to send
+     * @param mixed $parameters parameters to send in the querystring
+     * @param string $username Basic Authentication username
+     * @param string $password Basic Authentication password
+     * @return string|stdObj response string or stdObj if response is json-decodable
+     */
+    public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null)
+    {
+        return self::send(Method::HEAD, $url, $parameters, $headers, $username, $password);
+    }
+
+    /**
+     * Send a OPTIONS request to a URL
+     * @param string $url URL to send the OPTIONS request to
+     * @param array $headers additional headers to send
+     * @param mixed $parameters parameters to send in the querystring
+     * @param string $username Basic Authentication username
+     * @param string $password Basic Authentication password
+     * @return string|stdObj response string or stdObj if response is json-decodable
+     */
+    public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null)
+    {
+        return self::send(Method::OPTIONS, $url, $parameters, $headers, $username, $password);
+    }
+
+    /**
+     * Send a CONNECT request to a URL
+     * @param string $url URL to send the CONNECT request to
+     * @param array $headers additional headers to send
+     * @param mixed $parameters parameters to send in the querystring
+     * @param string $username Basic Authentication username
+     * @param string $password Basic Authentication password
+     * @return string|stdObj response string or stdObj if response is json-decodable
+     */
+    public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null)
+    {
+        return self::send(Method::CONNECT, $url, $parameters, $headers, $username, $password);
+    }
+
+    /**
      * Send POST request to a URL
      * @param string $url URL to send the POST request to
      * @param array $headers additional headers to send
@@ -115,6 +157,20 @@ class Request
     public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
     {
         return self::send(Method::PATCH, $url, $body, $headers, $username, $password);
+    }
+
+    /**
+     * Send TRACE request to a URL
+     * @param string $url URL to send the TRACE request to
+     * @param array $headers additional headers to send
+     * @param mixed $body TRACE body data
+     * @param string $username Basic Authentication username
+     * @param string $password Basic Authentication password
+     * @return string|stdObj response string or stdObj if response is json-decodable
+     */
+    public static function trace($url, $headers = array(), $body = null, $username = null, $password = null)
+    {
+        return self::send(Method::TRACE, $url, $body, $headers, $username, $password);
     }
 
     /**
