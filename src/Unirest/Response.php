@@ -4,7 +4,6 @@ namespace Unirest;
 
 class Response
 {
-
     public $code;
     public $raw_body;
     public $body;
@@ -39,9 +38,8 @@ class Response
         if (function_exists('http_parse_headers')) {
             return http_parse_headers($raw_headers);
         } else {
-
-            $headers = array();
             $key = '';
+            $headers = array();
 
             foreach (explode("\n", $raw_headers) as $i => $h) {
                 $h = explode(':', $h, 2);
