@@ -1,17 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../../src/Unirest.php';
-
-define('UPLOAD_FIXTURE', dirname(__DIR__) . '/fixtures/upload.txt');
-
-use Unirest\File as File;
-use Unirest\Request as Request;
-
-class UnirestTest extends \PHPUnit_Framework_TestCase
+class UnirestRequestTest extends \PHPUnit_Framework_TestCase
 {
     public function testGet()
     {
-        $response = Request::get('http://httpbin.org/get?name=Mark', array(
+        $response = Unirest\Request::get('http://httpbin.org/get?name=Mark', array(
             'Accept' => 'application/json'
         ), array(
             'nick' => 'thefosk'
@@ -26,7 +19,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMultidimensionalArray()
     {
-        $response = Request::get('http://httpbin.org/get', array(
+        $response = Unirest\Request::get('http://httpbin.org/get', array(
             'Accept' => 'application/json'
         ), array(
             'key' => 'value',
@@ -47,7 +40,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetWithDots()
     {
-        $response = Request::get('http://httpbin.org/get', array(
+        $response = Unirest\Request::get('http://httpbin.org/get', array(
             'Accept' => 'application/json'
         ), array(
             'user.name' => 'Mark',
@@ -63,7 +56,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetWithDots2()
     {
-        $response = Request::get('http://httpbin.org/get', array(
+        $response = Unirest\Request::get('http://httpbin.org/get', array(
             'Accept' => 'application/json'
         ), array(
             'user.name' => 'Mark Bond',
@@ -79,7 +72,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testPost()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark',
@@ -95,7 +88,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testPostWithEqualSign()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark=Hello'
@@ -109,7 +102,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetWithEqualSign()
     {
-        $response = Request::get('http://httpbin.org/get', array(
+        $response = Unirest\Request::get('http://httpbin.org/get', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark=Hello'
@@ -120,7 +113,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
         $args = $response->body->args;
         $this->assertEquals('Mark=Hello', $args->name);
 
-        $response = Request::get('http://httpbin.org/get', array(
+        $response = Unirest\Request::get('http://httpbin.org/get', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark=Hello=John'
@@ -134,7 +127,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testPostArray()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json'
         ), array(
             'name[0]' => 'Mark',
@@ -151,7 +144,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetArray()
     {
-        $response = Request::get('http://httpbin.org/get', array(), array(
+        $response = Unirest\Request::get('http://httpbin.org/get', array(), array(
             'name[0]' => 'Mark',
             'name[1]' => 'John'
         ));
@@ -165,7 +158,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testPostWithDots()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json'
         ), array(
             'user.name' => 'Mark',
@@ -181,7 +174,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testRawPost()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json',
             'Content-Type' => 'application/json'
         ), json_encode(array(
@@ -197,24 +190,24 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testHttpBuildQueryWhenCurlFile()
     {
-        $file = File::add(UPLOAD_FIXTURE);
+        $file = Unirest\File::add(UPLOAD_FIXTURE);
         $body = array(
             'to' => 'mail@mailinator.com',
             'from' => 'mail@mailinator.com',
             'file' => $file
         );
 
-        $result = Request::buildHTTPCurlQuery($body);
+        $result = Unirest\Request::buildHTTPCurlQuery($body);
         $this->assertEquals($result['file'], $file);
     }
 
     public function testUpload()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark',
-            'file' => File::add(UPLOAD_FIXTURE)
+            'file' => Unirest\File::add(UPLOAD_FIXTURE)
         ));
         $this->assertEquals(200, $response->code);
 
@@ -227,11 +220,11 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testUploadIfFilePartOfData()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark',
-            'files[owl.gif]' => File::add(UPLOAD_FIXTURE)
+            'files[owl.gif]' => Unirest\File::add(UPLOAD_FIXTURE)
         ));
         $this->assertEquals(200, $response->code);
 
@@ -244,7 +237,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testPostMultidimensionalArray()
     {
-        $response = Request::post('http://httpbin.org/post', array(
+        $response = Unirest\Request::post('http://httpbin.org/post', array(
             'Accept' => 'application/json'
         ), array(
             'key' => 'value',
@@ -264,7 +257,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testPut()
     {
-        $response = Request::put('http://httpbin.org/put', array(
+        $response = Unirest\Request::put('http://httpbin.org/put', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark',
@@ -280,7 +273,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testPatch()
     {
-        $response = Request::patch('http://httpbin.org/patch', array(
+        $response = Unirest\Request::patch('http://httpbin.org/patch', array(
             'Accept' => 'application/json'
         ), array(
             'name' => 'Mark',
@@ -296,7 +289,7 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $response = Request::delete('http://httpbin.org/delete', array(
+        $response = Unirest\Request::delete('http://httpbin.org/delete', array(
             'Accept' => 'application/json',
             'Content-Type' => 'application/x-www-form-urlencoded'
         ), array(
@@ -314,42 +307,42 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
      */
     public function testTimeoutFail()
     {
-        Request::timeout(1);
+        Unirest\Request::timeout(1);
 
-        Request::get('http://httpbin.org/delay/3');
+        Unirest\Request::get('http://httpbin.org/delay/3');
 
-        Request::timeout(null); // Cleaning timeout for the other tests
+        Unirest\Request::timeout(null); // Cleaning timeout for the other tests
     }
 
     public function testTimeoutSuccess()
     {
-        Request::timeout(3);
+        Unirest\Request::timeout(3);
 
-        $response = Request::get('http://httpbin.org/delay/1');
+        $response = Unirest\Request::get('http://httpbin.org/delay/1');
         $this->assertEquals(200, $response->code);
 
-        Request::timeout(null); // Cleaning timeout for the other tests
+        Unirest\Request::timeout(null); // Cleaning timeout for the other tests
     }
 
     public function testDefaultHeader()
     {
-        Request::defaultHeader('Hello', 'custom');
-        $response = Request::get('http://httpbin.org/get');
+        Unirest\Request::defaultHeader('Hello', 'custom');
+        $response = Unirest\Request::get('http://httpbin.org/get');
 
         $this->assertEquals(200, $response->code);
         $headers    = $response->body->headers;
         $properties = get_object_vars($headers);
         $this->assertTrue(array_key_exists('Hello', $properties));
         $this->assertEquals('custom', $headers->Hello);
-        $response = Request::get('http://httpbin.org/get');
+        $response = Unirest\Request::get('http://httpbin.org/get');
 
         $this->assertEquals(200, $response->code);
         $headers    = $response->body->headers;
         $properties = get_object_vars($headers);
         $this->assertTrue(array_key_exists('Hello', $properties));
         $this->assertEquals('custom', $headers->Hello);
-        Request::clearDefaultHeaders();
-        $response = Request::get('http://httpbin.org/get');
+        Unirest\Request::clearDefaultHeaders();
+        $response = Unirest\Request::get('http://httpbin.org/get');
 
         $this->assertEquals(200, $response->code);
         $headers    = $response->body->headers;
@@ -359,21 +352,21 @@ class UnirestTest extends \PHPUnit_Framework_TestCase
 
     public function testGzip()
     {
-        $response = Request::get('http://httpbin.org/gzip');
+        $response = Unirest\Request::get('http://httpbin.org/gzip');
         $args     = $response->body;
         $this->assertEquals(true, $args->gzipped);
     }
 
     public function testBasicAuthentication()
     {
-        $response = Request::get('http://httpbin.org/get', array(), array(), 'user', 'password');
+        $response = Unirest\Request::get('http://httpbin.org/get', array(), array(), 'user', 'password');
         $headers  = $response->body->headers;
         $this->assertEquals('Basic dXNlcjpwYXNzd29yZA==', $headers->Authorization);
     }
 
     public function testCustomHeaders()
     {
-        $response = Request::get('http://httpbin.org/get', array(
+        $response = Unirest\Request::get('http://httpbin.org/get', array(
             'user-agent' => 'ciao',
         ));
 
