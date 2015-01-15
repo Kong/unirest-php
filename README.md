@@ -1,94 +1,109 @@
-# Unirest for PHP [![Build Status](https://api.travis-ci.org/Mashape/unirest-php.png)](https://travis-ci.org/Mashape/unirest-php)
+# Unirest for PHP ![GitHub version][github-image] [![version][composer-image]][composer-url]
+
+[![Build Status][travis-image]][travis-url]
+[![Code Climate][codeclimate-image]][codeclimate-url]
+[![Coverage Status][codecoverage-image]][codecoverage-url]
+[![Dependency Status][dependency-image]][dependency-url]
+[![Gitter][gitter-image]][gitter-url]
 
 Unirest is a set of lightweight HTTP libraries available in multiple languages, ideal for most applications:
 
-* Make `GET`, `POST`, `PUT`, `PATCH`, `DELETE` requests
-* It supports form parameters, file uploads and custom body entities
+## Features
+
+* Utility methods to call `GET`, `HEAD`, `POST`, `PUT`, `DELETE`, `CONNECT`, `OPTIONS`, `TRACE`, `PATCH` requests
+* Supports form parameters, file uploads and custom body entities
 * Supports gzip
 * Supports Basic Authentication natively
 * Customizable timeout
 * Customizable default headers for every request (DRY)
 * Automatic JSON parsing into a native object for JSON responses
 
-Created with love by [thefosk](https://github.com/thefosk) @ [mashape.com](https://mashape.com)
+## Installation
 
----
+### Using [Composer](https://getcomposer.org)
 
-**To the community**: At this time Unirest-PHP only support syncronous requests, and I would really love to implement  asynchronous support. If you guys have any feedback or ideas please comment on issue <a href="https://github.com/Mashape/unirest-php/issues/23">#23</a>.
+To install unirest-php with Composer, just add the following to your `composer.json` file:
 
----
-
-### Install with Composer
-If you're using [Composer](https://github.com/composer/composer) to manage
-dependencies, you can add Unirest with it.
-
-```javascript
+```json
+// composer.json
 {
-  "require" : {
-    "mashape/unirest-php" : "dev-master"
-  },
-  "autoload": {
-    "psr-0": {"Unirest": "lib/"}
-  }
+    "require-dev": {
+        "mashape/unirest-php": "2.*"
+    }
 }
 ```
 
-### Install source from GitHub
-Unirest-PHP requires PHP `v5.3+`. Download the PHP library from Github, and require in your script like so:
+or by running the following command:
 
-To install the source code:
-
-```bash
-$ git clone git@github.com:Mashape/unirest-php.git 
+```shell
+composer require mashape/unirest-php
 ```
 
-And include it in your scripts:
+This will get you the latest version of the reporter and install it. If you do want the master, untagged, version you may use the command below:
 
-```bash
-require_once '/path/to/unirest-php/lib/Unirest.php';
+```shell
+composer require mashape/php-test-reporter:@dev-master
 ```
 
-## Creating Request
+Composer installs autoloader at `./vendor/autoloader.php`. to include the library in your script, add:
+
+```php
+require_once 'vendor/autoload.php';
+```
+
+If you use Symfony2, autoloader has to be detected automatically.
+
+*You can see this library on [Packagist](https://packagist.org/packages/mashape/unirest-php).*
+
+### Install from source
+
+Unirest-PHP requires PHP `v5.4+`. Download the PHP library from Github, then include `Unirest.php` in your script:
+
+```shell
+git clone git@github.com:Mashape/unirest-php.git 
+```
+
+```php
+require_once '/path/to/unirest-php/src/Unirest.php';
+```
+
+## Usage
+
+### Creating a Request
 
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
 
 ```php
-$response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
-  array(
-    "parameter" => 23,
-    "foo" => "bar"
-  )
-);
+$headers = array("Accept" => "application/json");
+$body = array("foo" => "hellow", "bar" => "world");
 
-$response->code; // HTTP Status code
-$response->headers; // Headers
-$response->body; // Parsed body
-$response->raw_body; // Unparsed body
+$response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
+
+$response->code;        // HTTP Status code
+$response->headers;     // Headers
+$response->body;        // Parsed body
+$response->raw_body;    // Unparsed body
 ```
 
 ### File Uploads
 
-To upload files in a multipart form representation use the return value of `Unirest::file($path)` as the value of a parameter:
+To upload files in a multipart form representation use the return value of `Unirest\File::add($path)` as the value of a parameter:
 
 ```php
-$response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
-  array(
-    "file" => Unirest::file("/tmp/file.txt") // Tells Unirest where the file is located
-  )
-);
+$headers = array("Accept" => "application/json");
+$body = array("file" => Unirest\File::add("/tmp/file.txt"));
+
+$response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
  ```
  
 ### Custom Entity Body
+
 Sending a custom body such as a JSON Object rather than a string or form style parameters we utilize json_encode for the body:
 ```php
-$response = Unirest::post("http://httpbin.org/post", array( "Accept" => "application/json" ),
-  json_encode(
-    array(
-      "parameter" => "value",
-      "foo" => "bar"
-    )
-  )
-);
+$headers = array("Accept" => "application/json");
+$body =   json_encode(array("foo" => "hellow", "bar" => "world"));
+
+$response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
 ```
 
 ### Basic Authentication
@@ -96,16 +111,17 @@ $response = Unirest::post("http://httpbin.org/post", array( "Accept" => "applica
 Authenticating the request with basic authentication can be done by providing the `username` and `password` arguments:
 
 ```php
-$response = Unirest::get("http://httpbin.org/get", null, null, "username", "password");
+$response = Unirest\Request::get("http://httpbin.org/get", null, null, "username", "password");
 ```
 
-# Request
+### Request Object
+
 ```php
-Unirest::get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
-Unirest::post($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
-Unirest::put($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
-Unirest::patch($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
-Unirest::delete($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest\Request::get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
+Unirest\Request::post($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest\Request::put($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest\Request::patch($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest\Request::delete($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
 ```
   
 - `url` - Endpoint, address, or uri to be acted upon and requested information from.
@@ -114,7 +130,8 @@ Unirest::delete($url, $headers = array(), $body = NULL, $username = NULL, $passw
 - `username` - Basic Authentication username
 - `password` - Basic Authentication password
 
-# Response
+### Response Object
+
 Upon recieving a response Unirest returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
 
 - `code` - HTTP Response Status Code (Example `200`)
@@ -122,39 +139,67 @@ Upon recieving a response Unirest returns the result in the form of an Object, t
 - `body` - Parsed response body where applicable, for example JSON responses are parsed to Objects / Associative Arrays.
 - `raw_body` - Un-parsed response body
 
-# Advanced Configuration
+### Advanced Configuration
 
 You can set some advanced configuration to tune Unirest-PHP:
 
-### Timeout
+#### Timeout
 
 You can set a custom timeout value (in **seconds**):
 
 ```php
-Unirest::timeout(5); // 5s timeout
+Unirest\Request::timeout(5); // 5s timeout
 ```
 
-### Default Request Headers
+#### Default Request Headers
 
 You can set default headers that will be sent on every request:
 
 ```php
-Unirest::defaultHeader("Header1", "Value1");
-Unirest::defaultHeader("Header2", "Value2");
+Unirest\Request::defaultHeader("Header1", "Value1");
+Unirest\Request::defaultHeader("Header2", "Value2");
 ```
 
 You can clear the default headers anytime with:
 
 ```php
-Unirest::clearDefaultHeaders();
+Unirest\Request::clearDefaultHeaders();
 ```
 
-### SSL validation
+#### SSL validation
 
 You can explicitly enable or disable SSL certificate validation when consuming an SSL protected endpoint:
 
 ```php
-Unirest::verifyPeer(false); // Disables SSL cert validation
+Unirest\Request::verifyPeer(false); // Disables SSL cert validation
 ```
 
 By default is `true`.
+
+## License
+
+Licensed under [the MIT license](LICENSE).
+
+Created with love by [![Mashape Logo][mashape-logo]](https://www.mashape.com/)
+
+[github-image]: https://badge.fury.io/gh/mashape%2Funirest-php.svg
+
+[gitter-url]: https://gitter.im/Mashape
+[gitter-image]: https://badges.gitter.im/Mashape.png
+
+[composer-url]: http://badge.fury.io/ph/mashape%2Funirest-php
+[composer-image]: https://badge.fury.io/ph/mashape%2Funirest-php.svg
+
+[travis-url]: https://travis-ci.org/Mashape/unirest-php
+[travis-image]: https://travis-ci.org/Mashape/unirest-php.png?branch=master
+
+[codeclimate-url]: https://codeclimate.com/github/Mashape/unirest-php
+[codeclimate-image]: https://codeclimate.com/github/Mashape/unirest-php/badges/gpa.svg
+
+[codecoverage-url]: https://codeclimate.com/github/Mashape/unirest-php
+[codecoverage-image]: https://codeclimate.com/github/Mashape/unirest-php/badges/coverage.svg
+
+[dependency-url]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d
+[dependency-image]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d/badge.svg?style=flat
+
+[mashape-logo]: https://cloud.githubusercontent.com/assets/183195/5750736/c94e178c-9c26-11e4-91b2-84bcd5d33e28.png
