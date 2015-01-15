@@ -1,9 +1,10 @@
-# Unirest for PHP [![version][composer-image]][composer-url]
+# Unirest for PHP [![Build Status][travis-image]][travis-url] [![version][packagist-version]][packagist-url]
 
-[![Build Status][travis-image]][travis-url]
-[![Code Climate][codeclimate-image]][codeclimate-url]
-[![Coverage Status][codecoverage-image]][codecoverage-url]
-[![Dependency Status][dependency-image]][dependency-url]
+[![License][packagist-license]][license-url]
+[![Downloads][packagist-downloads]][packagist-url]
+[![Code Climate][codeclimate-quality]][codeclimate-url]
+[![Coverage Status][codeclimate-coverage]][codeclimate-url]
+[![Dependencies][versioneye-image]][versioneye-url]
 [![Gitter][gitter-image]][gitter-url]
 
 Unirest is a set of lightweight HTTP libraries available in multiple languages, ideal for most applications:
@@ -207,26 +208,26 @@ Unirest\Request::verifyPeer(false); // Disables SSL cert validation
 
 By default is `true`.
 
-## License
+----
 
-Licensed under [the MIT license](https://github.com/Mashape/unirest-php/blob/master/LICENSE).
+Made with &#9829; from the [Mashape](https://www.mashape.com/) team
 
-Created with love by [Mashape](https://www.mashape.com/).
+[license-url]: https://github.com/Mashape/unirest-php/blob/master/LICENSE
 
 [gitter-url]: https://gitter.im/Mashape/unirest-php
-[gitter-image]: https://badges.gitter.im/Join%20Chat.svg
-
-[composer-url]: http://badge.fury.io/ph/mashape%2Funirest-php
-[composer-image]: https://badge.fury.io/ph/mashape%2Funirest-php.svg
+[gitter-image]: https://img.shields.io/badge/Gitter-Join%20Chat-blue.svg?style=flat-square
 
 [travis-url]: https://travis-ci.org/Mashape/unirest-php
-[travis-image]: https://travis-ci.org/Mashape/unirest-php.png?branch=master
+[travis-image]: https://img.shields.io/travis/Mashape/unirest-php.svg?style=flat-square
+
+[packagist-url]: https://packagist.org/packages/Mashape/unirest-php
+[packagist-license]: https://img.shields.io/packagist/l/Mashape/unirest-php.svg?style=flat-square
+[packagist-version]: https://img.shields.io/packagist/v/Mashape/unirest-php.svg?style=flat-square
+[packagist-downloads]: https://img.shields.io/packagist/dt/Mashape/unirest-php.svg?style=flat-square
 
 [codeclimate-url]: https://codeclimate.com/github/Mashape/unirest-php
-[codeclimate-image]: https://codeclimate.com/github/Mashape/unirest-php/badges/gpa.svg
+[codeclimate-quality]: https://img.shields.io/codeclimate/github/Mashape/unirest-php.svg?style=flat-square
+[codeclimate-coverage]: https://img.shields.io/codeclimate/coverage/github/Mashape/unirest-php.svg?style=flat-square
 
-[codecoverage-url]: https://codeclimate.com/github/Mashape/unirest-php
-[codecoverage-image]: https://codeclimate.com/github/Mashape/unirest-php/badges/coverage.svg
-
-[dependency-url]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d
-[dependency-image]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d/badge.svg?style=flat
+[versioneye-url]: https://www.versioneye.com/user/projects/Mashape/unirest-php
+[versioneye-image]: https://img.shields.io/versioneye/d/Mashape/unirest-php.svg?style=flat-square
