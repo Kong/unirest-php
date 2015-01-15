@@ -17,46 +17,58 @@ Unirest is a set of lightweight HTTP libraries available in multiple languages, 
 * Customizable default headers for every request (DRY)
 * Automatic JSON parsing into a native object for JSON responses
 
-Created with love by [Mashape](https://www.mashape.com)
+## Installation
 
----
+### [Componser](https://getcomposer.org)
 
-**To the community**: At this time Unirest-PHP only support syncronous requests, and I would really love to implement  asynchronous support. If you guys have any feedback or ideas please comment on issue [#23](https://github.com/Mashape/unirest-php/issues/23).
+To install unirest-php with Composer, just add the following to your `composer.json` file:
 
----
-
-### Install with [Componser](https://getcomposer.org)
-
-If you're using Composer to manage dependencies, you can add Unirest with it.
-
-```javascript
+```json
+// composer.json
 {
-  "require" : {
-    "mashape/unirest-php" : "2.0.*"
-  },
-  "autoload": {
-    "psr-0": {"Unirest": "src/"}
-  }
+    "require-dev": {
+        "mashape/unirest-php": "2.*"
+    }
 }
 ```
 
-### Install source from GitHub
+or by running the following command:
 
-Unirest-PHP requires PHP `v5.3+`. Download the PHP library from Github, and require in your script like so:
-
-To install the source code:
-
-```bash
-$ git clone git@github.com:Mashape/unirest-php.git 
+```shell
+composer require mashape/unirest-php
 ```
 
-And include it in your scripts:
+This will get you the latest version of the reporter and install it. If you do want the master, untagged, version you may use the command below:
 
-```bash
+```shell
+composer require mashape/php-test-reporter:@dev-master
+```
+
+Composer installs autoloader at `./vendor/autoloader.php`. to include the library in your script, add:
+
+```php
+require_once 'vendor/autoload.php';
+```
+
+If you use Symfony2, autoloader has to be detected automatically.
+
+*You can see this library on [Packagist](https://packagist.org/packages/mashape/unirest-php).*
+
+### Install from source
+
+Unirest-PHP requires PHP `v5.4+`. Download the PHP library from Github, then include `Unirest.php` in your script:
+
+```shell
+git clone git@github.com:Mashape/unirest-php.git 
+```
+
+```php
 require_once '/path/to/unirest-php/src/Unirest.php';
 ```
 
-## Creating Request
+## Usage
+
+### Creating a Request
 
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
 
@@ -70,7 +82,7 @@ $response->code;        // HTTP Status code
 $response->headers;     // Headers
 $response->body;        // Parsed body
 $response->raw_body;    // Unparsed body
-```dependency-image
+```
 
 ### File Uploads
 
@@ -101,7 +113,7 @@ Authenticating the request with basic authentication can be done by providing th
 $response = Unirest\Request::get("http://httpbin.org/get", null, null, "username", "password");
 ```
 
-# Request
+### Request Object
 
 ```php
 Unirest\Request::get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
@@ -117,7 +129,7 @@ Unirest\Request::delete($url, $headers = array(), $body = NULL, $username = NULL
 - `username` - Basic Authentication username
 - `password` - Basic Authentication password
 
-# Response
+### Response Object
 
 Upon recieving a response Unirest returns the result in the form of an Object, this object should always have the same keys for each language regarding to the response details.
 
@@ -126,11 +138,11 @@ Upon recieving a response Unirest returns the result in the form of an Object, t
 - `body` - Parsed response body where applicable, for example JSON responses are parsed to Objects / Associative Arrays.
 - `raw_body` - Un-parsed response body
 
-# Advanced Configuration
+### Advanced Configuration
 
 You can set some advanced configuration to tune Unirest-PHP:
 
-### Timeout
+#### Timeout
 
 You can set a custom timeout value (in **seconds**):
 
@@ -138,7 +150,7 @@ You can set a custom timeout value (in **seconds**):
 Unirest\Request::timeout(5); // 5s timeout
 ```
 
-### Default Request Headers
+#### Default Request Headers
 
 You can set default headers that will be sent on every request:
 
@@ -153,7 +165,7 @@ You can clear the default headers anytime with:
 Unirest\Request::clearDefaultHeaders();
 ```
 
-### SSL validation
+#### SSL validation
 
 You can explicitly enable or disable SSL certificate validation when consuming an SSL protected endpoint:
 
@@ -166,6 +178,8 @@ By default is `true`.
 ## License
 
 Licensed under [the MIT license](LICENSE).
+
+Created with love by [Mashape](https://www.mashape.com)
 
 [github-image]: https://badge.fury.io/gh/mashape%2Funirest-php.svg
 
