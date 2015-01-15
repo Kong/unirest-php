@@ -1,4 +1,4 @@
-# Unirest for PHP ![GitHub version][github-image] [![version][composer-image]][composer-url]
+# Unirest for PHP [![version][composer-image]][composer-url]
 
 [![Build Status][travis-image]][travis-url]
 [![Code Climate][codeclimate-image]][codeclimate-url]
@@ -181,8 +181,6 @@ By default is `true`.
 Licensed under [the MIT license](LICENSE).
 
 Created with love by [![Mashape Logo][mashape-logo]](https://www.mashape.com/)
-
-[github-image]: https://badge.fury.io/gh/mashape%2Funirest-php.svg
 
 [gitter-url]: https://gitter.im/Mashape
 [gitter-image]: https://badges.gitter.im/Mashape.png
