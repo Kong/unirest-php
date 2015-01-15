@@ -87,7 +87,7 @@ $response->raw_body;    // Unparsed body
 
 ### File Uploads
 
-To upload files in a multipart form representation use the return value of `Unirest::file($path)` as the value of a parameter:
+To upload files in a multipart form representation use the return value of `Unirest\File::add($path)` as the value of a parameter:
 
 ```php
 $headers = array("Accept" => "application/json");
