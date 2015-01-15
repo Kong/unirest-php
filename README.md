@@ -120,11 +120,11 @@ $response = Unirest\Request::get("http://httpbin.org/get", null, null, "username
 ### Request Object
 
 ```php
-Unirest\Request::get($url, $headers = array(), $parameters = NULL, $username = NULL, $password = NULL)
-Unirest\Request::post($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
-Unirest\Request::put($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
-Unirest\Request::patch($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
-Unirest\Request::delete($url, $headers = array(), $body = NULL, $username = NULL, $password = NULL)
+Unirest\Request::get($url, $headers = array(), $parameters = null, $username = null, $password = null)
+Unirest\Request::post($url, $headers = array(), $body = null, $username = null, $password = null)
+Unirest\Request::put($url, $headers = array(), $body = null, $username = null, $password = null)
+Unirest\Request::patch($url, $headers = array(), $body = null, $username = null, $password = null)
+Unirest\Request::delete($url, $headers = array(), $body = null, $username = null, $password = null)
 ```
   
 - `url` - Endpoint, address, or uri to be acted upon and requested information from.
@@ -132,6 +132,14 @@ Unirest\Request::delete($url, $headers = array(), $body = NULL, $username = NULL
 - `body` - Request Body as associative array or object
 - `username` - Basic Authentication username
 - `password` - Basic Authentication password
+
+You can send a request with any [standard](http://www.iana.org/assignments/http-methods/http-methods.xhtml) or custom HTTP Method:
+
+```php
+Unirest\Request::send(Unirest\Methods::LINK, $url, $headers = array(), $body);
+
+Unirest\Request::send('CHECKOUT', $url, $headers = array(), $body);
+```
 
 ### Response Object
 
