@@ -1,5 +1,7 @@
 # Unirest for PHP [![version][composer-image]][composer-url]
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Mashape/unirest-php?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status][travis-image]][travis-url]
 [![Code Climate][codeclimate-image]][codeclimate-url]
 [![Coverage Status][codecoverage-image]][codecoverage-url]
