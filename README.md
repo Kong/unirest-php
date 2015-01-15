@@ -182,7 +182,7 @@ Licensed under [the MIT license](https://github.com/Mashape/unirest-php/blob/mas
 
 Created with love by [Mashape](https://www.mashape.com/).
 
-[gitter-url]: https://gitter.im/Mashape
+[gitter-url]: https://gitter.im/Mashape/unirest-php
 [gitter-image]: https://badges.gitter.im/Mashape.png
 
 [composer-url]: http://badge.fury.io/ph/mashape%2Funirest-php
