@@ -21,3 +21,8 @@ notifications:
     on_success: always
     on_failure: always
     on_start: false
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: hhvm
