@@ -7,7 +7,7 @@
 [![Dependencies][versioneye-image]][versioneye-url]
 [![Gitter][gitter-image]][gitter-url]
 
-Unirest is a set of lightweight HTTP libraries available in multiple languages, ideal for most applications:
+Unirest is a set of lightweight HTTP libraries available in [multiple languages](http://unirest.io).
 
 ## Features
 
@@ -223,11 +223,11 @@ Made with &#9829; from the [Mashape](https://www.mashape.com/) team
 [packagist-url]: https://packagist.org/packages/Mashape/unirest-php
 [packagist-license]: https://img.shields.io/packagist/l/Mashape/unirest-php.svg?style=flat-square
 [packagist-version]: https://img.shields.io/packagist/v/Mashape/unirest-php.svg?style=flat-square
-[packagist-downloads]: https://img.shields.io/packagist/dt/Mashape/unirest-php.svg?style=flat-square
+[packagist-downloads]: https://img.shields.io/packagist/dm/Mashape/unirest-php.svg?style=flat-square
 
 [codeclimate-url]: https://codeclimate.com/github/Mashape/unirest-php
 [codeclimate-quality]: https://img.shields.io/codeclimate/github/Mashape/unirest-php.svg?style=flat-square
 [codeclimate-coverage]: https://img.shields.io/codeclimate/coverage/github/Mashape/unirest-php.svg?style=flat-square
 
-[versioneye-url]: https://www.versioneye.com/user/projects/Mashape/unirest-php
-[versioneye-image]: https://img.shields.io/versioneye/d/Mashape/unirest-php.svg?style=flat-square
+[versioneye-url]: https://www.versioneye.com/user/projects/54b82450050646ca5c0001f3
+[versioneye-image]: https://img.shields.io/versioneye/d/user/projects/54b82450050646ca5c0001f3.svg?style=flat-square
