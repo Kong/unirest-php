@@ -18,6 +18,10 @@ Unirest is a set of lightweight HTTP libraries available in multiple languages, 
 * Customizable default headers for every request (DRY)
 * Automatic JSON parsing into a native object for JSON responses
 
+## Requirements
+
+- [cURL](http://php.net/manual/en/book.curl.php)
+
 ## Installation
 
 ### Using [Composer](https://getcomposer.org)
@@ -25,7 +29,6 @@ Unirest is a set of lightweight HTTP libraries available in multiple languages, 
 To install unirest-php with Composer, just add the following to your `composer.json` file:
 
 ```json
-// composer.json
 {
     "require-dev": {
         "mashape/unirest-php": "2.*"
