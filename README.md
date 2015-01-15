@@ -20,7 +20,7 @@ Unirest is a set of lightweight HTTP libraries available in multiple languages, 
 
 ## Installation
 
-### [Componser](https://getcomposer.org)
+### Using [Composer](https://getcomposer.org)
 
 To install unirest-php with Composer, just add the following to your `composer.json` file:
 
