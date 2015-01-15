@@ -215,19 +215,19 @@ Made with &#9829; from the [Mashape](https://www.mashape.com/) team
 [license-url]: https://github.com/Mashape/unirest-php/blob/master/LICENSE
 
 [gitter-url]: https://gitter.im/Mashape/unirest-php
-[gitter-image]: https://img.shields.io/badge/Gitter-Join%20Chat-blue.svg?style=flat-square
+[gitter-image]: https://img.shields.io/badge/Gitter-Join%20Chat-blue.svg?style=flat
 
 [travis-url]: https://travis-ci.org/Mashape/unirest-php
-[travis-image]: https://img.shields.io/travis/Mashape/unirest-php.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/Mashape/unirest-php.svg?style=flat
 
 [packagist-url]: https://packagist.org/packages/Mashape/unirest-php
-[packagist-license]: https://img.shields.io/packagist/l/Mashape/unirest-php.svg?style=flat-square
-[packagist-version]: https://img.shields.io/packagist/v/Mashape/unirest-php.svg?style=flat-square
-[packagist-downloads]: https://img.shields.io/packagist/dm/Mashape/unirest-php.svg?style=flat-square
+[packagist-license]: https://img.shields.io/packagist/l/Mashape/unirest-php.svg?style=flat
+[packagist-version]: https://img.shields.io/packagist/v/Mashape/unirest-php.svg?style=flat
+[packagist-downloads]: https://img.shields.io/packagist/dm/Mashape/unirest-php.svg?style=flat
 
 [codeclimate-url]: https://codeclimate.com/github/Mashape/unirest-php
-[codeclimate-quality]: https://img.shields.io/codeclimate/github/Mashape/unirest-php.svg?style=flat-square
-[codeclimate-coverage]: https://img.shields.io/codeclimate/coverage/github/Mashape/unirest-php.svg?style=flat-square
+[codeclimate-quality]: https://img.shields.io/codeclimate/github/Mashape/unirest-php.svg?style=flat
+[codeclimate-coverage]: https://img.shields.io/codeclimate/coverage/github/Mashape/unirest-php.svg?style=flat
 
 [versioneye-url]: https://www.versioneye.com/user/projects/54b82450050646ca5c0001f3
-[versioneye-image]: https://img.shields.io/versioneye/d/user/projects/54b82450050646ca5c0001f3.svg?style=flat-square
+[versioneye-image]: https://img.shields.io/versioneye/d/user/projects/54b82450050646ca5c0001f3.svg?style=flat
