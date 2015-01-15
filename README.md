@@ -1,6 +1,13 @@
-# Unirest for PHP [![Build Status](https://api.travis-ci.org/Mashape/unirest-php.png)](https://travis-ci.org/Mashape/unirest-php)
+# Unirest for PHP ![GitHub version][github-image] [![version][composer-image]][composer-url]
+
+[![Build Status][travis-image]][travis-url]
+[![Code Climate][codeclimate-image]][codeclimate-url]
+[![Coverage Status][codecoverage-image]][codecoverage-url]
+[![Dependency Status][dependency-image]][dependency-url]
 
 Unirest is a set of lightweight HTTP libraries available in multiple languages, ideal for most applications:
+
+## Features
 
 * Utility methods to call `GET`, `HEAD`, `POST`, `PUT`, `DELETE`, `CONNECT`, `OPTIONS`, `TRACE`, `PATCH` requests
 * Supports form parameters, file uploads and custom body entities
@@ -18,8 +25,9 @@ Created with love by [Mashape](https://www.mashape.com)
 
 ---
 
-### Install with Composer
-If you're using [Composer](https://getcomposer.org/) to manage dependencies, you can add Unirest with it.
+### Install with [Componser](https://getcomposer.org)
+
+If you're using Composer to manage dependencies, you can add Unirest with it.
 
 ```javascript
 {
@@ -62,7 +70,7 @@ $response->code;        // HTTP Status code
 $response->headers;     // Headers
 $response->body;        // Parsed body
 $response->raw_body;    // Unparsed body
-```
+```dependency-image
 
 ### File Uploads
 
@@ -154,3 +162,24 @@ Unirest\Request::verifyPeer(false); // Disables SSL cert validation
 ```
 
 By default is `true`.
+
+## License
+
+Licensed under [the MIT license](LICENSE).
+
+[github-image]: https://badge.fury.io/gh/mashape%2Funirest-php.svg
+
+[composer-url]: http://badge.fury.io/ph/mashape%2Funirest-php
+[composer-image]: https://badge.fury.io/ph/mashape%2Funirest-php.svg
+
+[travis-url]: https://travis-ci.org/Mashape/unirest-php
+[travis-image]: https://travis-ci.org/Mashape/unirest-php.png?branch=master
+
+[codeclimate-url]: https://codeclimate.com/github/Mashape/unirest-php
+[codeclimate-image]: https://codeclimate.com/github/Mashape/unirest-php/badges/gpa.svg
+
+[codecoverage-url]: https://codeclimate.com/github/Mashape/unirest-php
+[codecoverage-image]: https://codeclimate.com/github/Mashape/unirest-php/badges/coverage.svg
+
+[dependency-url]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d
+[dependency-image]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d/badge.svg?style=flat

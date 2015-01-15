@@ -8,11 +8,13 @@
   "author": "Mashape <opensource@mashape.com> (https://www.mashape.com)",
   "require": {
     "php": ">=5.4.0",
-    "ext-curl": "*",
-    "ext-json": "*"
+    "ext-curl": "0.0.0.*",
+    "ext-json": "~1.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "*"
+    "ext-xdebug": "~2.2",
+    "phpunit/phpunit": "~4.4",
+    "codeclimate/php-test-reporter": "0.1.*"
   },
   "autoload": {
     "psr-0": {
