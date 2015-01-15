@@ -171,7 +171,10 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
 
         $args = $response->body->args;
         $this->assertEquals('Mark=Hello', $args->name);
+    }
 
+    public function testGetWithEqualSignAlt()
+    {
         $response = Unirest\Request::get('http://httpbin.org/get', array(
             'Accept' => 'application/json'
         ), array(
@@ -182,6 +185,17 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
 
         $args = $response->body->args;
         $this->assertEquals('Mark=Hello=John', $args->name);
+    }
+
+    public function testGetWithComplexQuery()
+    {
+        $response = Unirest\Request::get('http://httpbin.org/get?query=[{"type":"/music/album","name":null,"artist":{"id":"/en/bob_dylan"},"limit":3}]&cursor');
+
+        $this->assertEquals(200, $response->code);
+
+        $args = $response->body->args;
+        $this->assertEquals('', $args->cursor);
+        $this->assertEquals('[{"type":"/music/album","name":null,"artist":{"id":"/en/bob_dylan"},"limit":3}]', $args->query);
     }
 
     public function testGetArray()
