@@ -178,9 +178,9 @@ By default is `true`.
 
 ## License
 
-Licensed under [the MIT license](LICENSE).
+Licensed under [the MIT license](https://github.com/Mashape/unirest-php/blob/master/LICENSE).
 
-Created with love by [![Mashape Logo][mashape-logo]](https://www.mashape.com/)
+Created with love by [Mashape](https://www.mashape.com/)
 
 [gitter-url]: https://gitter.im/Mashape
 [gitter-image]: https://badges.gitter.im/Mashape.png
@@ -199,5 +199,3 @@ Created with love by [![Mashape Logo][mashape-logo]](https://www.mashape.com/)
 
 [dependency-url]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d
 [dependency-image]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d/badge.svg?style=flat
-
-[mashape-logo]: https://cloud.githubusercontent.com/assets/183195/5750736/c94e178c-9c26-11e4-91b2-84bcd5d33e28.png
