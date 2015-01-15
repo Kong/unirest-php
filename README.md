@@ -180,7 +180,7 @@ By default is `true`.
 
 Licensed under [the MIT license](LICENSE).
 
-Created with love by [Mashape](https://www.mashape.com)
+Created with love by [![Mashape Logo][mashape-logo]](https://www.mashape.com/)
 
 [github-image]: https://badge.fury.io/gh/mashape%2Funirest-php.svg
 
@@ -201,3 +201,5 @@ Created with love by [Mashape](https://www.mashape.com)
 
 [dependency-url]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d
 [dependency-image]: https://www.versioneye.com/user/projects/54b702db050646ca5c00019d/badge.svg?style=flat
+
+[mashape-logo]: https://cloud.githubusercontent.com/assets/183195/5750736/c94e178c-9c26-11e4-91b2-84bcd5d33e28.png
