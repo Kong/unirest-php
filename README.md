@@ -4,6 +4,7 @@
 [![Code Climate][codeclimate-image]][codeclimate-url]
 [![Coverage Status][codecoverage-image]][codecoverage-url]
 [![Dependency Status][dependency-image]][dependency-url]
+[![Gitter][gitter-image]][gitter-url]
 
 Unirest is a set of lightweight HTTP libraries available in multiple languages, ideal for most applications:
 
@@ -182,6 +183,9 @@ Licensed under [the MIT license](LICENSE).
 Created with love by [Mashape](https://www.mashape.com)
 
 [github-image]: https://badge.fury.io/gh/mashape%2Funirest-php.svg
+
+[gitter-url]: https://gitter.im/Mashape
+[gitter-image]: https://badges.gitter.im/Mashape.png
 
 [composer-url]: http://badge.fury.io/ph/mashape%2Funirest-php
 [composer-image]: https://badge.fury.io/ph/mashape%2Funirest-php.svg
