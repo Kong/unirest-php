@@ -13,14 +13,19 @@ class Response
      * @param int $code response code of the cURL request
      * @param string $raw_body the raw body of the cURL response
      * @param string $headers raw header string from cURL response
+     * @param array $json_args arguments to pass to json_decode function
      */
-    public function __construct($code, $raw_body, $headers)
+    public function __construct($code, $raw_body, $headers, $json_args = array())
     {
         $this->code     = $code;
         $this->headers  = $this->parseHeaders($headers);
         $this->raw_body = $raw_body;
         $this->body     = $raw_body;
-        $json           = json_decode($raw_body);
+
+        // make sure raw_body is the first argument
+        array_unshift($json_args, $raw_body);
+
+        $json = call_user_func_array('json_decode', $json_args);
 
         if (json_last_error() === JSON_ERROR_NONE) {
             $this->body = $json;

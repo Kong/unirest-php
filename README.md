@@ -146,6 +146,17 @@ Upon recieving a response Unirest returns the result in the form of an Object, t
 
 You can set some advanced configuration to tune Unirest-PHP:
 
+#### Custom JSON Decode Flags
+
+Unirest uses PHP's [JSON Extension](http://php.net/manual/en/book.json.php) for automatically decoding JSON responses.
+sometime you may want to return associative arrays, limit the depth of recursion, or use any of the [customization flags](http://php.net/manual/en/json.constants.php#constant.json-hex-tag).
+
+To do so, simply set the desired options using the `jsonOpts` request method:
+
+```php
+Unirest\Request::jsonOpts(true, 512, JSON_NUMERIC_CHECK & JSON_FORCE_OBJECT & JSON_UNESCAPED_SLASHES);
+```
+
 #### Timeout
 
 You can set a custom timeout value (in **seconds**):
@@ -162,6 +173,14 @@ You can set default headers that will be sent on every request:
 Unirest\Request::defaultHeader("Header1", "Value1");
 Unirest\Request::defaultHeader("Header2", "Value2");
 ```
+
+You can do set default headers in bulk:
+
+```php
+Unirest\Request::defaultHeaders(array(
+    "Header1" => "Value1",
+    "Header2" => "Value2"
+));
 
 You can clear the default headers anytime with:
 
@@ -186,7 +205,7 @@ Licensed under [the MIT license](https://github.com/Mashape/unirest-php/blob/mas
 Created with love by [Mashape](https://www.mashape.com/).
 
 [gitter-url]: https://gitter.im/Mashape/unirest-php
-[gitter-image]: https://badges.gitter.im/Mashape.png
+[gitter-image]: https://badges.gitter.im/Join%20Chat.svg
 
 [composer-url]: http://badge.fury.io/ph/mashape%2Funirest-php
 [composer-image]: https://badge.fury.io/ph/mashape%2Funirest-php.svg
