@@ -180,7 +180,7 @@ By default is `true`.
 
 Licensed under [the MIT license](https://github.com/Mashape/unirest-php/blob/master/LICENSE).
 
-Created with love by [Mashape](https://www.mashape.com/)
+Created with love by [Mashape](https://www.mashape.com/).
 
 [gitter-url]: https://gitter.im/Mashape
 [gitter-image]: https://badges.gitter.im/Mashape.png
