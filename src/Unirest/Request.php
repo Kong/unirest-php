@@ -244,31 +244,11 @@ class Request
      * @throws Exception if a cURL error occurs
      * @return Unirest\Response
      */
-    private static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
+    public static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
     {
-        if ($headers == null) {
-            $headers = array();
-        }
-
-        $lowercaseHeaders = array();
-        $finalHeaders = array_merge($headers, self::$defaultHeaders);
-        foreach ($finalHeaders as $key => $val) {
-            $lowercaseHeaders[] = self::getHeader($key, $val);
-        }
-
-        $lowerCaseFinalHeaders = array_change_key_case($finalHeaders);
-
-        if (!array_key_exists('user-agent', $lowerCaseFinalHeaders)) {
-            $lowercaseHeaders[] = 'user-agent: unirest-php/2.0';
-        }
-
-        if (!array_key_exists('expect', $lowerCaseFinalHeaders)) {
-            $lowercaseHeaders[] = 'expect:';
-        }
-
         $ch = curl_init();
 
-        if ($method != Method::GET) {
+        if ($method !== Method::GET) {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
             if (is_array($body) || $body instanceof \Traversable) {
@@ -290,12 +270,12 @@ class Request
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $lowercaseHeaders);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, self::getFormattedHeaders($headers));
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, self::$verifyPeer);
         curl_setopt($ch, CURLOPT_ENCODING, ''); // If an empty string, '', is set, a header containing all supported encoding types is sent.
 
-        if (self::$socketTimeout != null) {
+        if (self::$socketTimeout !== null) {
             curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
         }
 
@@ -318,6 +298,27 @@ class Request
         $httpCode    = $curl_info['http_code'];
 
         return new Response($httpCode, $body, $header, self::$jsonOpts);
+    }
+
+    public static function getFormattedHeaders($headers)
+    {
+        $formattedHeaders = array();
+
+        $combinedHeaders = array_change_key_case(array_merge((array) $headers, self::$defaultHeaders));
+
+        foreach ($combinedHeaders as $key => $val) {
+            $formattedHeaders[] = self::getHeaderString($key, $val);
+        }
+
+        if (!array_key_exists('user-agent', $combinedHeaders)) {
+            $formattedHeaders[] = 'user-agent: unirest-php/2.0';
+        }
+
+        if (!array_key_exists('expect', $combinedHeaders)) {
+            $formattedHeaders[] = 'expect:';
+        }
+
+        return $formattedHeaders;
     }
 
     private static function getArrayFromQuerystring($query)
@@ -346,11 +347,11 @@ class Request
         $path   = (isset($url_parsed['path']) ? $url_parsed['path'] : null);
         $query  = (isset($url_parsed['query']) ? $url_parsed['query'] : null);
 
-        if ($query != null) {
+        if ($query !== null) {
             $query = '?' . http_build_query(self::getArrayFromQuerystring($query));
         }
 
-        if ($port && $port[0] != ':') {
+        if ($port && $port[0] !== ':') {
             $port = ':' . $port;
         }
 
@@ -358,7 +359,7 @@ class Request
         return $result;
     }
 
-    private static function getHeader($key, $val)
+    private static function getHeaderString($key, $val)
     {
         $key = trim(strtolower($key));
         return $key . ': ' . $val;
