@@ -1,4 +1,5 @@
 .DS_Store
-/vendor
+build
+vendor
 composer.lock
 composer.phar
