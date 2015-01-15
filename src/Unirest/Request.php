@@ -7,36 +7,66 @@ use Unirest\Response;
 
 class Request
 {
+    private static $jsonOpts = array();
     private static $verifyPeer = true;
     private static $socketTimeout = null;
     private static $defaultHeaders = array();
 
     /**
+     * Set JSON decode mode
+     *
+     * @param bool $assoc When TRUE, returned objects will be converted into associative arrays.
+     * @param bool $depth User specified recursion depth.
+     * @param bool $options Bitmask of JSON decode options. Currently only JSON_BIGINT_AS_STRING is supported (default is to cast large integers as floats)
+     */
+    public static function jsonOpts($assoc = false, $depth = 512, $options = 0)
+    {
+        return self::$jsonOpts = array($assoc, $depth, $options);
+    }
+
+    /**
      * Verify SSL peer
+     *
      * @param bool $enabled enable SSL verification, by default is true
      */
     public static function verifyPeer($enabled)
     {
-        self::$verifyPeer = $enabled;
+        return self::$verifyPeer = $enabled;
     }
 
     /**
      * Set a timeout
+     *
      * @param integer $seconds timeout value in seconds
      */
     public static function timeout($seconds)
     {
-        self::$socketTimeout = $seconds;
+        return self::$socketTimeout = $seconds;
+    }
+
+    /**
+     * Set default headers to send on every request
+     *
+     * @param array $headers headers array
+     */
+    public static function defaultHeaders($headers)
+    {
+        foreach ($headers as $name => $value) {
+            self::$defaultHeaders[$name] = $value;
+        }
+
+        return $headers;
     }
 
     /**
      * Set a new default header to send on every request
+     *
      * @param string $name header name
      * @param string $value header value
      */
     public static function defaultHeader($name, $value)
     {
-        self::$defaultHeaders[$name] = $value;
+        return self::$defaultHeaders[$name] = $value;
     }
 
     /**
@@ -44,11 +74,12 @@ class Request
      */
     public static function clearDefaultHeaders()
     {
-        self::$defaultHeaders = array();
+        return self::$defaultHeaders = array();
     }
 
     /**
      * Send a GET request to a URL
+     *
      * @param string $url URL to send the GET request to
      * @param array $headers additional headers to send
      * @param mixed $parameters parameters to send in the querystring
@@ -286,7 +317,7 @@ class Request
         $body        = substr($response, $header_size);
         $httpCode    = $curl_info['http_code'];
 
-        return new Response($httpCode, $body, $header);
+        return new Response($httpCode, $body, $header, self::$jsonOpts);
     }
 
     private static function getArrayFromQuerystring($query)
