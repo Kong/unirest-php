@@ -181,6 +181,7 @@ Unirest\Request::defaultHeaders(array(
     "Header1" => "Value1",
     "Header2" => "Value2"
 ));
+```
 
 You can clear the default headers anytime with:
 
