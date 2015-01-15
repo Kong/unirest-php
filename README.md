@@ -136,7 +136,7 @@ Unirest\Request::delete($url, $headers = array(), $body = null, $username = null
 You can send a request with any [standard](http://www.iana.org/assignments/http-methods/http-methods.xhtml) or custom HTTP Method:
 
 ```php
-Unirest\Request::send(Unirest\Methods::LINK, $url, $headers = array(), $body);
+Unirest\Request::send(Unirest\Method::LINK, $url, $headers = array(), $body);
 
 Unirest\Request::send('CHECKOUT', $url, $headers = array(), $body);
 ```
