@@ -3,4 +3,4 @@ build
 vendor
 composer.lock
 composer.phar
-/nbproject/
+/nbproject/private/
