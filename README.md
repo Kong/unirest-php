@@ -1,11 +1,11 @@
 # Unirest for PHP [![Build Status][travis-image]][travis-url] [![version][packagist-version]][packagist-url]
 
-[![License][packagist-license]][license-url]
 [![Downloads][packagist-downloads]][packagist-url]
 [![Code Climate][codeclimate-quality]][codeclimate-url]
 [![Coverage Status][codeclimate-coverage]][codeclimate-url]
 [![Dependencies][versioneye-image]][versioneye-url]
 [![Gitter][gitter-image]][gitter-url]
+[![License][packagist-license]][license-url]
 
 Unirest is a set of lightweight HTTP libraries available in [multiple languages](http://unirest.io).
 
@@ -172,6 +172,26 @@ You can set a custom timeout value (in **seconds**):
 
 ```php
 Unirest\Request::timeout(5); // 5s timeout
+```
+
+#### Proxy
+
+Set the proxy to use for the upcoming request.
+
+you can also set the proxy type to be one of `CURLPROXY_HTTP`, `CURLPROXY_HTTP_1_0`, `CURLPROXY_SOCKS4`, `CURLPROXY_SOCKS5`, `CURLPROXY_SOCKS4A`, and `CURLPROXY_SOCKS5_HOSTNAME`.
+
+*check the [cURL docs](http://curl.haxx.se/libcurl/c/CURLOPT_PROXYTYPE.html) for more info*.
+
+```php
+
+// quick setup with default port: 1080
+Unirest\Request::proxy('10.10.10.1');
+
+// custom port and proxy type
+Unirest\Request::proxy('10.10.10.1', 8080, CURLPROXY_HTTP)l
+
+// enable tunneling
+Unirest\Request::proxy('10.10.10.1', 8080, CURLPROXY_HTTP, true);
 ```
 
 #### Default Request Headers

@@ -7,6 +7,10 @@ use Unirest\Response;
 
 class Request
 {
+    private static $proxyPort = false;
+    private static $proxyType = CURLPROXY_HTTP;
+    private static $proxyTunnel = false;
+    private static $proxyAddress = false;
     private static $jsonOpts = array();
     private static $verifyPeer = true;
     private static $socketTimeout = null;
@@ -75,6 +79,22 @@ class Request
     public static function clearDefaultHeaders()
     {
         return self::$defaultHeaders = array();
+    }
+
+    /**
+     * Set proxy to use
+     *
+     * @param string $address proxy address
+     * @param string $port proxy port
+     * @param string $port proxy type (Available options for this are CURLPROXY_HTTP, CURLPROXY_HTTP_1_0 CURLPROXY_SOCKS4, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4A and CURLPROXY_SOCKS5_HOSTNAME)
+     * @param string $tunnel enable/disable tunneling
+     */
+    public static function proxy($address, $port = 1080, $type = CURLPROXY_HTTP, $tunnel = false)
+    {
+        self::$proxyType = $type;
+        self::$proxyPort = $port;
+        self::$proxyTunnel = $tunnel;
+        self::$proxyAddress = $address;
     }
 
     /**
@@ -281,6 +301,13 @@ class Request
 
         if (!empty($username)) {
             curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . ((empty($password)) ? '' : $password));
+        }
+
+        if (self::$proxyAddress) {
+            curl_setopt($ch, CURLOPT_PROXYTYPE, self::$proxyType);
+            curl_setopt($ch, CURLOPT_PROXY, self::$proxyAddress);
+            curl_setopt($ch, CURLOPT_PROXYPORT, self::$proxyPort);
+            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, self::$proxyTunnel);
         }
 
         $response = curl_exec($ch);
