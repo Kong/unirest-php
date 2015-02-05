@@ -7,14 +7,28 @@ use Unirest\Response;
 
 class Request
 {
-    private static $proxyPort = false;
-    private static $proxyType = CURLPROXY_HTTP;
-    private static $proxyTunnel = false;
-    private static $proxyAddress = false;
     private static $jsonOpts = array();
     private static $verifyPeer = true;
     private static $socketTimeout = null;
     private static $defaultHeaders = array();
+
+    private static $auth => array (
+        'user' => '',
+        'pass' => '',
+        'method' => CURLAUTH_BASIC
+    );
+
+    private static $proxy = array(
+        'port' => false,
+        'tunnel' => false,
+        'address' => false,
+        'type' => CURLPROXY_HTTP,
+        'auth' => array (
+            'user' => '',
+            'pass' => '',
+            'method' => CURLAUTH_BASIC
+        )
+    );
 
     /**
      * Set JSON decode mode
@@ -82,6 +96,20 @@ class Request
     }
 
     /**
+     * Set authentication method to use
+     *
+     * @param string $username authentication username
+     * @param string $password authentication password
+     * @param string $method authentication method
+     */
+    public static function auth($username = '', $password = '', $method = CURLAUTH_BASIC)
+    {
+        self::$auth['user'] = $username;
+        self::$auth['pass'] = $password;
+        self::$auth['method'] = $method;
+    }
+
+    /**
      * Set proxy to use
      *
      * @param string $address proxy address
@@ -91,10 +119,25 @@ class Request
      */
     public static function proxy($address, $port = 1080, $type = CURLPROXY_HTTP, $tunnel = false)
     {
-        self::$proxyType = $type;
-        self::$proxyPort = $port;
-        self::$proxyTunnel = $tunnel;
-        self::$proxyAddress = $address;
+        self::$proxy['type'] = $type;
+        self::$proxy['port'] = $port;
+        self::$proxy['tunnel'] = $tunnel;
+        self::$proxy['address'] = $address;
+    }
+
+    /**
+     * Set proxy authentication method to use
+     *
+     * @param string $username authentication username
+     * @param string $password authentication password
+     * @param string $method authentication method
+     * @param string $tunnel enable/disable tunneling
+     */
+    public static function proxyAuth($username = '', $password = '', $method = CURLAUTH_BASIC)
+    {
+        self::$proxy['auth']['user'] = $username;
+        self::$proxy['auth']['pass'] = $password;
+        self::$proxy['auth']['method'] = $method;
     }
 
     /**
@@ -103,8 +146,8 @@ class Request
      * @param string $url URL to send the GET request to
      * @param array $headers additional headers to send
      * @param mixed $parameters parameters to send in the querystring
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Authentication username (deprecated)
+     * @param string $password Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
@@ -117,8 +160,8 @@ class Request
      * @param string $url URL to send the HEAD request to
      * @param array $headers additional headers to send
      * @param mixed $parameters parameters to send in the querystring
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Basic Authentication username (deprecated)
+     * @param string $password Basic Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null)
@@ -145,8 +188,8 @@ class Request
      * @param string $url URL to send the CONNECT request to
      * @param array $headers additional headers to send
      * @param mixed $parameters parameters to send in the querystring
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Basic Authentication username (deprecated)
+     * @param string $password Basic Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null)
@@ -159,8 +202,8 @@ class Request
      * @param string $url URL to send the POST request to
      * @param array $headers additional headers to send
      * @param mixed $body POST body data
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Basic Authentication username (deprecated)
+     * @param string $password Basic Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
@@ -173,8 +216,8 @@ class Request
      * @param string $url URL to send the DELETE request to
      * @param array $headers additional headers to send
      * @param mixed $body DELETE body data
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Basic Authentication username (deprecated)
+     * @param string $password Basic Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
@@ -187,8 +230,8 @@ class Request
      * @param string $url URL to send the PUT request to
      * @param array $headers additional headers to send
      * @param mixed $body PUT body data
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Basic Authentication username (deprecated)
+     * @param string $password Basic Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
@@ -201,8 +244,8 @@ class Request
      * @param string $url URL to send the PATCH request to
      * @param array $headers additional headers to send
      * @param mixed $body PATCH body data
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Basic Authentication username (deprecated)
+     * @param string $password Basic Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
@@ -215,8 +258,8 @@ class Request
      * @param string $url URL to send the TRACE request to
      * @param array $headers additional headers to send
      * @param mixed $body TRACE body data
-     * @param string $username Basic Authentication username
-     * @param string $password Basic Authentication password
+     * @param string $username Basic Authentication username (deprecated)
+     * @param string $password Basic Authentication password (deprecated)
      * @return string|stdObj response string or stdObj if response is json-decodable
      */
     public static function trace($url, $headers = array(), $body = null, $username = null, $password = null)
@@ -259,8 +302,8 @@ class Request
      * @param string $url URL to send the request to
      * @param mixed $body request body
      * @param array $headers additional headers to send
-     * @param string $username  Basic Authentication username
-     * @param string $password  Basic Authentication password
+     * @param string $username Authentication username (deprecated)
+     * @param string $password Authentication password (deprecated)
      * @throws Exception if a cURL error occurs
      * @return Unirest\Response
      */
@@ -299,15 +342,21 @@ class Request
             curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
         }
 
-        if (!empty($username)) {
-            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . ((empty($password)) ? '' : $password));
+        if (!empty($self::auth['user'])) {
+            curl_setopt($ch, CURLOPT_USERNAME, self::$auth['user']);
+            curl_setopt($ch, CURLOPT_PASSWORD, self::$auth['pass']);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, self::$auth['method']);
         }
 
-        if (self::$proxyAddress) {
-            curl_setopt($ch, CURLOPT_PROXYTYPE, self::$proxyType);
-            curl_setopt($ch, CURLOPT_PROXY, self::$proxyAddress);
-            curl_setopt($ch, CURLOPT_PROXYPORT, self::$proxyPort);
-            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, self::$proxyTunnel);
+        if (self::$proxy['address'] !== false) {
+            curl_setopt($ch, CURLOPT_PROXYTYPE, self::$proxy['type']);
+            curl_setopt($ch, CURLOPT_PROXY, self::$proxy['address']);
+            curl_setopt($ch, CURLOPT_PROXYPORT, self::$proxy['port']);
+            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, self::$proxy['tunnel']);
+
+            curl_setopt($ch, CURLOPT_PROXYAUTH, self::$proxy['auth']['method']);
+            curl_setopt($ch, CURLOPT_PROXYUSERNAME, self::$proxy['auth']['user']);
+            curl_setopt($ch, CURLOPT_PROXYPASSWORD, self::$proxy['auth']['pass']);
         }
 
         $response = curl_exec($ch);

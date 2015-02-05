@@ -14,7 +14,7 @@ Unirest is a set of lightweight HTTP libraries available in [multiple languages]
 * Utility methods to call `GET`, `HEAD`, `POST`, `PUT`, `DELETE`, `CONNECT`, `OPTIONS`, `TRACE`, `PATCH` requests
 * Supports form parameters, file uploads and custom body entities
 * Supports gzip
-* Supports Basic Authentication natively
+* Supports Basic, Digest, Negotiate, NTLM Authentication natively
 * Customizable timeout
 * Customizable default headers for every request (DRY)
 * Automatic JSON parsing into a native object for JSON responses
@@ -110,29 +110,59 @@ $body =   json_encode(array("foo" => "hellow", "bar" => "world"));
 $response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
 ```
 
-### Basic Authentication
+### Authentication
 
-Authenticating the request with basic authentication can be done by providing the `username` and `password` arguments:
+Passing a username, password *(optional)*, defaults to Basic Authentication:
+
+```php
+// basic auth
+Unirest\Request::auth('username', 'password');
+```
+
+The third parameter, which is a bitmask, will Unirest which HTTP authentication method(s) you want it to use for your proxy authentication.
+
+If more than one bit is set, Unirest *(at PHP's libcurl level)* will first query the site to see what authentication methods it supports and then pick the best one you allow it to use. *For some methods, this will induce an extra network round-trip.*
+
+**Supported Method**
+
+| Method               | Description                                                                                                                                                                                                     |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `CURLAUTH_BASIC`     | HTTP Basic authentication. This is the default choice                                                                                                                                                           | 
+| `CURLAUTH_DIGEST`    | HTTP Digest authentication. as defined in [RFC 2617](http://www.ietf.org/rfc/rfc2617.txt)                                                                                                                       | 
+| `CURLAUTH_DIGEST_IE` | HTTP Digest authentication with an IE flavor. *The IE flavor is simply that libcurl will use a special "quirk" that IE is known to have used before version 7 and that some servers require the client to use.* | 
+| `CURLAUTH_NEGOTIATE` | HTTP Negotiate (SPNEGO) authentication. as defined in [RFC 4559](http://www.ietf.org/rfc/rfc4559.txt)                                                                                                           |
+| `CURLAUTH_NTLM`      | HTTP NTLM authentication. A proprietary protocol invented and used by Microsoft.                                                                                                                                |
+| `CURLAUTH_NTLM_WB`   | NTLM delegating to winbind helper. Authentication is performed by a separate binary application. *see [libcurl docs](http://curl.haxx.se/libcurl/c/CURLOPT_HTTPAUTH.html) for more info*                        | 
+| `CURLAUTH_ANY`       | This is a convenience macro that sets all bits and thus makes libcurl pick any it finds suitable. libcurl will automatically select the one it finds most secure.                                               |
+| `CURLAUTH_ANYSAFE`   | This is a convenience macro that sets all bits except Basic and thus makes libcurl pick any it finds suitable. libcurl will automatically select the one it finds most secure.                                  |
+| `CURLAUTH_ONLY`      | This is a meta symbol. OR this value together with a single specific auth value to force libcurl to probe for un-restricted auth and if not, only that single auth algorithm is acceptable.                     |
+
+```php
+// custom auth method
+Unirest\Request::proxyAuth('username', 'password', CURLAUTH_DIGEST);
+```
+
+Previous versions of **Unirest** support *Basic Authentication* by providing the `username` and `password` arguments:
 
 ```php
 $response = Unirest\Request::get("http://httpbin.org/get", null, null, "username", "password");
 ```
 
+**This has been deprecated, and will be completely removed in `v.3.0.0` please use the `Unirest\Request::auth()` method instead**
+
 ### Request Object
 
 ```php
-Unirest\Request::get($url, $headers = array(), $parameters = null, $username = null, $password = null)
-Unirest\Request::post($url, $headers = array(), $body = null, $username = null, $password = null)
-Unirest\Request::put($url, $headers = array(), $body = null, $username = null, $password = null)
-Unirest\Request::patch($url, $headers = array(), $body = null, $username = null, $password = null)
-Unirest\Request::delete($url, $headers = array(), $body = null, $username = null, $password = null)
+Unirest\Request::get($url, $headers = array(), $parameters = null)
+Unirest\Request::post($url, $headers = array(), $body = null)
+Unirest\Request::put($url, $headers = array(), $body = null)
+Unirest\Request::patch($url, $headers = array(), $body = null)
+Unirest\Request::delete($url, $headers = array(), $body = null)
 ```
   
 - `url` - Endpoint, address, or uri to be acted upon and requested information from.
 - `headers` - Request Headers as associative array or object
 - `body` - Request Body as associative array or object
-- `username` - Basic Authentication username
-- `password` - Basic Authentication password
 
 You can send a request with any [standard](http://www.iana.org/assignments/http-methods/http-methods.xhtml) or custom HTTP Method:
 
@@ -183,7 +213,6 @@ you can also set the proxy type to be one of `CURLPROXY_HTTP`, `CURLPROXY_HTTP_1
 *check the [cURL docs](http://curl.haxx.se/libcurl/c/CURLOPT_PROXYTYPE.html) for more info*.
 
 ```php
-
 // quick setup with default port: 1080
 Unirest\Request::proxy('10.10.10.1');
 
@@ -192,6 +221,26 @@ Unirest\Request::proxy('10.10.10.1', 8080, CURLPROXY_HTTP);
 
 // enable tunneling
 Unirest\Request::proxy('10.10.10.1', 8080, CURLPROXY_HTTP, true);
+```
+
+##### Proxy Authenticaton
+
+Passing a username, password *(optional)*, defaults to Basic Authentication:
+
+```php
+// basic auth
+Unirest\Request::proxyAuth('username', 'password');
+```
+
+The third parameter, which is a bitmask, will Unirest which HTTP authentication method(s) you want it to use for your proxy authentication. 
+
+If more than one bit is set, Unirest *(at PHP's libcurl level)* will first query the site to see what authentication methods it supports and then pick the best one you allow it to use. *For some methods, this will induce an extra network round-trip.*
+
+See [Authentication](#authentication) for more details on methods supported.
+
+```php
+// basic auth
+Unirest\Request::proxyAuth('username', 'password', CURLAUTH_DIGEST);
 ```
 
 #### Default Request Headers
