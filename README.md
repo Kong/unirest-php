@@ -188,7 +188,7 @@ you can also set the proxy type to be one of `CURLPROXY_HTTP`, `CURLPROXY_HTTP_1
 Unirest\Request::proxy('10.10.10.1');
 
 // custom port and proxy type
-Unirest\Request::proxy('10.10.10.1', 8080, CURLPROXY_HTTP)l
+Unirest\Request::proxy('10.10.10.1', 8080, CURLPROXY_HTTP);
 
 // enable tunneling
 Unirest\Request::proxy('10.10.10.1', 8080, CURLPROXY_HTTP, true);
