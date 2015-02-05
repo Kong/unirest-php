@@ -123,7 +123,7 @@ The third parameter, which is a bitmask, will Unirest which HTTP authentication 
 
 If more than one bit is set, Unirest *(at PHP's libcurl level)* will first query the site to see what authentication methods it supports and then pick the best one you allow it to use. *For some methods, this will induce an extra network round-trip.*
 
-**Supported Method**
+**Supported Methods**
 
 | Method               | Description                                                                                                                                                                                                     |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
