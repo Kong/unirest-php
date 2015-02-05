@@ -12,7 +12,7 @@ class Request
     private static $socketTimeout = null;
     private static $defaultHeaders = array();
 
-    private static $auth => array (
+    private static $auth = array (
         'user' => '',
         'pass' => '',
         'method' => CURLAUTH_BASIC
@@ -342,7 +342,14 @@ class Request
             curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
         }
 
-        if (!empty($self::auth['user'])) {
+        // supporting deprecated http auth method
+        if (!empty($username)) {
+            curl_setopt($ch, CURLOPT_USERNAME, $username);
+            curl_setopt($ch, CURLOPT_PASSWORD, $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        }
+
+        if (!empty(self::$auth['user'])) {
             curl_setopt($ch, CURLOPT_USERNAME, self::$auth['user']);
             curl_setopt($ch, CURLOPT_PASSWORD, self::$auth['pass']);
             curl_setopt($ch, CURLOPT_HTTPAUTH, self::$auth['method']);
