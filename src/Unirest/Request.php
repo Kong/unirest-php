@@ -350,8 +350,7 @@ class Request
         }
 
         if (!empty(self::$auth['user'])) {
-            curl_setopt($ch, CURLOPT_USERNAME, self::$auth['user']);
-            curl_setopt($ch, CURLOPT_PASSWORD, self::$auth['pass']);
+            curl_setopt($ch, CURLOPT_USERPWD, self::$auth['user'] . ':' . self::$auth['pass']);
             curl_setopt($ch, CURLOPT_HTTPAUTH, self::$auth['method']);
         }
 
@@ -362,8 +361,7 @@ class Request
             curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, self::$proxy['tunnel']);
 
             curl_setopt($ch, CURLOPT_PROXYAUTH, self::$proxy['auth']['method']);
-            curl_setopt($ch, CURLOPT_PROXYUSERNAME, self::$proxy['auth']['user']);
-            curl_setopt($ch, CURLOPT_PROXYPASSWORD, self::$proxy['auth']['pass']);
+            curl_setopt($ch, CURLOPT_PROXYUSERPWD, self::$proxy['auth']['user'] . ':' . self::$proxy['auth']['pass']);
         }
 
         $response = curl_exec($ch);
