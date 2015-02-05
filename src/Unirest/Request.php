@@ -344,14 +344,13 @@ class Request
 
         // supporting deprecated http auth method
         if (!empty($username)) {
-            curl_setopt($ch, CURLOPT_USERNAME, $username);
-            curl_setopt($ch, CURLOPT_PASSWORD, $password);
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_USERPWD, self::$auth['user'] . ':' . self::$auth['pass']);
         }
 
         if (!empty(self::$auth['user'])) {
-            curl_setopt($ch, CURLOPT_USERPWD, self::$auth['user'] . ':' . self::$auth['pass']);
             curl_setopt($ch, CURLOPT_HTTPAUTH, self::$auth['method']);
+            curl_setopt($ch, CURLOPT_USERPWD, self::$auth['user'] . ':' . self::$auth['pass']);
         }
 
         if (self::$proxy['address'] !== false) {
