@@ -299,4 +299,4 @@ Made with &#9829; from the [Mashape](https://www.mashape.com/) team
 [codeclimate-coverage]: https://img.shields.io/codeclimate/coverage/github/Mashape/unirest-php.svg?style=flat
 
 [versioneye-url]: https://www.versioneye.com/user/projects/54b82450050646ca5c0001f3
-[versioneye-image]: https://img.shields.io/versioneye/d/user/projects/54b82450050646ca5c0001f3.svg?style=flat
+[versioneye-image]: https://img.shields.io/versioneye/d/php/mashape:unirest-php.svg?style=flat
