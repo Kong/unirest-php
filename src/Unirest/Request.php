@@ -345,7 +345,7 @@ class Request
         // supporting deprecated http auth method
         if (!empty($username)) {
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($ch, CURLOPT_USERPWD, self::$auth['user'] . ':' . self::$auth['pass']);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
         }
 
         if (!empty(self::$auth['user'])) {

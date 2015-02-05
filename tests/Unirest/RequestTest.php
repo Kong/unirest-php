@@ -71,11 +71,19 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(true, $args->gzipped);
     }
 
-    public function testBasicAuthentication()
+    public function testBasicAuthenticationDeprecated()
     {
         $response = Unirest\Request::get('http://httpbin.org/get', array(), array(), 'user', 'password');
         $headers  = $response->body->headers;
         $this->assertEquals('Basic dXNlcjpwYXNzd29yZA==', $headers->Authorization);
+    }
+
+    public function testBasicAuthentication()
+    {
+        Unirest\Request::auth('user', 'password');
+        $response = Unirest\Request::get('http://httpbin.org/get');
+
+        $this->assertEquals('Basic dXNlcjpwYXNzd29yZA==', $response->body->headers->Authorization);
     }
 
     public function testCustomHeaders()
