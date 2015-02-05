@@ -15,6 +15,7 @@ class Request
     private static $verifyPeer = true;
     private static $socketTimeout = null;
     private static $defaultHeaders = array();
+    private static $cookieFile = null;
 
     /**
      * Set JSON decode mode
@@ -60,6 +61,18 @@ class Request
         }
 
         return $headers;
+    }
+
+    /**
+     * Set a coockie file path for enabling coockie handling
+     *
+     * $cookieFile must be a correct path with permission to write to them
+     *
+     * @param string $cookieFile - path to file for saving coockie
+     */
+    public static function cookieFile($cookieFile)
+    {
+        self::$cookieFile = $cookieFile;
     }
 
     /**
@@ -297,6 +310,11 @@ class Request
 
         if (self::$socketTimeout !== null) {
             curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
+        }
+
+        if (self::$cookieFile) {
+            curl_setopt($ch, CURLOPT_COOKIEFILE, self::$cookieFile);
+            curl_setopt($ch, CURLOPT_COOKIEJAR, self::$cookieFile);
         }
 
         if (!empty($username)) {
