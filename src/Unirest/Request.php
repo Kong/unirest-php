@@ -98,7 +98,7 @@ class Request
      */
     public static function setMashapeKey($key)
     {
-        return self::$defaultHeaders['X-Mashape-Key'] = $key;
+        return self::defaultHeader('X-Mashape-Key', $key);
     }
 
     /**
