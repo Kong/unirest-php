@@ -88,6 +88,20 @@ class Request
     }
 
     /**
+     * Set a Mashape key to send on every request as a header
+     * Obtain your Mashape key by browsing one of your Mashape applications on https://www.mashape.com
+     *
+     * Note: Mashape provides 2 keys for each application: a 'Testing' and a 'Production' one.
+     *       Be aware of which key you are using and do not share your Production key.
+     *
+     * @param string $key Mashape key
+     */
+    public static function setMashapeKey($key)
+    {
+        return self::defaultHeader('X-Mashape-Key', $key);
+    }
+
+    /**
      * Clear all the default headers
      */
     public static function clearDefaultHeaders()

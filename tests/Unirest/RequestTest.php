@@ -64,6 +64,32 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(array_key_exists('Hello', $properties));
     }
 
+    public function testSetMashapeKey()
+    {
+        Unirest\Request::setMashapeKey('abcd');
+        $response = Unirest\Request::get('http://httpbin.org/get');
+
+        $this->assertEquals(200, $response->code);
+        $headers    = $response->body->headers;
+        $properties = get_object_vars($headers);
+        $this->assertTrue(array_key_exists('X-Mashape-Key', $properties));
+        $this->assertEquals('abcd', $headers->{'X-Mashape-Key'});
+        $response = Unirest\Request::get('http://httpbin.org/get');
+
+        $this->assertEquals(200, $response->code);
+        $headers    = $response->body->headers;
+        $properties = get_object_vars($headers);
+        $this->assertTrue(array_key_exists('X-Mashape-Key', $properties));
+        $this->assertEquals('abcd', $headers->{'X-Mashape-Key'});
+        Unirest\Request::clearDefaultHeaders();
+        $response = Unirest\Request::get('http://httpbin.org/get');
+
+        $this->assertEquals(200, $response->code);
+        $headers    = $response->body->headers;
+        $properties = get_object_vars($headers);
+        $this->assertFalse(array_key_exists('X-Mashape-Key', $properties));
+    }
+
     public function testGzip()
     {
         $response = Unirest\Request::get('http://httpbin.org/gzip');

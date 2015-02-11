@@ -112,7 +112,13 @@ $response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
 
 ### Authentication
 
-Passing a username, password *(optional)*, defaults to Basic Authentication:
+First, if you are using [Mashape][mashape-url]:
+```php
+// Mashape auth
+Unirest\Request::setMashapeKey('<mashape_key>');
+```
+
+Otherwise, passing a username, password *(optional)*, defaults to Basic Authentication:
 
 ```php
 // basic auth
@@ -279,7 +285,9 @@ By default is `true`.
 
 ----
 
-Made with &#9829; from the [Mashape](https://www.mashape.com/) team
+Made with &#9829; from the [Mashape][mashape-url] team
+
+[mashape-url]: https://www.mashape.com/
 
 [license-url]: https://github.com/Mashape/unirest-php/blob/master/LICENSE
 
