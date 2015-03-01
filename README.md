@@ -283,6 +283,16 @@ Unirest\Request::verifyPeer(false); // Disables SSL cert validation
 
 By default is `true`.
 
+#### Utility Methods
+
+```php
+// alias for `curl_getinfo`
+Unirest\Request::getInfo()
+
+// returns internal cURL handle
+Unirest\Request::getCurlHandle()
+```
+
 ----
 
 Made with &#9829; from the [Mashape][mashape-url] team

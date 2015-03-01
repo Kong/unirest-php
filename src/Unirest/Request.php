@@ -7,6 +7,7 @@ use Unirest\Response;
 
 class Request
 {
+    private static $handle = null;
     private static $jsonOpts = array();
     private static $verifyPeer = true;
     private static $socketTimeout = null;
@@ -323,15 +324,15 @@ class Request
      */
     public static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
     {
-        $ch = curl_init();
+        self::$handle = curl_init();
 
         if ($method !== Method::GET) {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+            curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
 
             if (is_array($body) || $body instanceof \Traversable) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, self::buildHTTPCurlQuery($body));
+                curl_setopt(self::$handle, CURLOPT_POSTFIELDS, self::buildHTTPCurlQuery($body));
             } else {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+                curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $body);
             }
         } elseif (is_array($body)) {
             if (strpos($url, '?') !== false) {
@@ -343,55 +344,73 @@ class Request
             $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
         }
 
-        curl_setopt($ch, CURLOPT_URL, self::encodeUrl($url));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, self::getFormattedHeaders($headers));
-        curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, self::$verifyPeer);
-        curl_setopt($ch, CURLOPT_ENCODING, ''); // If an empty string, '', is set, a header containing all supported encoding types is sent.
+        curl_setopt_array(self::$handle, array(
+            CURLOPT_URL => self::encodeUrl($url),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_HTTPHEADER => self::getFormattedHeaders($headers),
+            CURLOPT_HEADER => true,
+            CURLOPT_SSL_VERIFYPEER => self::$verifyPeer,
+            // If an empty string, '', is set, a header containing all supported encoding types is sent
+            CURLOPT_ENCODING => ''
+        ));
 
         if (self::$socketTimeout !== null) {
-            curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
+            curl_setopt(self::$handle, CURLOPT_TIMEOUT, self::$socketTimeout);
         }
 
         // supporting deprecated http auth method
         if (!empty($username)) {
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt_array(self::$handle, array(
+                CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+                CURLOPT_USERPWD => $username . ':' . $password
+            ));
         }
 
         if (!empty(self::$auth['user'])) {
-            curl_setopt($ch, CURLOPT_HTTPAUTH, self::$auth['method']);
-            curl_setopt($ch, CURLOPT_USERPWD, self::$auth['user'] . ':' . self::$auth['pass']);
+            curl_setopt_array(self::$handle, array(
+                CURLOPT_HTTPAUTH    => self::$auth['method'],
+                CURLOPT_USERPWD     => self::$auth['user'] . ':' . self::$auth['pass']
+            ));
         }
 
         if (self::$proxy['address'] !== false) {
-            curl_setopt($ch, CURLOPT_PROXYTYPE, self::$proxy['type']);
-            curl_setopt($ch, CURLOPT_PROXY, self::$proxy['address']);
-            curl_setopt($ch, CURLOPT_PROXYPORT, self::$proxy['port']);
-            curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, self::$proxy['tunnel']);
-
-            curl_setopt($ch, CURLOPT_PROXYAUTH, self::$proxy['auth']['method']);
-            curl_setopt($ch, CURLOPT_PROXYUSERPWD, self::$proxy['auth']['user'] . ':' . self::$proxy['auth']['pass']);
+            curl_setopt_array(self::$handle, array(
+                CURLOPT_PROXYTYPE       => self::$proxy['type'],
+                CURLOPT_PROXY           => self::$proxy['address'],
+                CURLOPT_PROXYPORT       => self::$proxy['port'],
+                CURLOPT_HTTPPROXYTUNNEL => self::$proxy['tunnel'],
+                CURLOPT_PROXYAUTH       => self::$proxy['auth']['method'],
+                CURLOPT_PROXYUSERPWD    => self::$proxy['auth']['user'] . ':' . self::$proxy['auth']['pass']
+            ));
         }
 
-        $response = curl_exec($ch);
-        $error    = curl_error($ch);
+        $response   = curl_exec(self::$handle);
+        $error      = curl_error(self::$handle);
+        $info       = self::getInfo();
 
         if ($error) {
             throw new \Exception($error);
         }
 
         // Split the full response in its headers and body
-        $curl_info   = curl_getinfo($ch);
-        $header_size = $curl_info['header_size'];
+        $header_size = $info['header_size'];
         $header      = substr($response, 0, $header_size);
         $body        = substr($response, $header_size);
-        $httpCode    = $curl_info['http_code'];
+        $httpCode    = $info['http_code'];
 
         return new Response($httpCode, $body, $header, self::$jsonOpts);
+    }
+
+    public static function getInfo()
+    {
+        return curl_getinfo(self::$handle);
+    }
+
+    public static function getCurlHandle()
+    {
+        return self::$handle;
     }
 
     public static function getFormattedHeaders($headers)
