@@ -81,7 +81,7 @@ So you're probably wondering how using Unirest makes creating requests in PHP ea
 $headers = array("Accept" => "application/json");
 $body = array("foo" => "hellow", "bar" => "world");
 
-$response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
+$response = Unirest\Request::post("http://mockbin.com/request", $headers, $body);
 
 $response->code;        // HTTP Status code
 $response->headers;     // Headers
@@ -97,7 +97,7 @@ To upload files in a multipart form representation use the return value of `Unir
 $headers = array("Accept" => "application/json");
 $body = array("file" => Unirest\File::add("/tmp/file.txt"));
 
-$response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
+$response = Unirest\Request::post("http://mockbin.com/request", $headers, $body);
  ```
  
 ### Custom Entity Body
@@ -107,7 +107,7 @@ Sending a custom body such as a JSON Object rather than a string or form style p
 $headers = array("Accept" => "application/json");
 $body =   json_encode(array("foo" => "hellow", "bar" => "world"));
 
-$response = Unirest\Request::post("http://httpbin.org/post", $headers, $body);
+$response = Unirest\Request::post("http://mockbin.com/request", $headers, $body);
 ```
 
 ### Authentication
@@ -151,7 +151,7 @@ Unirest\Request::proxyAuth('username', 'password', CURLAUTH_DIGEST);
 Previous versions of **Unirest** support *Basic Authentication* by providing the `username` and `password` arguments:
 
 ```php
-$response = Unirest\Request::get("http://httpbin.org/get", null, null, "username", "password");
+$response = Unirest\Request::get("http://mockbin.com/request", null, null, "username", "password");
 ```
 
 **This has been deprecated, and will be completely removed in `v.3.0.0` please use the `Unirest\Request::auth()` method instead**
@@ -194,7 +194,7 @@ You can set some advanced configuration to tune Unirest-PHP:
 #### Custom JSON Decode Flags
 
 Unirest uses PHP's [JSON Extension](http://php.net/manual/en/book.json.php) for automatically decoding JSON responses.
-sometime you may want to return associative arrays, limit the depth of recursion, or use any of the [customization flags](http://php.net/manual/en/json.constants.php#constant.json-hex-tag).
+sometime you may want to return associative arrays, limit the depth of recursion, or use any of the [customization flags](http://php.net/manual/en/json.constants.php).
 
 To do so, simply set the desired options using the `jsonOpts` request method:
 
