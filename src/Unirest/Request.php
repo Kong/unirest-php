@@ -346,14 +346,13 @@ class Request
 
         curl_setopt_array(self::$handle, array(
             CURLOPT_URL => self::encodeUrl($url),
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT =>        10,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_HTTPHEADER => self::getFormattedHeaders($headers),
-            CURLOPT_HEADER => true,
-            CURLOPT_SSL_VERIFYPEER => self::$verifyPeer,
-            // If an empty string, '', is set, a header containing all supported encoding types is sent
-            CURLOPT_ENCODING => ''
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_POST =>         true,
+            CURLOPT_HTTPHEADER => self::getFormattedHeaders($headers)
         ));
 
         if (self::$socketTimeout !== null) {
@@ -420,7 +419,7 @@ class Request
         $combinedHeaders = array_change_key_case(array_merge((array) $headers, self::$defaultHeaders));
 
         foreach ($combinedHeaders as $key => $val) {
-            $formattedHeaders[] = self::getHeaderString($key, $val);
+            $formattedHeaders[] = $val;
         }
 
         if (!array_key_exists('user-agent', $combinedHeaders)) {
