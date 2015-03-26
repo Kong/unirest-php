@@ -420,7 +420,7 @@ class Request
         $combinedHeaders = array_change_key_case(array_merge((array) $headers, self::$defaultHeaders));
 
         foreach ($combinedHeaders as $key => $val) {
-            $formattedHeaders[] = self::getHeaderString($key, $val);
+            $formattedHeaders[] = $val;
         }
 
         if (!array_key_exists('user-agent', $combinedHeaders)) {
