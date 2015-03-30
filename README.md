@@ -22,6 +22,7 @@ Unirest is a set of lightweight HTTP libraries available in [multiple languages]
 ## Requirements
 
 - [cURL](http://php.net/manual/en/book.curl.php)
+- PHP 5.4+
 
 ## Installation
 
