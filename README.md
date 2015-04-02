@@ -157,6 +157,16 @@ $response = Unirest\Request::get("http://mockbin.com/request", null, null, "user
 
 **This has been deprecated, and will be completely removed in `v.3.0.0` please use the `Unirest\Request::auth()` method instead**
 
+### Cookies
+
+Set a cookie file path for enabling cookie reading and storing cookies across multiple sequence of requests.
+
+```php
+Unirest\Request::cookieFile($cookieFile)
+```
+
+`$cookieFile` must be a correct path with write permission.
+
 ### Request Object
 
 ```php

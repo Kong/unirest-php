@@ -106,9 +106,9 @@ class Request
     /**
      * Set a coockie file path for enabling coockie handling
      *
-     * $cookieFile must be a correct path with permission to write to them
+     * $cookieFile must be a correct path with write permission
      *
-     * @param string $cookieFile - path to file for saving coockie
+     * @param string $cookieFile - path to file for saving cookie
      */
     public static function cookieFile($cookieFile)
     {
