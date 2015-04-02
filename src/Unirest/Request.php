@@ -7,11 +7,12 @@ use Unirest\Response;
 
 class Request
 {
+    private static $cookieFile = null;
+    private static $defaultHeaders = array();
     private static $handle = null;
     private static $jsonOpts = array();
-    private static $verifyPeer = true;
     private static $socketTimeout = null;
-    private static $defaultHeaders = array();
+    private static $verifyPeer = true;
 
     private static $auth = array (
         'user' => '',
@@ -100,6 +101,18 @@ class Request
     public static function setMashapeKey($key)
     {
         return self::defaultHeader('X-Mashape-Key', $key);
+    }
+
+    /**
+     * Set a coockie file path for enabling coockie handling
+     *
+     * $cookieFile must be a correct path with permission to write to them
+     *
+     * @param string $cookieFile - path to file for saving coockie
+     */
+    public static function cookieFile($cookieFile)
+    {
+        self::$cookieFile = $cookieFile;
     }
 
     /**
@@ -358,6 +371,11 @@ class Request
 
         if (self::$socketTimeout !== null) {
             curl_setopt(self::$handle, CURLOPT_TIMEOUT, self::$socketTimeout);
+        }
+
+        if (self::$cookieFile) {
+            curl_setopt($ch, CURLOPT_COOKIEFILE, self::$cookieFile);
+            curl_setopt($ch, CURLOPT_COOKIEJAR, self::$cookieFile);
         }
 
         // supporting deprecated http auth method
