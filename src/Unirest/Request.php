@@ -7,6 +7,7 @@ use Unirest\Response;
 
 class Request
 {
+    private static $cookie = null;
     private static $cookieFile = null;
     private static $defaultHeaders = array();
     private static $handle = null;
@@ -101,6 +102,16 @@ class Request
     public static function setMashapeKey($key)
     {
         return self::defaultHeader('X-Mashape-Key', $key);
+    }
+
+    /**
+     * Set a coockie string for enabling coockie handling
+     *
+     * @param string $cookie
+     */
+    public static function cookie($cookie)
+    {
+        self::$cookie = $cookie;
     }
 
     /**
@@ -371,6 +382,10 @@ class Request
 
         if (self::$socketTimeout !== null) {
             curl_setopt(self::$handle, CURLOPT_TIMEOUT, self::$socketTimeout);
+        }
+
+        if (self::$cookie) {
+            curl_setopt(self::$handle, CURLOPT_COOKIE, self::$cookie);
         }
 
         if (self::$cookieFile) {
