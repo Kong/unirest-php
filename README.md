@@ -159,6 +159,12 @@ $response = Unirest\Request::get("http://mockbin.com/request", null, null, "user
 
 ### Cookies
 
+Set a cookie string to specify the contents of a cookie header. Multiple cookies are separated with a semicolon followed by a space (e.g., "fruit=apple; colour=red")
+
+```php
+Unirest\Request::cookie($cookie)
+```
+
 Set a cookie file path for enabling cookie reading and storing cookies across multiple sequence of requests.
 
 ```php
