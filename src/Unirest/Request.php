@@ -374,8 +374,8 @@ class Request
         }
 
         if (self::$cookieFile) {
-            curl_setopt($ch, CURLOPT_COOKIEFILE, self::$cookieFile);
-            curl_setopt($ch, CURLOPT_COOKIEJAR, self::$cookieFile);
+            curl_setopt(self::$handle, CURLOPT_COOKIEFILE, self::$cookieFile);
+            curl_setopt(self::$handle, CURLOPT_COOKIEJAR, self::$cookieFile);
         }
 
         // supporting deprecated http auth method
