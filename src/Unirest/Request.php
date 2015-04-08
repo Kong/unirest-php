@@ -9,6 +9,7 @@ class Request
 {
     private static $cookie = null;
     private static $cookieFile = null;
+    private static $curlOpts = array();
     private static $defaultHeaders = array();
     private static $handle = null;
     private static $jsonOpts = array();
@@ -72,11 +73,7 @@ class Request
      */
     public static function defaultHeaders($headers)
     {
-        foreach ($headers as $name => $value) {
-            self::$defaultHeaders[$name] = $value;
-        }
-
-        return $headers;
+        return array_merge(self::$defaultHeaders, $headers);
     }
 
     /**
@@ -88,6 +85,43 @@ class Request
     public static function defaultHeader($name, $value)
     {
         return self::$defaultHeaders[$name] = $value;
+    }
+
+    /**
+     * Clear all the default headers
+     */
+    public static function clearDefaultHeaders()
+    {
+        return self::$defaultHeaders = array();
+    }
+
+    /**
+     * Set curl options to send on every request
+     *
+     * @param array $options options array
+     */
+    public static function curlOpts($opts)
+    {
+        return array_merge(self::$curlOpts, $opts);
+    }
+
+    /**
+     * Set a new default header to send on every request
+     *
+     * @param string $name header name
+     * @param string $value header value
+     */
+    public static function curlOpt($name, $value)
+    {
+        return self::$curlOpts[$name] = $value;
+    }
+
+    /**
+     * Clear all the default headers
+     */
+    public static function clearCurlOpts()
+    {
+        return self::$curlOpts = array();
     }
 
     /**
@@ -124,14 +158,6 @@ class Request
     public static function cookieFile($cookieFile)
     {
         self::$cookieFile = $cookieFile;
-    }
-
-    /**
-     * Clear all the default headers
-     */
-    public static function clearDefaultHeaders()
-    {
-        return self::$defaultHeaders = array();
     }
 
     /**
@@ -350,6 +376,9 @@ class Request
     {
         self::$handle = curl_init();
 
+        // start with default options
+        curl_setopt_array(self::$handle, self::$curlOpts);
+
         if ($method !== Method::GET) {
             curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
 
@@ -436,9 +465,15 @@ class Request
         return new Response($httpCode, $body, $header, self::$jsonOpts);
     }
 
-    public static function getInfo()
+    public static function getInfo($opt = false)
     {
-        return curl_getinfo(self::$handle);
+        if ($opt) {
+            $info = curl_getinfo(self::$handle, $opt);
+        } else {
+            $info = curl_getinfo(self::$handle);
+        }
+
+        return $info;
     }
 
     public static function getCurlHandle()

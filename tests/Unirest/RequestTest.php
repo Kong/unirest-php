@@ -16,6 +16,17 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result['file'], $file);
     }
 
+    public function testCurlOpts()
+    {
+        Unirest\Request::curlOpt(CURLOPT_COOKIE, 'foo=bar');
+
+        $response = Unirest\Request::get('http://mockbin.com/request');
+
+        $this->assertTrue(property_exists($response->body->cookies, 'foo'));
+
+        Unirest\Request::clearCurlOpts();
+    }
+
     /**
      * @expectedException Exception
      */
@@ -23,22 +34,10 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
     {
         Unirest\Request::timeout(1);
 
-        Unirest\Request::get('http://mockbin.com/delay/3000');
+        Unirest\Request::get('http://mockbin.com/delay/1000');
 
         Unirest\Request::timeout(null); // Cleaning timeout for the other tests
     }
-
-/*
-    public function testTimeoutSuccess()
-    {
-        Unirest\Request::timeout(3);
-
-        $response = Unirest\Request::get('http://mockbin.com/delay/2000');
-        $this->assertEquals(200, $response->code);
-
-        Unirest\Request::timeout(null); // Cleaning timeout for the other tests
-    }
-*/
 
     public function testDefaultHeader()
     {

@@ -275,7 +275,7 @@ Unirest\Request::defaultHeader("Header1", "Value1");
 Unirest\Request::defaultHeader("Header2", "Value2");
 ```
 
-You can do set default headers in bulk:
+You can set default headers in bulk by passing an array:
 
 ```php
 Unirest\Request::defaultHeaders(array(
@@ -288,6 +288,27 @@ You can clear the default headers anytime with:
 
 ```php
 Unirest\Request::clearDefaultHeaders();
+
+#### Default cURL Options
+
+You can set default [cURL options](http://php.net/manual/en/function.curl-setopt.php) that will be sent on every request:
+
+```php
+Unirest\Request::curlOpt(CURLOPT_COOKIE, "foo=bar");
+```
+
+You can set options bulk by passing an array:
+
+```php
+Unirest\Request::curlOpts(array(
+    CURLOPT_COOKIE => "foo=bar"
+));
+```
+
+You can clear the default options anytime with:
+
+```php
+Unirest\Request::clearCurlOpts();
 ```
 
 #### SSL validation
