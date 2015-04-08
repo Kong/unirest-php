@@ -288,6 +288,7 @@ You can clear the default headers anytime with:
 
 ```php
 Unirest\Request::clearDefaultHeaders();
+```
 
 #### Default cURL Options
 
