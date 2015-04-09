@@ -27,9 +27,10 @@ matrix:
   allow_failures:
     - php: hhvm
 
-webhooks:
-  urls:
-    - https://webhooks.gitter.im/e/d4319553d0aecfd5b9ac
-  on_success: always
-  on_failure: always
-  on_start: false
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/d4319553d0aecfd5b9ac
+    on_success: always
+    on_failure: always
+    on_start: false
