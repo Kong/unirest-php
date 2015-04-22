@@ -62,7 +62,7 @@ If you use Symfony2, autoloader has to be detected automatically.
 
 ### Install from source
 
-Unirest-PHP requires PHP `v5.4+`. Download the PHP library from Github, then include `Unirest.php` in your script:
+Download the PHP library from Github, then include `Unirest.php` in your script:
 
 ```shell
 git clone git@github.com:Mashape/unirest-php.git 
