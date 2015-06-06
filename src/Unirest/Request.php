@@ -15,6 +15,7 @@ class Request
     private static $jsonOpts = array();
     private static $socketTimeout = null;
     private static $verifyPeer = true;
+    private static $verifyHost = true;
 
     private static $auth = array (
         'user' => '',
@@ -54,6 +55,16 @@ class Request
     public static function verifyPeer($enabled)
     {
         return self::$verifyPeer = $enabled;
+    }
+    
+    /**
+     * Verify SSL host
+     *
+     * @param bool $enabled enable SSL host verification, by default is true
+     */
+    public static function verifyHost($enabled)
+    {
+        return self::$verifyHost = $enabled;
     }
 
     /**
@@ -405,6 +416,7 @@ class Request
             CURLOPT_HTTPHEADER => self::getFormattedHeaders($headers),
             CURLOPT_HEADER => true,
             CURLOPT_SSL_VERIFYPEER => self::$verifyPeer,
+            CURLOPT_SSL_VERIFYHOST => self::$verifyHost,
             // If an empty string, '', is set, a header containing all supported encoding types is sent
             CURLOPT_ENCODING => ''
         ));
