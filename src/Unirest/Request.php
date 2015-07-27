@@ -224,7 +224,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Authentication username (deprecated)
      * @param string $password Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -238,7 +238,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -252,7 +252,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username
      * @param string $password Basic Authentication password
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -266,7 +266,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -280,7 +280,7 @@ class Request
      * @param mixed $body POST body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response response
      */
     public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -294,7 +294,7 @@ class Request
      * @param mixed $body DELETE body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -308,7 +308,7 @@ class Request
      * @param mixed $body PUT body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -322,7 +322,7 @@ class Request
      * @param mixed $body PATCH body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -336,7 +336,7 @@ class Request
      * @param mixed $body TRACE body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response
      */
     public static function trace($url, $headers = array(), $body = null, $username = null, $password = null)
     {
