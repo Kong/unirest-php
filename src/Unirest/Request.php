@@ -280,7 +280,7 @@ class Request
      * @param mixed $body POST body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return string|stdObj response string or stdObj if response is json-decodable
+     * @return Unirest\Response response
      */
     public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
     {
