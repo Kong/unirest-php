@@ -47,7 +47,7 @@ composer require mashape/unirest-php
 This will get you the latest version of the reporter and install it. If you do want the master, untagged, version you may use the command below:
 
 ```shell
-composer require mashape/php-test-reporter:@dev-master
+composer require mashape/php-test-reporter dev-master
 ```
 
 Composer installs autoloader at `./vendor/autoloader.php`. to include the library in your script, add:
