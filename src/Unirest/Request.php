@@ -387,9 +387,6 @@ class Request
     {
         self::$handle = curl_init();
 
-        // start with default options
-        curl_setopt_array(self::$handle, self::$curlOpts);
-
         if ($method !== Method::GET) {
             curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
 
@@ -421,6 +418,9 @@ class Request
             // If an empty string, '', is set, a header containing all supported encoding types is sent
             CURLOPT_ENCODING => ''
         ));
+        
+        // update options
+        curl_setopt_array(self::$handle, self::$curlOpts);
 
         if (self::$socketTimeout !== null) {
             curl_setopt(self::$handle, CURLOPT_TIMEOUT, self::$socketTimeout);
