@@ -566,10 +566,7 @@ class Request
      */
     private static function mergeCurlOptions(&$existing_options, $new_options)
     {
-        foreach($new_options as $key => $value){
-            $existing_options[$key] = $value;
-        }
-
+        $existing_options = $new_options + $existing_options;
         return $existing_options;
     }
 }
