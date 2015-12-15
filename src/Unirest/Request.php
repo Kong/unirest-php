@@ -110,10 +110,11 @@ class Request
      * Set curl options to send on every request
      *
      * @param array $options options array
+     * @return array
      */
-    public static function curlOpts($opts)
+    public static function curlOpts($options)
     {
-        return array_merge(self::$curlOpts, $opts);
+        return self::mergeCurlOptions(self::$curlOpts, $options);
     }
 
     /**
@@ -405,7 +406,7 @@ class Request
             $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
         }
 
-        curl_setopt_array(self::$handle, array(
+        $curl_base_options = [
             CURLOPT_URL => self::encodeUrl($url),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
@@ -417,10 +418,9 @@ class Request
             CURLOPT_SSL_VERIFYHOST => self::$verifyHost === false ? 0 : 2,
             // If an empty string, '', is set, a header containing all supported encoding types is sent
             CURLOPT_ENCODING => ''
-        ));
-        
-        // update options
-        curl_setopt_array(self::$handle, self::$curlOpts);
+        ];
+
+        curl_setopt_array(self::$handle, self::mergeCurlOptions($curl_base_options, self::$curlOpts));
 
         if (self::$socketTimeout !== null) {
             curl_setopt(self::$handle, CURLOPT_TIMEOUT, self::$socketTimeout);
@@ -557,5 +557,16 @@ class Request
     {
         $key = trim(strtolower($key));
         return $key . ': ' . $val;
+    }
+
+    /**
+     * @param array $existing_options
+     * @param array $new_options
+     * @return array
+     */
+    private static function mergeCurlOptions(&$existing_options, $new_options)
+    {
+        $existing_options = $new_options + $existing_options;
+        return $existing_options;
     }
 }
