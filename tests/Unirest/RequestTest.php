@@ -39,6 +39,31 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
         Unirest\Request::timeout(null); // Cleaning timeout for the other tests
     }
 
+    public function testDefaultHeaders()
+    {
+        $defaultHeaders = array(
+            'header1' => 'Hello',
+            'header2' => 'world'
+        );
+        Unirest\Request::defaultHeaders($defaultHeaders);
+
+        $response = Unirest\Request::get('http://mockbin.com/request');
+
+        $this->assertEquals(200, $response->code);
+        $this->assertObjectHasAttribute('header1', $response->body->headers);
+        $this->assertEquals('Hello', $response->body->headers->header1);
+        $this->assertObjectHasAttribute('header2', $response->body->headers);
+        $this->assertEquals('world', $response->body->headers->header2);
+
+        Unirest\Request::clearDefaultHeaders();
+
+        $response = Unirest\Request::get('http://mockbin.com/request');
+
+        $this->assertEquals(200, $response->code);
+        $this->assertObjectNotHasAttribute('header1', $response->body->headers);
+        $this->assertObjectNotHasAttribute('header2', $response->body->headers);
+    }
+
     public function testDefaultHeader()
     {
         Unirest\Request::defaultHeader('Hello', 'custom');
