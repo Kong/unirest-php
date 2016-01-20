@@ -84,7 +84,7 @@ class Request
      */
     public static function defaultHeaders($headers)
     {
-        return array_merge(self::$defaultHeaders, $headers);
+        return self::$defaultHeaders = array_merge(self::$defaultHeaders, $headers);
     }
 
     /**
