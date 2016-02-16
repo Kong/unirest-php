@@ -37,6 +37,8 @@ class Response
      *
      * thanks to ricardovermeltfoort@gmail.com
      * http://php.net/manual/en/function.http-parse-headers.php#112986
+     * @param string $raw_headers raw headers
+     * @return array
      */
     private function parseHeaders($raw_headers)
     {

@@ -6,7 +6,10 @@ class File
 {
     /**
      * Prepares a file for upload. To be used inside the parameters declaration for a request.
-     * @param string $path The file path
+     * @param string $filename The file path
+     * @param string $mimetype MIME type
+     * @param string $postname the file name
+     * @return string|\CURLFile
      */
     public static function add($filename, $mimetype = '', $postname = '')
     {
