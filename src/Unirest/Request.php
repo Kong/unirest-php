@@ -2,9 +2,6 @@
 
 namespace Unirest;
 
-use Unirest\Method;
-use Unirest\Response;
-
 class Request
 {
     private static $cookie = null;
@@ -39,8 +36,9 @@ class Request
      * Set JSON decode mode
      *
      * @param bool $assoc When TRUE, returned objects will be converted into associative arrays.
-     * @param bool $depth User specified recursion depth.
-     * @param bool $options Bitmask of JSON decode options. Currently only JSON_BIGINT_AS_STRING is supported (default is to cast large integers as floats)
+     * @param integer $depth User specified recursion depth.
+     * @param integer $options Bitmask of JSON decode options. Currently only JSON_BIGINT_AS_STRING is supported (default is to cast large integers as floats)
+     * @return array
      */
     public static function jsonOpts($assoc = false, $depth = 512, $options = 0)
     {
@@ -51,16 +49,18 @@ class Request
      * Verify SSL peer
      *
      * @param bool $enabled enable SSL verification, by default is true
+     * @return bool
      */
     public static function verifyPeer($enabled)
     {
         return self::$verifyPeer = $enabled;
     }
-    
+
     /**
      * Verify SSL host
      *
      * @param bool $enabled enable SSL host verification, by default is true
+     * @return bool
      */
     public static function verifyHost($enabled)
     {
@@ -71,6 +71,7 @@ class Request
      * Set a timeout
      *
      * @param integer $seconds timeout value in seconds
+     * @return integer
      */
     public static function timeout($seconds)
     {
@@ -92,6 +93,7 @@ class Request
      *
      * @param string $name header name
      * @param string $value header value
+     * @return string
      */
     public static function defaultHeader($name, $value)
     {
@@ -122,6 +124,7 @@ class Request
      *
      * @param string $name header name
      * @param string $value header value
+     * @return string
      */
     public static function curlOpt($name, $value)
     {
@@ -144,6 +147,7 @@ class Request
      *       Be aware of which key you are using and do not share your Production key.
      *
      * @param string $key Mashape key
+     * @return string
      */
     public static function setMashapeKey($key)
     {
@@ -177,7 +181,7 @@ class Request
      *
      * @param string $username authentication username
      * @param string $password authentication password
-     * @param string $method authentication method
+     * @param integer $method authentication method
      */
     public static function auth($username = '', $password = '', $method = CURLAUTH_BASIC)
     {
@@ -190,9 +194,9 @@ class Request
      * Set proxy to use
      *
      * @param string $address proxy address
-     * @param string $port proxy port
-     * @param string $port proxy type (Available options for this are CURLPROXY_HTTP, CURLPROXY_HTTP_1_0 CURLPROXY_SOCKS4, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4A and CURLPROXY_SOCKS5_HOSTNAME)
-     * @param string $tunnel enable/disable tunneling
+     * @param integer $port proxy port
+     * @param integer $type (Available options for this are CURLPROXY_HTTP, CURLPROXY_HTTP_1_0 CURLPROXY_SOCKS4, CURLPROXY_SOCKS5, CURLPROXY_SOCKS4A and CURLPROXY_SOCKS5_HOSTNAME)
+     * @param bool $tunnel enable/disable tunneling
      */
     public static function proxy($address, $port = 1080, $type = CURLPROXY_HTTP, $tunnel = false)
     {
@@ -207,8 +211,7 @@ class Request
      *
      * @param string $username authentication username
      * @param string $password authentication password
-     * @param string $method authentication method
-     * @param string $tunnel enable/disable tunneling
+     * @param integer $method authentication method
      */
     public static function proxyAuth($username = '', $password = '', $method = CURLAUTH_BASIC)
     {
@@ -225,7 +228,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Authentication username (deprecated)
      * @param string $password Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -239,7 +242,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -253,7 +256,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username
      * @param string $password Basic Authentication password
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -267,7 +270,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -281,7 +284,7 @@ class Request
      * @param mixed $body POST body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response response
+     * @return \Unirest\Response response
      */
     public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -295,7 +298,7 @@ class Request
      * @param mixed $body DELETE body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -309,7 +312,7 @@ class Request
      * @param mixed $body PUT body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -323,7 +326,7 @@ class Request
      * @param mixed $body PATCH body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -337,7 +340,7 @@ class Request
      * @param mixed $body TRACE body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return \Unirest\Response
      */
     public static function trace($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -347,6 +350,9 @@ class Request
     /**
      * This function is useful for serializing multidimensional arrays, and avoid getting
      * the 'Array to string conversion' notice
+     * @param array|object $data array to flatten.
+     * @param bool|string $parent parent key or false if no parent
+     * @return array
      */
     public static function buildHTTPCurlQuery($data, $parent = false)
     {
@@ -375,14 +381,14 @@ class Request
 
     /**
      * Send a cURL request
-     * @param Unirest\Method $method HTTP method to use
+     * @param \Unirest\Method|string $method HTTP method to use
      * @param string $url URL to send the request to
      * @param mixed $body request body
      * @param array $headers additional headers to send
      * @param string $username Authentication username (deprecated)
      * @param string $password Authentication password (deprecated)
-     * @throws Exception if a cURL error occurs
-     * @return Unirest\Response
+     * @throws \Exception if a cURL error occurs
+     * @return \Unirest\Response
      */
     public static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
     {
