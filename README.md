@@ -94,7 +94,7 @@ $response->body;        // Parsed body
 $response->raw_body;    // Unparsed body
 ```
 
-### JSON Requests *(multipart/json)*
+### JSON Requests *(`application/json`)*
 
 A JSON Request can be constructed using the `Unirest\Request\Body::Json` helper:
 
@@ -129,7 +129,7 @@ $response = Unirest\Request::post('http://mockbin.com/request', $headers, $body)
 - `Content-Type` headers will be automatically set to `application/x-www-form-urlencoded`
 - the final data array will be processed through [`http_build_query`](http://php.net/manual/en/function.http-build-query.php) with default values for arguments.
 
-### Multipart Requests *(multipart/form-data)*
+### Multipart Requests *(`multipart/form-data`)*
 
 A Multipart Request can be constructed using the `Unirest\Request\Body::Multipart` helper:
 
