@@ -4,7 +4,7 @@ namespace Unirest\Request\Test;
 
 use Unirest\Request as Request;
 
-require __DIR__ . '/../../src/Unirest/Request.php';
+require __DIR__ . '/../../src/Unirest.php';
 
 class UnirestRequestTest extends \PHPUnit_Framework_TestCase
 {
