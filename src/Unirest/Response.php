@@ -25,10 +25,12 @@ class Response
         // make sure raw_body is the first argument
         array_unshift($json_args, $raw_body);
 
-        $json = call_user_func_array('json_decode', $json_args);
+        if (function_exists('json_decode')) {
+            $json = call_user_func_array('json_decode', $json_args);
 
-        if (json_last_error() === JSON_ERROR_NONE) {
-            $this->body = $json;
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->body = $json;
+            }
         }
     }
 
