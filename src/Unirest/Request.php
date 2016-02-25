@@ -2,6 +2,8 @@
 
 namespace Unirest;
 
+use Unirest\Method as Method;
+use Unirest\Response as Response;
 use Unirest\Exception as Exception;
 
 class Request
