@@ -83,10 +83,10 @@ require_once '/path/to/unirest-php/src/Unirest.php';
 So you're probably wondering how using Unirest makes creating requests in PHP easier, let's look at a working example:
 
 ```php
-$headers = array("Accept" => "application/json");
-$body = array("foo" => "hellow", "bar" => "world");
+$headers = array('Accept' => 'application/json');
+$query = array('foo' => 'hello', 'bar' => 'world');
 
-$response = Unirest\Request::post("http://mockbin.com/request", $headers, $body);
+$response = Unirest\Request::post('http://mockbin.com/request', $headers, $query);
 
 $response->code;        // HTTP Status code
 $response->headers;     // Headers
@@ -94,25 +94,98 @@ $response->body;        // Parsed body
 $response->raw_body;    // Unparsed body
 ```
 
-### File Uploads
+### JSON Requests *(multipart/json)*
 
-To upload files in a multipart form representation use the return value of `Unirest\File::add($path)` as the value of a parameter:
+A JSON Request can be constructed using the `Unirest\Request\Body::Json` helper:
 
 ```php
-$headers = array("Accept" => "application/json");
-$body = array("file" => Unirest\File::add("/tmp/file.txt"));
+$headers = array('Accept' => 'application/json');
+$data = array('name' => 'ahmad', 'company' => 'mashape');
 
-$response = Unirest\Request::post("http://mockbin.com/request", $headers, $body);
+$body = Unirest\Request\Body::json($data);
+
+$response = Unirest\Request::post('http://mockbin.com/request', $headers, $body);
+```
+
+**Notes:**
+- `Content-Type` headers will be automatically set to `application/json` 
+- the data variable will be processed through [`json_encode`](http://php.net/manual/en/function.json-encode.php) with default values for arguments.
+- an error will be thrown if the [JSON Extension](http://php.net/manual/en/book.json.php) is not available.
+
+### Form Requests *(`application/x-www-form-urlencoded`)*
+
+A typical Form Request can be constructed using the `Unirest\Request\Body::Form` helper:
+
+```php
+$headers = array('Accept' => 'application/json');
+$data = array('name' => 'ahmad', 'company' => 'mashape');
+
+$body = Unirest\Request\Body::form($data);
+
+$response = Unirest\Request::post('http://mockbin.com/request', $headers, $body);
+```
+
+**Notes:** 
+- `Content-Type` headers will be automatically set to `application/x-www-form-urlencoded`
+- the final data array will be processed through [`http_build_query`](http://php.net/manual/en/function.http-build-query.php) with default values for arguments.
+
+### Multipart Requests *(multipart/form-data)*
+
+A Multipart Request can be constructed using the `Unirest\Request\Body::Multipart` helper:
+
+```php
+$headers = array('Accept' => 'application/json');
+$data = array('name' => 'ahmad', 'company' => 'mashape');
+
+$body = Unirest\Request\Body::multipart($data);
+
+$response = Unirest\Request::post('http://mockbin.com/request', $headers, $body);
+```
+
+**Notes:** 
+
+- `Content-Type` headers will be automatically set to `multipart/form-data`.
+- an auto-generated `--boundary` will be set.
+
+### Multipart File Upload
+
+simply add an array of files as the second argument to to the `Multipart` helper:
+
+```php
+$headers = array('Accept' => 'application/json');
+$data = array('name' => 'ahmad', 'company' => 'mashape');
+$files = array('bio' => '/path/to/bio.txt', 'avatar' => '/path/to/avatar.jpg');
+
+$body = Unirest\Request\Body::multipart($data, $files);
+
+$response = Unirest\Request::post('http://mockbin.com/request', $headers, $body);
  ```
- 
-### Custom Entity Body
 
-Sending a custom body such as a JSON Object rather than a string or form style parameters we utilize json_encode for the body:
+If you wish to further customize the properties of files uploaded you can do so with the `Unirest\Request\Body::File` helper:
+
 ```php
-$headers = array("Accept" => "application/json");
-$body =   json_encode(array("foo" => "hellow", "bar" => "world"));
+$headers = array('Accept' => 'application/json');
+$body = array(
+    'name' => 'ahmad', 
+    'company' => 'mashape'
+    'bio' => Unirest\Request\Body::file('/path/to/bio.txt', 'text/plain'),
+    'avatar' => Unirest\Request\Body::file('/path/to/my_avatar.jpg', 'text/plain', 'avatar.jpg')
+);
 
-$response = Unirest\Request::post("http://mockbin.com/request", $headers, $body);
+$response = Unirest\Request::post('http://mockbin.com/request', $headers, $body);
+ ```
+
+**Note**: we did not use the `Unirest\Request\Body::multipart` helper in this example, it is not needed when manually adding files.
+ 
+### Custom Body
+
+Sending a custom body such rather than using the `Unirest\Request\Body` helpers is also possible, for example, using a [`serialize`](http://php.net/manual/en/function.serialize.php) body string with a custom `Content-Type`:
+
+```php
+$headers = array('Accept' => 'application/json', 'Content-Type' => 'application/x-php-serialized');
+$body = serialize((array('foo' => 'hello', 'bar' => 'world'));
+
+$response = Unirest\Request::post('http://mockbin.com/request', $headers, $body);
 ```
 
 ### Authentication
@@ -156,7 +229,7 @@ Unirest\Request::proxyAuth('username', 'password', CURLAUTH_DIGEST);
 Previous versions of **Unirest** support *Basic Authentication* by providing the `username` and `password` arguments:
 
 ```php
-$response = Unirest\Request::get("http://mockbin.com/request", null, null, "username", "password");
+$response = Unirest\Request::get('http://mockbin.com/request', null, null, 'username', 'password');
 ```
 
 **This has been deprecated, and will be completely removed in `v.3.0.0` please use the `Unirest\Request::auth()` method instead**
@@ -275,16 +348,16 @@ Unirest\Request::proxyAuth('username', 'password', CURLAUTH_DIGEST);
 You can set default headers that will be sent on every request:
 
 ```php
-Unirest\Request::defaultHeader("Header1", "Value1");
-Unirest\Request::defaultHeader("Header2", "Value2");
+Unirest\Request::defaultHeader('Header1', 'Value1');
+Unirest\Request::defaultHeader('Header2', 'Value2');
 ```
 
 You can set default headers in bulk by passing an array:
 
 ```php
 Unirest\Request::defaultHeaders(array(
-    "Header1" => "Value1",
-    "Header2" => "Value2"
+    'Header1' => 'Value1',
+    'Header2' => 'Value2'
 ));
 ```
 
@@ -299,14 +372,14 @@ Unirest\Request::clearDefaultHeaders();
 You can set default [cURL options](http://php.net/manual/en/function.curl-setopt.php) that will be sent on every request:
 
 ```php
-Unirest\Request::curlOpt(CURLOPT_COOKIE, "foo=bar");
+Unirest\Request::curlOpt(CURLOPT_COOKIE, 'foo=bar');
 ```
 
 You can set options bulk by passing an array:
 
 ```php
 Unirest\Request::curlOpts(array(
-    CURLOPT_COOKIE => "foo=bar"
+    CURLOPT_COOKIE => 'foo=bar'
 ));
 ```
 
