@@ -48,6 +48,12 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('header2', $response->body->headers);
         $this->assertEquals('world', $response->body->headers->header2);
 
+        $response = Request::get('http://mockbin.com/request', ['header1' => 'Custom value']);
+
+        $this->assertEquals(200, $response->code);
+        $this->assertObjectHasAttribute('header1', $response->body->headers);
+        $this->assertEquals('Custom value', $response->body->headers->header1);
+
         Request::clearDefaultHeaders();
 
         $response = Request::get('http://mockbin.com/request');
