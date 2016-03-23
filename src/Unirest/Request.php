@@ -504,7 +504,7 @@ class Request
     {
         $formattedHeaders = array();
 
-        $combinedHeaders = array_change_key_case(array_merge((array) $headers, self::$defaultHeaders));
+        $combinedHeaders = array_change_key_case(array_merge(self::$defaultHeaders, (array) $headers));
 
         foreach ($combinedHeaders as $key => $val) {
             $formattedHeaders[] = self::getHeaderString($key, $val);
