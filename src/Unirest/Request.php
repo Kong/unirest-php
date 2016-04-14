@@ -159,7 +159,7 @@ class Request
     }
 
     /**
-     * Set a coockie string for enabling coockie handling
+     * Set a cookie string for enabling cookie handling
      *
      * @param string $cookie
      */
@@ -169,7 +169,7 @@ class Request
     }
 
     /**
-     * Set a coockie file path for enabling coockie handling
+     * Set a cookie file path for enabling cookie handling
      *
      * $cookieFile must be a correct path with write permission
      *
