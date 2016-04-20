@@ -401,7 +401,6 @@ class Request
         if ($method !== Method::GET) {
 			if ($method === Method::POST) {
 				curl_setopt(self::$handle, CURLOPT_POST, true);
-				curl_setopt(self::$handle, CURLOPT_POSTREDIR, 3); 
 			} else {
 				curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
 			}
