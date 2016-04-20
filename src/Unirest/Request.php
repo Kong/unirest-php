@@ -399,7 +399,12 @@ class Request
         self::$handle = curl_init();
 
         if ($method !== Method::GET) {
-            curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
+			if ($method === Method::POST) {
+				curl_setopt(self::$handle, CURLOPT_POST, true);
+				curl_setopt(self::$handle, CURLOPT_POSTREDIR, 3); 
+			} else {
+				curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
+			}
 
             curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $body);
         } elseif (is_array($body)) {
