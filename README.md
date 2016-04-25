@@ -37,7 +37,7 @@ To install unirest-php with Composer, just add the following to your `composer.j
 ```json
 {
     "require-dev": {
-        "mashape/unirest-php": "2.*"
+        "mashape/unirest-php": "3.*"
     }
 }
 ```
