@@ -45,18 +45,20 @@ class Body
         return $data;
     }
 
-    public static function Multipart($data, $files = [])
+    public static function Multipart($data, $files = false)
     {
         if (is_object($data)) {
-            $data = get_object_vars($data);
+            return get_object_vars($data);
         }
 
         if (!is_array($data)) {
-            $data = array($data);
+            return array($data);
         }
 
-        foreach ($files as $name => $file) {
-            $data[$name] = call_user_func(array(__CLASS__, 'File'), $file);
+        if ($files !== false) {
+            foreach ($files as $name => $file) {
+                $data[$name] = call_user_func(array(__CLASS__, 'File'), $file);
+            }
         }
 
         return $data;
