@@ -2,10 +2,6 @@
 
 namespace Unirest;
 
-use Unirest\Method as Method;
-use Unirest\Response as Response;
-use Unirest\Exception as Exception;
-
 class Request
 {
     private static $cookie = null;
@@ -86,6 +82,7 @@ class Request
      * Set default headers to send on every request
      *
      * @param array $headers headers array
+     * @return array
      */
     public static function defaultHeaders($headers)
     {
@@ -232,7 +229,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Authentication username (deprecated)
      * @param string $password Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return Response
      */
     public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -246,7 +243,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return Response
      */
     public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -260,7 +257,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username
      * @param string $password Basic Authentication password
-     * @return Unirest\Response
+     * @return Response
      */
     public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -274,7 +271,7 @@ class Request
      * @param mixed $parameters parameters to send in the querystring
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return Response
      */
     public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null)
     {
@@ -288,7 +285,7 @@ class Request
      * @param mixed $body POST body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response response
+     * @return Response response
      */
     public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -302,7 +299,7 @@ class Request
      * @param mixed $body DELETE body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return Response
      */
     public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -316,7 +313,7 @@ class Request
      * @param mixed $body PUT body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return Response
      */
     public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -330,7 +327,7 @@ class Request
      * @param mixed $body PATCH body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return Response
      */
     public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -344,7 +341,7 @@ class Request
      * @param mixed $body TRACE body data
      * @param string $username Basic Authentication username (deprecated)
      * @param string $password Basic Authentication password (deprecated)
-     * @return Unirest\Response
+     * @return Response
      */
     public static function trace($url, $headers = array(), $body = null, $username = null, $password = null)
     {
@@ -385,14 +382,14 @@ class Request
 
     /**
      * Send a cURL request
-     * @param Unirest\Method|string $method HTTP method to use
+     * @param \Unirest\Method|string $method HTTP method to use
      * @param string $url URL to send the request to
      * @param mixed $body request body
      * @param array $headers additional headers to send
      * @param string $username Authentication username (deprecated)
      * @param string $password Authentication password (deprecated)
-     * @throws Unirest\Exception if a cURL error occurs
-     * @return Unirest\Response
+     * @throws \Unirest\Exception if a cURL error occurs
+     * @return Response
      */
     public static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
     {
