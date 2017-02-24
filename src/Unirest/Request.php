@@ -13,6 +13,7 @@ class Request
     private static $socketTimeout = null;
     private static $verifyPeer = true;
     private static $verifyHost = true;
+    private static $hooks = array();
 
     private static $auth = array (
         'user' => '',
@@ -415,9 +416,13 @@ class Request
 
             $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
         }
+        
+        $url=self::encodeUrl($url);
+        
+        self::dispatch('before_request', array(&$method, &$url, &$body, &$headers, &$username, &$password));
 
         $curl_base_options = [
-            CURLOPT_URL => self::encodeUrl($url),
+            CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS => 10,
@@ -476,16 +481,23 @@ class Request
         $info       = self::getInfo();
 
         if ($error) {
+            self::dispatch('before_error_response_exception', array($error,$info,$method, $url, $body, $headers, $username, $password));
             throw new Exception($error);
         }
+        
+        self::dispatch('before_parse_response', array(&$response,&$info,$method, $url, $body, $headers, $username, $password));
 
         // Split the full response in its headers and body
         $header_size = $info['header_size'];
         $header      = substr($response, 0, $header_size);
         $body        = substr($response, $header_size);
         $httpCode    = $info['http_code'];
+        
+        $uResponse=new Response($httpCode, $body, $header, self::$jsonOpts);
+        
+        self::dispatch('after_response', array(&$uResponse,$info,$method, $url, $body, $headers, $username, $password));
 
-        return new Response($httpCode, $body, $header, self::$jsonOpts);
+        return $uResponse;
     }
 
     public static function getInfo($opt = false)
@@ -525,16 +537,32 @@ class Request
         return $formattedHeaders;
     }
 
-    private static function getArrayFromQuerystring($query)
+
+    /**
+     * Normalizes a query string from the given parameters.
+     *
+     * @param string $query Query string
+     * @return string A normalized query string for the Request
+     */
+    public static function normalizeQueryString($query)
     {
-        $query = preg_replace_callback('/(?:^|(?<=&))[^=[]+/', function ($match) {
-            return bin2hex(urldecode($match[0]));
-        }, $query);
+        if ('' == $query) {
+            return '';
+        }
 
-        parse_str($query, $values);
-
-        return array_combine(array_map('hex2bin', array_keys($values)), $values);
-    }
+        $parts = array();
+        foreach (explode('&', $query) as $param) {
+            if ('' === $param || '=' === $param[0]) {
+                continue;
+            }
+            $keyValuePair = explode('=', $param, 2);
+            // RFC 3986 with rawurlencode.
+            $parts[] = isset($keyValuePair[1]) ?
+                rawurlencode(urldecode($keyValuePair[0])).'='.rawurlencode(urldecode($keyValuePair[1])) :
+                rawurlencode(urldecode($keyValuePair[0]));
+        }
+        return implode('&', $parts);
+    }    
 
     /**
      * Ensure that a URL is encoded and safe to use with cURL
@@ -552,7 +580,7 @@ class Request
         $query  = (isset($url_parsed['query']) ? $url_parsed['query'] : null);
 
         if ($query !== null) {
-            $query = '?' . http_build_query(self::getArrayFromQuerystring($query));
+            $query = '?' .self::normalizeQueryString($query);
         }
 
         if ($port && $port[0] !== ':') {
@@ -579,4 +607,41 @@ class Request
         $existing_options = $new_options + $existing_options;
         return $existing_options;
     }
+    
+    /**
+     * Register a callback for a hook
+     *
+     * @param string $hook Hook name
+     * @param callback $callback Function/method to call on event
+     * @param int $priority Priority number. <0 is executed earlier, >0 is executed later
+     */
+    public static function register($hook, $callback, $priority = 0) {
+        if (!isset(self::$hooks[$hook])) {
+            self::$hooks[$hook] = array();
+        }
+        if (!isset(self::$hooks[$hook][$priority])) {
+            self::$hooks[$hook][$priority] = array();
+        }
+        self::$hooks[$hook][$priority][] = $callback;
+    }
+    
+    /**
+     * Dispatch a message
+     *
+     * @param string $hook Hook name
+     * @param array $parameters Parameters to pass to callbacks
+     * @return boolean Successfulness
+     */
+    private static function dispatch($hook, $parameters = array()) {
+        if (empty(self::$hooks[$hook])) {
+            return false;
+        }
+        foreach (self::$hooks[$hook] as $priority => $hooked) {
+            foreach ($hooked as $callback) {
+                call_user_func_array($callback, $parameters);
+            }
+        }
+        return true;
+    }
+
 }
