@@ -251,6 +251,16 @@ class UnirestRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('John', $response->body->queryString->name[1]);
     }
 
+    // HEAD
+    public function testHead()
+    {
+        $response = Request::head('http://mockbin.com/request?name=Mark', array(
+          'Accept' => 'application/json'
+        ));
+
+        $this->assertEquals(200, $response->code);
+    }
+
     // POST
     public function testPost()
     {

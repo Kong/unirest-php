@@ -399,6 +399,9 @@ class Request
 			if ($method === Method::POST) {
 				curl_setopt(self::$handle, CURLOPT_POST, true);
 			} else {
+                 if ($method === Method::HEAD) {
+                    curl_setopt(self::$handle, CURLOPT_NOBODY, true);
+                 }
 				curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
 			}
 
