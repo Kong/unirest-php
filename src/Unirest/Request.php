@@ -13,6 +13,7 @@ class Request
     private static $socketTimeout = null;
     private static $verifyPeer = true;
     private static $verifyHost = true;
+    private static $reuseCurlHandle = false;
 
     private static $auth = array (
         'user' => '',
@@ -393,8 +394,9 @@ class Request
      */
     public static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
     {
-        self::$handle = curl_init();
-
+        if (!self::$reuseCurlHandle or self::$handle == null)
+          self::$handle = curl_init();
+        
         if ($method !== Method::GET) {
 			if ($method === Method::POST) {
 				curl_setopt(self::$handle, CURLOPT_POST, true);
@@ -485,6 +487,9 @@ class Request
         $body        = substr($response, $header_size);
         $httpCode    = $info['http_code'];
 
+        if (!self::$reuseCurlHandle)
+            curl_close(self::$handle);
+        
         return new Response($httpCode, $body, $header, self::$jsonOpts);
     }
 
@@ -502,6 +507,11 @@ class Request
     public static function getCurlHandle()
     {
         return self::$handle;
+    }
+    
+    public static function setReuseCurlHandle($reuseCurlHandle)
+    {
+        self::$reuseCurlHandle = $reuseCurlHandle;
     }
 
     public static function getFormattedHeaders($headers)
