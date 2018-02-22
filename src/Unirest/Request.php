@@ -231,9 +231,9 @@ class Request
      * @param string $password Authentication password (deprecated)
      * @return Response
      */
-    public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null, $resuseCurl=false)
+    public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::GET, $url, $parameters, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::GET, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -245,9 +245,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null, $resuseCurl=false)
+    public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::HEAD, $url, $parameters, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::HEAD, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -259,9 +259,9 @@ class Request
      * @param string $password Basic Authentication password
      * @return Response
      */
-    public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null, $resuseCurl=false)
+    public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::OPTIONS, $url, $parameters, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::OPTIONS, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -273,9 +273,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null, $resuseCurl=false)
+    public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::CONNECT, $url, $parameters, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::CONNECT, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -287,9 +287,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response response
      */
-    public static function post($url, $headers = array(), $body = null, $username = null, $password = null, $resuseCurl=false)
+    public static function post($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::POST, $url, $body, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::POST, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -301,9 +301,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function delete($url, $headers = array(), $body = null, $username = null, $password = null, $resuseCurl=false)
+    public static function delete($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::DELETE, $url, $body, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::DELETE, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -315,9 +315,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function put($url, $headers = array(), $body = null, $username = null, $password = null, $resuseCurl=false)
+    public static function put($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::PUT, $url, $body, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::PUT, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -329,9 +329,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function patch($url, $headers = array(), $body = null, $username = null, $password = null, $resuseCurl=false)
+    public static function patch($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::PATCH, $url, $body, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::PATCH, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -343,9 +343,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function trace($url, $headers = array(), $body = null, $username = null, $password = null, $resuseCurl=false)
+    public static function trace($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::TRACE, $url, $body, $headers, $username, $password, $resuseCurl);
+        return self::send(Method::TRACE, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
