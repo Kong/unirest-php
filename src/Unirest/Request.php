@@ -231,9 +231,9 @@ class Request
      * @param string $password Authentication password (deprecated)
      * @return Response
      */
-    public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null)
+    public static function get($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::GET, $url, $parameters, $headers, $username, $password);
+        return self::send(Method::GET, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -245,9 +245,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null)
+    public static function head($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::HEAD, $url, $parameters, $headers, $username, $password);
+        return self::send(Method::HEAD, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -259,9 +259,9 @@ class Request
      * @param string $password Basic Authentication password
      * @return Response
      */
-    public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null)
+    public static function options($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::OPTIONS, $url, $parameters, $headers, $username, $password);
+        return self::send(Method::OPTIONS, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -273,9 +273,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null)
+    public static function connect($url, $headers = array(), $parameters = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::CONNECT, $url, $parameters, $headers, $username, $password);
+        return self::send(Method::CONNECT, $url, $parameters, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -287,9 +287,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response response
      */
-    public static function post($url, $headers = array(), $body = null, $username = null, $password = null)
+    public static function post($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::POST, $url, $body, $headers, $username, $password);
+        return self::send(Method::POST, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -301,9 +301,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function delete($url, $headers = array(), $body = null, $username = null, $password = null)
+    public static function delete($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::DELETE, $url, $body, $headers, $username, $password);
+        return self::send(Method::DELETE, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -315,9 +315,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function put($url, $headers = array(), $body = null, $username = null, $password = null)
+    public static function put($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::PUT, $url, $body, $headers, $username, $password);
+        return self::send(Method::PUT, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -329,9 +329,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function patch($url, $headers = array(), $body = null, $username = null, $password = null)
+    public static function patch($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::PATCH, $url, $body, $headers, $username, $password);
+        return self::send(Method::PATCH, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -343,9 +343,9 @@ class Request
      * @param string $password Basic Authentication password (deprecated)
      * @return Response
      */
-    public static function trace($url, $headers = array(), $body = null, $username = null, $password = null)
+    public static function trace($url, $headers = array(), $body = null, $username = null, $password = null, $reuseCurl=false)
     {
-        return self::send(Method::TRACE, $url, $body, $headers, $username, $password);
+        return self::send(Method::TRACE, $url, $body, $headers, $username, $password, $reuseCurl);
     }
 
     /**
@@ -388,24 +388,32 @@ class Request
      * @param array $headers additional headers to send
      * @param string $username Authentication username (deprecated)
      * @param string $password Authentication password (deprecated)
+     * @param boolean $reuseCurl Whether or not to use an already existing curl handle
      * @throws \Unirest\Exception if a cURL error occurs
      * @return Response
      */
-    public static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null)
+    public static function send($method, $url, $body = null, $headers = array(), $username = null, $password = null, $reuseCurl=false)
     {
-        self::$handle = curl_init();
+        // In certain situations (for example, when doing mass curl requests from the same PHP request (or from a PHP CLI instance) 
+        // we want to be able to reuse the existing curl request because otherwise eventually a null curl instance is created and 
+        // things break. In my tests this was after about 3300 requests. This flag allows you to keep issuing curl requests without 
+        // limits and thus is useful for long-running (or batch processing) scripts.
+        if (!self::$handle) {
+            self::$handle = curl_init();
+        } elseif (!$reuseCurl) {
+            self::$handle = curl_init();
+        }
 
         if ($method !== Method::GET) {
-			if ($method === Method::POST) {
-				curl_setopt(self::$handle, CURLOPT_POST, true);
-			} else {
-                 if ($method === Method::HEAD) {
+            if ($method === Method::POST) {
+                curl_setopt(self::$handle, CURLOPT_POST, true);
+            } else {
+                if ($method === Method::HEAD) {
                     curl_setopt(self::$handle, CURLOPT_NOBODY, true);
-                 }
-				curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
-			}
-
-            curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $body);
+                }
+                curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
+           }
+           curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $body);
         } elseif (is_array($body)) {
             if (strpos($url, '?') !== false) {
                 $url .= '&';
