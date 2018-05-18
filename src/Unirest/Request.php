@@ -417,7 +417,7 @@ class Request
         }
 
         $curl_base_options = [
-            CURLOPT_URL => self::encodeUrl($url),
+            CURLOPT_URL => $data ? self::encodeUrl($url) : $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_MAXREDIRS => 10,
