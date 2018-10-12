@@ -396,18 +396,21 @@ class Request
         self::$handle = curl_init();
 
         if ($method !== Method::GET) {
-            if ($method === Method::POST) {
+
+            if ($method === Method::DELETE) {
+
+              // When it's a DELETE we must to add parameters to the URL
+              $url .= (strpos($url, '?') !== false) ? '&' : '?';
+              $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
+
+            } else if ($method === Method::POST) {
+
               curl_setopt(self::$handle, CURLOPT_POST, true);
             } else {
+
               curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
             }
             curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $body);
-
-            // When it's a DELETE we must to add parameters to the URL
-            if ($method === Method::DELETE) {
-              $url .= (strpos($url, '?') !== false) ? '&' : '?';
-              $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
-            }
 
         } elseif (is_array($body)) {
             if (strpos($url, '?') !== false) {
