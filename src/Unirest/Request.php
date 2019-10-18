@@ -405,6 +405,10 @@ class Request
 				curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
 			}
 
+            if (is_array($body)) {
+                $body = http_build_query($body);
+            }
+            
             curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $body);
         } elseif (is_array($body)) {
             if (strpos($url, '?') !== false) {
