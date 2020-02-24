@@ -167,7 +167,7 @@ If you wish to further customize the properties of files uploaded you can do so 
 $headers = array('Accept' => 'application/json');
 $body = array(
     'name' => 'ahmad', 
-    'company' => 'mashape'
+    'company' => 'mashape',
     'bio' => Unirest\Request\Body::file('/path/to/bio.txt', 'text/plain'),
     'avatar' => Unirest\Request\Body::file('/path/to/my_avatar.jpg', 'text/plain', 'avatar.jpg')
 );
