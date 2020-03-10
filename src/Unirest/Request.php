@@ -555,17 +555,12 @@ class Request
             $query = '?' . http_build_query(self::getArrayFromQuerystring($query));
         }
 
-        if (null !== $port) {
-            if (!is_string($port)) {
-                $port = strval($port);
-            }
-            if ($port[0] !== ':') {
-                $port = ':' . $port;
-            }
+        $port = (string)$port;
+        if ('' !== $port && ':' !== $port[0]) {
+            $port = ':' . $port;
         }
 
-        $result = $scheme . $host . $port . $path . $query;
-        return $result;
+        return $scheme . $host . $port . $path . $query;
     }
 
     private static function getHeaderString($key, $val)
