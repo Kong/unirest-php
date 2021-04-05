@@ -555,12 +555,16 @@ class Request
             $query = '?' . http_build_query(self::getArrayFromQuerystring($query));
         }
 
+        // Because it is a numeric port and it can not be received as an array
+        // And you have to turn it into a string
+        // $port[0] has it error
+        $port = "$port";
+
         if ($port && $port[0] !== ':') {
             $port = ':' . $port;
         }
 
-        $result = $scheme . $host . $port . $path . $query;
-        return $result;
+        return $scheme . $host . $port . $path . $query;
     }
 
     private static function getHeaderString($key, $val)
