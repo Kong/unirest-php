@@ -1,9 +1,9 @@
 {
-  "name": "mashape/unirest-php",
+  "name": "brockhaus/unirest-php",
   "description": "Unirest PHP",
   "keywords": ["rest", "curl", "http", "https", "client"],
   "type": "library",
-  "homepage": "https://github.com/Mashape/unirest-php",
+  "homepage": "https://github.com/brockhaus/unirest-php",
   "license": "MIT",
   "author": "Mashape <opensource@mashape.com> (https://www.mashape.com)",
   "require": {
@@ -18,9 +18,7 @@
     "codeclimate/php-test-reporter": "0.1.*"
   },
   "autoload": {
-    "psr-0": {
-      "Unirest\\": "src/"
-    }
+    "psr-4": { "Unirest\\": "src/Unirest" }
   },
   "support": {
     "email": "opensource@mashape.com"
