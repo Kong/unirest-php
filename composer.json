@@ -18,9 +18,7 @@
     "codeclimate/php-test-reporter": "0.1.*"
   },
   "autoload": {
-    "psr-0": {
-      "Unirest\\": "src/"
-    }
+    "psr-4": { "Unirest\\": "src/Unirest" }
   },
   "support": {
     "email": "opensource@mashape.com"
