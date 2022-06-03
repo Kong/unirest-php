@@ -555,7 +555,7 @@ class Request
             $query = '?' . http_build_query(self::getArrayFromQuerystring($query));
         }
 
-        if ($port && $port[0] !== ':') {
+        if ($port && (!is_array($port) || $port[0] !== ':')) {
             $port = ':' . $port;
         }
 
