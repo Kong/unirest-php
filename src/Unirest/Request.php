@@ -413,7 +413,7 @@ class Request
                 $url .= '?';
             }
 
-            $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
+            $url .= http_build_query(self::buildHTTPCurlQuery($body));
         }
 
         $curl_base_options = [
